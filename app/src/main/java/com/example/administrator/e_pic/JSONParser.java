@@ -1,4 +1,4 @@
-package com.example.androidhive;
+package com.example.administrator.e_pic;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -77,11 +77,13 @@ public class JSONParser {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 					is, "iso-8859-1"), 8);
 			StringBuilder sb = new StringBuilder();
-			String line = null;
+			String line = reader.readLine();
+            sb.append(line);
 			while ((line = reader.readLine()) != null) {
-				sb.append(line + "\n");
+				sb.append("\n" + line);
 			}
-			is.close();
+            is.close();
+            Log.i("is", sb.toString());
 			json = sb.toString();
 		} catch (Exception e) {
 			Log.e("Buffer Error", "Error converting result " + e.toString());
@@ -89,7 +91,8 @@ public class JSONParser {
 
 		// try parse the string to a JSON object
 		try {
-			jObj = new JSONObject(json);
+            System.out.println(json);
+            jObj = new JSONObject(json);
 		} catch (JSONException e) {
 			Log.e("JSON Parser", "Error parsing data " + e.toString());
 		}

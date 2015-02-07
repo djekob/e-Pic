@@ -16,5 +16,7 @@
     <string name="username">Username</string>
     <string name="loginnaam">Loginnaam</string>
     <string name="title_activity_login">LoginActivity</string>
+    <string name="login">Login</string>
+    <string name="i_just_sneezed">I just SNEEZED!!!</string>
 
 </resources>

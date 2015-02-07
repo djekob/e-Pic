@@ -1,9 +1,11 @@
 package com.example.administrator.e_pic;
 
+import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.NumberPicker;
@@ -14,6 +16,8 @@ public class RegisterActivity extends ActionBarActivity {
     private EditText mVoornaamEditText, mAchternaamEditText, mPasswordEditText, mUsernameEditText;
     private NumberPicker mAgePicker;
     private Button mOkButton;
+    private String voornaam, achternaam, password, username;
+    private int age;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,10 +26,28 @@ public class RegisterActivity extends ActionBarActivity {
 
         initialization();
 
+        mOkButton.setOnClickListener(new okOnClickListener());
 
 
     }
 
+    private class okOnClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            setValues();
+            Context context = getApplicationContext();
+            Connections con = new Connections(voornaam, achternaam, username, password, age, context);
+        }
+    }
+
+    private void setValues() {
+        voornaam = mVoornaamEditText.getText().toString();
+        achternaam = mAchternaamEditText.getText().toString();
+        username = mUsernameEditText.getText().toString();
+        password = mPasswordEditText.getText().toString();
+        age = mAgePicker.getValue();
+    }
 
     private void initialization() {
 
@@ -35,6 +57,9 @@ public class RegisterActivity extends ActionBarActivity {
         mUsernameEditText = (EditText) findViewById(R.id.username_edit_text);
         mAgePicker = (NumberPicker) findViewById(R.id.age_number_picker);
         mOkButton = (Button) findViewById(R.id.register_button);
+
+        mAgePicker.setMinValue(0);
+        mAgePicker.setMaxValue(100);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

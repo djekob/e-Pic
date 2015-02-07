@@ -18,20 +18,36 @@ import java.util.List;
 //TODO connectie maken
 public class Connections {
 
+    private static final String TAG_SUCCESS = "success";
     //public static final int ADD_USER = 0;
     private ProgressDialog pDialog;
     private Context context;
     private String prename, name, username, password;
     private int age;
 
-    public Connections() {
+    public Connections(Context context){
+        this.context = context;
 
+        new CreateSneeze().execute();
+    }
+
+    public Connections(String prename, String name, String username, String password, int age, Context context) {
+        this.prename = prename;
+        this.name = name;
+        this.username = username;
+        this.password = password;
+        this.age = age;
+        this.context = context;
+
+        CreateNewUser cnu = new CreateNewUser();
+        cnu.execute();
     }
 
     /**
-     * Background Async Task to Create new product
+     * Background Async Task to Create new user
      * */
-    class CreateNewProduct extends AsyncTask<String, String, String> {
+    class CreateNewUser extends AsyncTask<String, String, String> {
+        private static final String URL_CREATE_USER = "http://unuzeleirstest.netau.net/create_user.php";
 
         /**
          * Before starting background thread Show Progress Dialog
@@ -52,7 +68,7 @@ public class Connections {
         protected String doInBackground(String... args) {
 
             // Building Parameters
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            List<NameValuePair> params = new ArrayList<>();
             params.add(new BasicNameValuePair("Voornaam", prename));
             params.add(new BasicNameValuePair("Achternaam", name));
             params.add(new BasicNameValuePair("Loginnaam", username));
@@ -61,11 +77,13 @@ public class Connections {
 
             // getting JSON Object
             // Note that create product url accepts POST method
-            JSONObject json = jsonParser.makeHttpRequest(url_create_product,
+            JSONParser jsonParser = new JSONParser();
+
+
+            JSONObject json = jsonParser.makeHttpRequest(URL_CREATE_USER,
                     "POST", params);
 
             // check log cat fro response
-            Log.d("Create Response", json.toString());
 
             // check for success tag
             try {
@@ -73,11 +91,13 @@ public class Connections {
 
                 if (success == 1) {
                     // successfully created product
-                    Intent i = new Intent(getApplicationContext(), AllProductsActivity.class);
-                    startActivity(i);
+                    Intent i = new Intent(context, iSneezeActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(i);
 
                     // closing this screen
-                    finish();
+
+
                 } else {
                     // failed to create product
                 }
@@ -96,5 +116,23 @@ public class Connections {
             pDialog.dismiss();
         }
 
+    }
+
+    class CreateSneeze extends AsyncTask<String, String, String>{
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+        }
     }
 }
