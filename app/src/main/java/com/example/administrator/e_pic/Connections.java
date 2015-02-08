@@ -19,15 +19,18 @@ import java.util.List;
 public class Connections {
 
     private static final String TAG_SUCCESS = "success";
+    private static final String URL_CREATE_USER = "http://unuzeleirstest.netau.net/create_user.php";
+    private static final String URL_ADD_SNEEZE = "http://unuzeleirstest.netau.net/add_sneeze.php";
+    public static final String NAAM_VAR_USER = "Username";
     //public static final int ADD_USER = 0;
     private ProgressDialog pDialog;
     private Context context;
-    private String prename, name, username, password;
+    private String prename = null, name = null, username = null, password = null, timestamp = null;
     private int age;
 
-    public Connections(Context context){
+    public Connections(Context context, String timestamp){
         this.context = context;
-
+        this.timestamp = timestamp;
         new CreateSneeze().execute();
     }
 
@@ -39,15 +42,14 @@ public class Connections {
         this.age = age;
         this.context = context;
 
-        CreateNewUser cnu = new CreateNewUser();
-        cnu.execute();
+        new CreateNewUser().execute();
     }
 
     /**
      * Background Async Task to Create new user
      * */
     class CreateNewUser extends AsyncTask<String, String, String> {
-        private static final String URL_CREATE_USER = "http://unuzeleirstest.netau.net/create_user.php";
+
 
         /**
          * Before starting background thread Show Progress Dialog
@@ -93,6 +95,7 @@ public class Connections {
                     // successfully created product
                     Intent i = new Intent(context, iSneezeActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    i.putExtra(NAAM_VAR_USER, prename + " " + name);
                     context.startActivity(i);
 
                     // closing this screen
@@ -123,16 +126,58 @@ public class Connections {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            pDialog = new ProgressDialog(context);
+            pDialog.setMessage("Add sneeze..");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();
         }
 
         @Override
-        protected String doInBackground(String... params) {
+        protected String doInBackground(String... args) {
+
+            // Building Parameters
+            List<NameValuePair> params = new ArrayList<>();
+            params.add(new BasicNameValuePair("Loginnaam", username));
+            //params.add(new BasicNameValuePair("Timestamp", timestamp));
+
+            // getting JSON Object
+            // Note that create product url accepts POST method
+            JSONParser jsonParser = new JSONParser();
+
+
+            JSONObject json = jsonParser.makeHttpRequest(URL_ADD_SNEEZE,
+                    "POST", params);
+
+            // check log cat fro response
+
+            // check for success tag
+            try {
+                int success = json.getInt(TAG_SUCCESS);
+
+                if (success == 1) {
+                    // successfully created product
+                    /*Intent i = new Intent(context, iSneezeActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(i);*/
+
+                    // closing this screen
+
+
+                } else {
+                    // failed to create product
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
             return null;
         }
 
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            pDialog.dismiss();
         }
     }
 }
