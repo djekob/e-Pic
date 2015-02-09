@@ -41,9 +41,9 @@ public class iSneezeActivity extends ActionBarActivity {
 
         @Override
         public void onClick(View v) {
-            String timestamp = Calendar.YEAR + "-" + Calendar.MONTH + "-" + Calendar.DAY_OF_MONTH + " " + Calendar.HOUR + "-" + Calendar.MINUTE + "-" + Calendar.SECOND;
+            //String timestamp = Calendar.YEAR + "-" + Calendar.MONTH + "-" + Calendar.DAY_OF_MONTH + " " + Calendar.HOUR + "-" + Calendar.MINUTE + "-" + Calendar.SECOND;
 
-            new Connections(getApplicationContext(), timestamp);
+            new Connections(getApplicationContext(), myName);
         }
     }
 

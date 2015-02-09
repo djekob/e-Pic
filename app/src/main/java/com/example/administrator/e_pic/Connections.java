@@ -25,12 +25,12 @@ public class Connections {
     //public static final int ADD_USER = 0;
     private ProgressDialog pDialog;
     private Context context;
-    private String prename = null, name = null, username = null, password = null, timestamp = null;
+    private String prename = null, name = null, username = null, password = null;
     private int age;
 
-    public Connections(Context context, String timestamp){
+    public Connections(Context context, String username){
         this.context = context;
-        this.timestamp = timestamp;
+        this.username = username;
         new CreateSneeze().execute();
     }
 
@@ -57,11 +57,11 @@ public class Connections {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = new ProgressDialog(context);
+            /*pDialog = new ProgressDialog(context);
             pDialog.setMessage("Creating Login..");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(false);
-            pDialog.show();
+            pDialog.show();*/
         }
 
         /**
@@ -95,7 +95,7 @@ public class Connections {
                     // successfully created product
                     Intent i = new Intent(context, iSneezeActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    i.putExtra(NAAM_VAR_USER, prename + " " + name);
+                    i.putExtra(NAAM_VAR_USER, username);
                     context.startActivity(i);
 
                     // closing this screen
@@ -116,7 +116,7 @@ public class Connections {
          * **/
         protected void onPostExecute(String file_url) {
             // dismiss the dialog once done
-            pDialog.dismiss();
+            //pDialog.dismiss();
         }
 
     }
@@ -126,11 +126,11 @@ public class Connections {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = new ProgressDialog(context);
+            /*pDialog = new ProgressDialog(context);
             pDialog.setMessage("Add sneeze..");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(false);
-            pDialog.show();
+            pDialog.show();*/
         }
 
         @Override
@@ -177,7 +177,7 @@ public class Connections {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            pDialog.dismiss();
+            //pDialog.dismiss();
         }
     }
 }
