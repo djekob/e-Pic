@@ -37,7 +37,7 @@ public class RegisterActivity extends ActionBarActivity {
         public void onClick(View v) {
             setValues();
             Context context = getApplicationContext();
-            Connections con = new Connections(voornaam, achternaam, username, password, age, context);
+            new Connections(voornaam, achternaam, username, password, age, context);
         }
     }
 

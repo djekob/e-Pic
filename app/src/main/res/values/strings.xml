@@ -18,5 +18,7 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="login">Login</string>
     <string name="i_just_sneezed">I just SNEEZED!!!</string>
+    <string name="title_activity_sneeze_list">SneezeListActivity</string>
+    <string name="all_sneezes">All Sneezes</string>
 
 </resources>

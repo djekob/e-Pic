@@ -43,7 +43,7 @@ public class iSneezeActivity extends ActionBarActivity {
         public void onClick(View v) {
             //String timestamp = Calendar.YEAR + "-" + Calendar.MONTH + "-" + Calendar.DAY_OF_MONTH + " " + Calendar.HOUR + "-" + Calendar.MINUTE + "-" + Calendar.SECOND;
 
-            new Connections(getApplicationContext(), myName);
+            new Connections(getApplicationContext(), myName, Connections.CREATE_SNEEZE_CODE);
         }
     }
 

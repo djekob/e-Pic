@@ -1,19 +1,24 @@
 package com.example.administrator.e_pic;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 //TODO connectie maken
 public class Connections {
@@ -21,17 +26,48 @@ public class Connections {
     private static final String TAG_SUCCESS = "success";
     private static final String URL_CREATE_USER = "http://unuzeleirstest.netau.net/create_user.php";
     private static final String URL_ADD_SNEEZE = "http://unuzeleirstest.netau.net/add_sneeze.php";
+    private static final String URL_CHECK_LOGIN = "http://unuzeleirstest.netau.net/check_login.php";
+    private static final String URL_ALL_SNEEZES = "http://unuzeleirstest.netau.net/get_all_sneezes.php";
     public static final String NAAM_VAR_USER = "Username";
+    public static final String TAG_SNEEZES = "sneezes";
+    public static final String TAG_USER_ID = "User_id";
+    public static final String TAG_TIME = "Time";
+    public static final String TAG_NAME = "Name";
+    public static final String TAG_ID = "_id";
+    public static final String TAG_VOORNAAM= "Voornaam";
+    public static final String TAG_ACHTERNAAM= "Achternaam";
+    public static final String TAG_LEEFTIJD= "Leeftijd";
+
+
+    public static final int CREATE_SNEEZE_CODE = 1;
+    public static final int GET_ALL_SNEEZES_CODE = 2;
+
+
     //public static final int ADD_USER = 0;
     private ProgressDialog pDialog;
     private Context context;
     private String prename = null, name = null, username = null, password = null;
     private int age;
 
-    public Connections(Context context, String username){
+    public Connections(Context context, String username, int code){
         this.context = context;
         this.username = username;
-        new CreateSneeze().execute();
+
+        if(code==CREATE_SNEEZE_CODE) {
+            new CreateSneeze().execute();
+        } else if (code == GET_ALL_SNEEZES_CODE) {
+            new AllSneezes().execute();
+        }
+
+    }
+
+
+
+    public Connections(Context context, String username, String password){
+        this.context = context;
+        this.username = username;
+        this.password = password;
+        new Login().execute();
     }
 
     public Connections(String prename, String name, String username, String password, int age, Context context) {
@@ -48,7 +84,73 @@ public class Connections {
     /**
      * Background Async Task to Create new user
      * */
-    class CreateNewUser extends AsyncTask<String, String, String> {
+
+     private class Login extends AsyncTask<String, String, Boolean> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            /*pDialog = new ProgressDialog(context);
+            pDialog.setMessage("Creating Login..");
+            pDialog.setCancelable(true);
+            pDialog.show();*/
+        }
+
+        protected Boolean doInBackground(String... args) {
+
+            // Building Parameters
+            List<NameValuePair> params = new ArrayList<>();
+            params.add(new BasicNameValuePair("Loginnaam", username));
+            params.add(new BasicNameValuePair("Password", password));
+
+            // getting JSON Object
+            // Note that create product url accepts POST method
+            JSONParser jsonParser = new JSONParser();
+
+
+            JSONObject json = jsonParser.makeHttpRequest(URL_CHECK_LOGIN,
+                    "POST", params);
+
+            // check log cat fro response
+
+            // check for success tag
+            try {
+                int success = json.getInt(TAG_SUCCESS);
+
+                if (success == 1) {
+                    // successfully created product
+                    Intent i = new Intent(context, iSneezeActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    i.putExtra(NAAM_VAR_USER, username);
+                    context.startActivity(i);
+
+                    // closing this screen
+
+
+                } else {
+
+                    return true;
+                    // failed to create product
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean b) {
+            super.onPostExecute(b);
+            //pDialog.dismiss();
+            if (b) Toast.makeText(context, "Login mislukt", Toast.LENGTH_LONG).show();
+
+
+        }
+
+
+    }
+     class CreateNewUser extends AsyncTask<String, String, String> {
 
 
         /**
@@ -178,6 +280,88 @@ public class Connections {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             //pDialog.dismiss();
+        }
+    }
+
+    class AllSneezes extends AsyncTask<String, String, Boolean> {
+
+        private ArrayList<String> sneezeList = new ArrayList<>();
+        private ArrayList<Sneeze> arrayListSneezes = new ArrayList<>();
+
+        JSONArray sneezes = new JSONArray();
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        protected Boolean doInBackground(String... args) {
+
+            List<NameValuePair> params = new ArrayList<>();
+
+            Map<Integer, Sneeze> sneezeMap = null;
+
+            JSONParser jsonParser = new JSONParser();
+            JSONObject json = jsonParser.makeHttpRequest(URL_ALL_SNEEZES,"GET", params);
+            System.out.println(json);
+            try {
+                int success = json.getInt(TAG_SUCCESS);
+
+                    if (success == 1) {
+                        // products found
+                        // Getting Array of Products
+                        sneezes = json.getJSONArray(TAG_SNEEZES);
+
+                        // looping through All Products
+                        for (int i = 0; i < sneezes.length(); i++) {
+                            JSONObject c = sneezes.getJSONObject(i);
+
+                            // Storing each json item in variable
+                            String id = c.getString(TAG_USER_ID);
+                            String time = c.getString(TAG_TIME);
+                            String name = c.getString(TAG_NAME);
+                            int sneeze_id = c.getInt(TAG_ID);
+                            String firstname = c.getString(TAG_VOORNAAM);
+                            String secondname = c.getString(TAG_ACHTERNAAM);
+                            String leeftijd2 = c.getString(TAG_LEEFTIJD);
+                            int leeftijd = Integer.parseInt(leeftijd2);
+
+                            User user = new User(name, firstname, secondname, leeftijd);
+                            Sneeze sneeze = new Sneeze(time, user, sneeze_id);
+
+                            sneezeMap.put(sneeze_id, sneeze);
+                            System.out.println(sneezeMap);
+                            sneezeList.add(id + " " + time);
+                            Intent ik = new Intent(context, SneezeListActivity.class);
+                            ik.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            ik.putExtra(NAAM_VAR_USER, username);
+                            ik.putExtra(TAG_SNEEZES, sneezeList);
+                            context.startActivity(ik);
+                        }
+                        // successfully created product
+
+                        // closing this screen
+
+
+                    } else {
+
+
+                        return true;
+                        // failed to create product
+                    }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean b) {
+            super.onPostExecute(b);
+            //pDialog.dismiss();
+            if (b) Toast.makeText(context, "Laden sneezes mislukt.", Toast.LENGTH_LONG).show();
+
+
         }
     }
 }

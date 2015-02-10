@@ -12,7 +12,7 @@ import android.widget.Button;
 
 public class MainActivity extends ActionBarActivity {
 
-    private Button mLoginButton, mRegisterButton;
+    private Button mLoginButton, mRegisterButton, testButty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,9 +21,18 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         mLoginButton = (Button) findViewById(R.id.login_button_main);
         mRegisterButton = (Button) findViewById(R.id.register_button_main);
+        testButty = (Button) findViewById(R.id.test_butty);
 
         mRegisterButton.setOnClickListener(new registerOnClickListener());
         mLoginButton.setOnClickListener(new loginOnClickListener());
+
+        testButty.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                new Connections(getApplicationContext(),"admin",Connections.GET_ALL_SNEEZES_CODE);
+            }
+        });
 
 
 
