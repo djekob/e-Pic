@@ -29,15 +29,19 @@ public class Connections {
     private static final String URL_ADD_SNEEZE = "http://unuzeleirstest.netau.net/add_sneeze.php";
     private static final String URL_CHECK_LOGIN = "http://unuzeleirstest.netau.net/check_login.php";
     private static final String URL_ALL_SNEEZES = "http://unuzeleirstest.netau.net/get_all_sneezes.php";
+    public static final String URL_GET_USERS_NOT_FRIEND = "http://unuzeleirstest.netau.net/get_users_not_friend.php";
     public static final String NAAM_VAR_USER = "Username";
+    public static final String NAAM_VAR_USERS_NOT_FRIEND = "Users not friends";
     public static final String TAG_SNEEZES = "sneezes";
     public static final String TAG_USER_ID = "User_id";
     public static final String TAG_TIME = "Time";
     public static final String TAG_LOGINNAME = "Loginnaam";
+    public static final String TAG_USERS_NOT_FRIEND= "Users";
     public static final String TAG_ID = "_id";
-    public static final String TAG_VOORNAAM= "Voornaam";
-    public static final String TAG_ACHTERNAAM= "Achternaam";
-    public static final String TAG_LEEFTIJD= "Leeftijd";
+    public static final String TAG_VOORNAAM = "Voornaam";
+    public static final String TAG_ACHTERNAAM = "Achternaam";
+    public static final String TAG_LEEFTIJD = "Leeftijd";
+
 
 
     public static final int CREATE_SNEEZE_CODE = 1;
@@ -303,7 +307,7 @@ public class Connections {
 
             JSONParser jsonParser = new JSONParser();
             JSONObject json = jsonParser.makeHttpRequest(URL_ALL_SNEEZES,"GET", params);
-            System.out.println(json);
+
             try {
                 sneezeMap = new HashMap<>();
                 int success = json.getInt(TAG_SUCCESS);
@@ -377,6 +381,73 @@ public class Connections {
             //pDialog.dismiss();
             if (b) Toast.makeText(context, "Laden sneezes mislukt.", Toast.LENGTH_LONG).show();
 
+
+        }
+    }
+
+
+    class GetUsers extends AsyncTask<String, String, Boolean> {
+
+
+        private ArrayList<String> users;
+
+        //JSONArray sneezes = new JSONArray();
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        protected Boolean doInBackground(String... args) {
+
+            List<NameValuePair> params = new ArrayList<>();
+
+            params.add(new BasicNameValuePair(TAG_LOGINNAME, username));
+
+            JSONParser jsonParser = new JSONParser();
+
+            JSONObject json = jsonParser.makeHttpRequest(URL_GET_USERS_NOT_FRIEND,"GET", params);
+
+            try {
+                users = new ArrayList<String>();
+                int success = json.getInt(TAG_SUCCESS);
+
+                if (success == 1) {
+                    // products found
+                    // Getting Array of Products
+                    JSONArray sneezes = json.getJSONArray(TAG_USERS_NOT_FRIEND);
+
+
+                    // looping through All Products
+                    for (int i = 0; i < sneezes.length(); i++) {
+                        JSONObject c = sneezes.getJSONObject(i);
+
+                        // Storing each json item in variable
+
+                        String name = c.getString(TAG_LOGINNAME);
+                        users.add(name);
+                    }
+                    // successfully created product
+
+                    // closing this screen
+
+                    System.out.println("DIT ZIJN ZE:" + users);
+                    Intent ik = new Intent(context, SearchFriendActivity.class);
+                    ik.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    ik.putExtra(NAAM_VAR_USERS_NOT_FRIEND, users);
+                    context.startActivity(ik);
+
+                } else {
+
+
+                    return true;
+                    // failed to create product
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return false;
 
         }
     }
