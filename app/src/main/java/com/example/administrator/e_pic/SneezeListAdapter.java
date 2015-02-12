@@ -13,13 +13,13 @@ import java.util.List;
 /**
  * Created by Administrator on 9/02/2015.
  */
-public class SneezeListAdapter extends ArrayAdapter<String> {
+public class SneezeListAdapter extends ArrayAdapter<Sneeze> {
 
-    private ArrayList<String> sneezeStrings;
+    private ArrayList<Sneeze> sneezeStrings;
     private int resource;
     private Context context;
 
-    public SneezeListAdapter(Context context, int resource, ArrayList<String> arrayList) {
+    public SneezeListAdapter(Context context, int resource, ArrayList<Sneeze> arrayList) {
         super(context, resource, arrayList);
         this.context = context;
         this.resource = resource;

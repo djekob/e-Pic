@@ -15,6 +15,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +33,7 @@ public class Connections {
     public static final String TAG_SNEEZES = "sneezes";
     public static final String TAG_USER_ID = "User_id";
     public static final String TAG_TIME = "Time";
-    public static final String TAG_NAME = "Name";
+    public static final String TAG_LOGINNAME = "Loginnaam";
     public static final String TAG_ID = "_id";
     public static final String TAG_VOORNAAM= "Voornaam";
     public static final String TAG_ACHTERNAAM= "Achternaam";
@@ -298,12 +299,13 @@ public class Connections {
 
             List<NameValuePair> params = new ArrayList<>();
 
-            Map<Integer, Sneeze> sneezeMap = null;
+            HashMap<Integer, ArrayList<Sneeze>> sneezeMap ;
 
             JSONParser jsonParser = new JSONParser();
             JSONObject json = jsonParser.makeHttpRequest(URL_ALL_SNEEZES,"GET", params);
             System.out.println(json);
             try {
+                sneezeMap = new HashMap<>();
                 int success = json.getInt(TAG_SUCCESS);
 
                     if (success == 1) {
@@ -311,14 +313,15 @@ public class Connections {
                         // Getting Array of Products
                         sneezes = json.getJSONArray(TAG_SNEEZES);
 
+                        ArrayList<Sneeze> temporarySneezes = new ArrayList<>();
                         // looping through All Products
                         for (int i = 0; i < sneezes.length(); i++) {
                             JSONObject c = sneezes.getJSONObject(i);
 
                             // Storing each json item in variable
-                            String id = c.getString(TAG_USER_ID);
+                            int id = c.getInt(TAG_USER_ID);
                             String time = c.getString(TAG_TIME);
-                            String name = c.getString(TAG_NAME);
+                            String name = c.getString(TAG_LOGINNAME);
                             int sneeze_id = c.getInt(TAG_ID);
                             String firstname = c.getString(TAG_VOORNAAM);
                             String secondname = c.getString(TAG_ACHTERNAAM);
@@ -328,19 +331,31 @@ public class Connections {
                             User user = new User(name, firstname, secondname, leeftijd);
                             Sneeze sneeze = new Sneeze(time, user, sneeze_id);
 
-                            sneezeMap.put(sneeze_id, sneeze);
-                            System.out.println(sneezeMap);
-                            sneezeList.add(id + " " + time);
-                            Intent ik = new Intent(context, SneezeListActivity.class);
-                            ik.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            ik.putExtra(NAAM_VAR_USER, username);
-                            ik.putExtra(TAG_SNEEZES, sneezeList);
-                            context.startActivity(ik);
+                            temporarySneezes.add(sneeze);
+
+                            if(sneezeMap.containsKey(id)) {
+                                ArrayList<Sneeze> sneezekes = new ArrayList<>();
+                                sneezekes = sneezeMap.get(id);
+                                sneezekes.add(sneeze);
+                                sneezeMap.remove(id);
+                                sneezeMap.put(id, sneezekes);
+
+                            } else {
+                                ArrayList<Sneeze> sneezekes = new ArrayList<>();
+                                sneezekes.add(sneeze);
+                                sneezeMap.put(id, sneezekes);
+                            }
                         }
                         // successfully created product
 
                         // closing this screen
 
+                        System.out.println("DIT ZIJN ZE:" + sneezeMap);
+                        Intent ik = new Intent(context, SneezeListActivity.class);
+                        ik.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        ik.putExtra(NAAM_VAR_USER, username);
+                        ik.putExtra(TAG_SNEEZES, sneezeMap);
+                        context.startActivity(ik);
 
                     } else {
 

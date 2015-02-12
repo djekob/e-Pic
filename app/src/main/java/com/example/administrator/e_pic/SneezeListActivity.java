@@ -17,7 +17,7 @@ public class SneezeListActivity extends ActionBarActivity {
     private ListAdapter SneezeListAdapter;
     private ListView mListView;
     private ArrayList<Sneeze> sneezes;
-    private ArrayList<String> sneezeList;
+    private ArrayList<Sneeze> sneezeList;
 
 
     @Override
@@ -36,8 +36,15 @@ public class SneezeListActivity extends ActionBarActivity {
     private void ArrayListVuller() {
 
         sneezeList = new ArrayList<>();
-        sneezeList = getIntent().getExtras().getStringArrayList(Connections.TAG_SNEEZES);
 
+        HashMap<Integer, ArrayList<Sneeze>> sneezeMap = new HashMap<>();
+        sneezeMap = (HashMap<Integer, ArrayList<Sneeze>>) getIntent().getExtras().getParcelable(Connections.TAG_SNEEZES);
+
+        for(Integer i : sneezeMap.keySet()) {
+            for(Sneeze sneeze : sneezeMap.get(i)) {
+                sneezeList.add(sneeze);
+            }
+        }
 
         User thomasty = new User("patat", "thomas", "deletter", 20);
         User gilels = new User("magic", "gilles", "mahy", 20);
