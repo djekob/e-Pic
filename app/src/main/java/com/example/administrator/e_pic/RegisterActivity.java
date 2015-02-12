@@ -1,6 +1,7 @@
 package com.example.administrator.e_pic;
 
 import android.content.Context;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -9,15 +10,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.NumberPicker;
+import android.widget.TextView;
 
 
 public class RegisterActivity extends ActionBarActivity {
 
     private EditText mVoornaamEditText, mAchternaamEditText, mPasswordEditText, mUsernameEditText;
-    private NumberPicker mAgePicker;
-    private Button mOkButton;
+
+    private TextView birthDateTextView;
+    private Button mOkButton, datePickerButton;
     private String voornaam, achternaam, password, username;
     private int age;
+    private int month, year, day;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,10 +32,22 @@ public class RegisterActivity extends ActionBarActivity {
         initialization();
 
         mOkButton.setOnClickListener(new okOnClickListener());
-
+        datePickerButton.setOnClickListener(new datePickerOnClickListener());
 
     }
 
+    private class datePickerOnClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+               showDatePickerDialog(v);
+        }
+
+        public void showDatePickerDialog(View v) {
+            DialogFragment newFragment = new DatePickerFragment();
+            newFragment.show(getSupportFragmentManager(), "datePicker");
+        }
+    }
     private class okOnClickListener implements View.OnClickListener {
 
         @Override
@@ -46,20 +63,23 @@ public class RegisterActivity extends ActionBarActivity {
         achternaam = mAchternaamEditText.getText().toString();
         username = mUsernameEditText.getText().toString();
         password = mPasswordEditText.getText().toString();
-        age = mAgePicker.getValue();
+        //age = mAgePicker.getValue();
     }
 
     private void initialization() {
 
+        birthDateTextView = (TextView) findViewById(R.id.date_of_birth_text_view);
+        birthDateTextView.setText("");
+        datePickerButton = (Button) findViewById(R.id.date_of_birth_button);
         mVoornaamEditText = (EditText) findViewById(R.id.first_name_edit_text);
         mAchternaamEditText = (EditText) findViewById(R.id.achternaam_edit_text);
         mPasswordEditText = (EditText) findViewById(R.id.password_edit_text);
         mUsernameEditText = (EditText) findViewById(R.id.username_edit_text);
-        mAgePicker = (NumberPicker) findViewById(R.id.age_number_picker);
+        //mAgePicker = (NumberPicker) findViewById(R.id.age_number_picker);
         mOkButton = (Button) findViewById(R.id.register_button);
 
-        mAgePicker.setMinValue(0);
-        mAgePicker.setMaxValue(100);
+        //mAgePicker.setMinValue(0);
+        //mAgePicker.setMaxValue(100);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

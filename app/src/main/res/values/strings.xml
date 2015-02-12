@@ -23,5 +23,6 @@
     <string name="title_activity_add_friend">AddFriend</string>
     <string name="suggestion_text_search_friend">Type the name of a friend!</string>
     <string name="add_friend_button">Add Friend</string>
+    <string name="kies_geboortedatum">Kies geboortedatum</string>
 
 </resources>
