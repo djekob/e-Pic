@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 //TODO connectie maken
-public class Connections {
+public class Connections extends Activity {
 
     private static final String TAG_SUCCESS = "success";
     private static final String URL_CREATE_USER = "http://unuzeleirstest.netau.net/create_user.php";
@@ -263,7 +263,12 @@ public class Connections {
                 int success = json.getInt(TAG_SUCCESS);
 
                 if (success == 1) {
-                    Toast.makeText(context, "cva", Toast.LENGTH_LONG).show();
+
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(context, "Sneeze added ;)", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                     // successfully created product
                     /*Intent i = new Intent(context, iSneezeActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -281,6 +286,7 @@ public class Connections {
 
             return null;
         }
+
 
         @Override
         protected void onPostExecute(String s) {
