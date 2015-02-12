@@ -16,8 +16,8 @@ public class SneezeListActivity extends ActionBarActivity {
 
     private ListAdapter SneezeListAdapter;
     private ListView mListView;
-    private ArrayList<Sneeze> sneezes;
     private ArrayList<Sneeze> sneezeList;
+    HashMap<Integer, ArrayList<Sneeze>> sneezeMap;
 
 
     @Override
@@ -26,9 +26,8 @@ public class SneezeListActivity extends ActionBarActivity {
         setContentView(R.layout.activity_sneeze_list);
 
         mListView = (ListView) findViewById(R.id.all_sneezes_list);
-        sneezes = new ArrayList<>();
         ArrayListVuller();
-        SneezeListAdapter = new SneezeListAdapter(getApplicationContext(), R.layout.sneeze_list_item, sneezeList);
+        SneezeListAdapter = new SneezeMapAdapter(getApplicationContext(), R.layout.sneeze_list_item, sneezeMap);
 
         mListView.setAdapter(SneezeListAdapter);
     }
@@ -37,7 +36,7 @@ public class SneezeListActivity extends ActionBarActivity {
 
         sneezeList = new ArrayList<>();
 
-        HashMap<Integer, ArrayList<Sneeze>> sneezeMap = new HashMap<>();
+        sneezeMap= new HashMap<>();
         sneezeMap = (HashMap<Integer, ArrayList<Sneeze>>) getIntent().getSerializableExtra(Connections.TAG_SNEEZES);
 
         for(Integer i : sneezeMap.keySet()) {
@@ -45,17 +44,6 @@ public class SneezeListActivity extends ActionBarActivity {
                 sneezeList.add(sneeze);
             }
         }
-
-        User thomasty = new User("patat", "thomas", "deletter", 20);
-        User gilels = new User("magic", "gilles", "mahy", 20);
-        User iveu = new User("piveu", "ivo", "tanghe", 21);
-        User leon = new User("legend", "leon", "vauterin", 19);
-
-
-
-
-
-
     }
 
     @Override

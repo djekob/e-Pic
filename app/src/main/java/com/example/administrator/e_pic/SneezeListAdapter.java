@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +41,7 @@ public class SneezeListAdapter extends ArrayAdapter<Sneeze> {
         }
 
         TextView textView = (TextView) v.findViewById(R.id.sneeze_date_list_item);
+        TextView dateView = (TextView) v.findViewById(R.id.sneeze_user_list_item);
         textView.setText(sneezeStrings.get(position).toString());
 
 

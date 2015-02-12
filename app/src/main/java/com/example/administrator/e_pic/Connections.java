@@ -386,7 +386,7 @@ public class Connections {
     }
 
 
-    class GetUsers extends AsyncTask<String, String, Boolean> {
+    /*class GetUsers extends AsyncTask<String, String, Boolean> {
 
 
         private ArrayList<String> users;
@@ -450,5 +450,5 @@ public class Connections {
             return false;
 
         }
-    }
+    }*/
 }
