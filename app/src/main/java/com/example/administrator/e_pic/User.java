@@ -1,9 +1,11 @@
 package com.example.administrator.e_pic;
 
+import java.io.Serializable;
+
 /**
  * Created by Administrator on 9/02/2015.
  */
-public class User {
+public class User implements Serializable {
 
     private String username, firstname, name;
     private int age;

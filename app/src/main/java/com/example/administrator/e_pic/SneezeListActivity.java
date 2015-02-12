@@ -38,7 +38,7 @@ public class SneezeListActivity extends ActionBarActivity {
         sneezeList = new ArrayList<>();
 
         HashMap<Integer, ArrayList<Sneeze>> sneezeMap = new HashMap<>();
-        sneezeMap = (HashMap<Integer, ArrayList<Sneeze>>) getIntent().getExtras().getParcelable(Connections.TAG_SNEEZES);
+        sneezeMap = (HashMap<Integer, ArrayList<Sneeze>>) getIntent().getSerializableExtra(Connections.TAG_SNEEZES);
 
         for(Integer i : sneezeMap.keySet()) {
             for(Sneeze sneeze : sneezeMap.get(i)) {

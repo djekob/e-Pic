@@ -1,9 +1,11 @@
 package com.example.administrator.e_pic;
 
+import java.io.Serializable;
+
 /**
  * Created by Administrator on 9/02/2015.
  */
-public class Sneeze {
+public class Sneeze implements Serializable {
 
     private String time;
     private User user;

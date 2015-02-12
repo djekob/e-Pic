@@ -350,11 +350,12 @@ public class Connections {
 
                         // closing this screen
 
-                        System.out.println("DIT ZIJN ZE:" + sneezeMap);
+
                         Intent ik = new Intent(context, SneezeListActivity.class);
                         ik.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         ik.putExtra(NAAM_VAR_USER, username);
                         ik.putExtra(TAG_SNEEZES, sneezeMap);
+                        System.out.println("jolaaaa " + sneezeMap);
                         context.startActivity(ik);
 
                     } else {
