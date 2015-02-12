@@ -23,6 +23,7 @@ public class RegisterActivity extends ActionBarActivity {
     private int age;
     private int month, year, day;
 
+    //TODO age afleiden uit textView die wordt aangepast door DatePickerFragment
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

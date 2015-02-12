@@ -8,13 +8,22 @@ import java.io.Serializable;
 public class User implements Serializable {
 
     private String username, firstname, name;
-    private int age;
+    private int age, id;
 
-    public User(String username, String firstname, String name, int age) {
+    public User(String username, String firstname, String name, int age, int id) {
         this.username = username;
         this.firstname = firstname;
         this.name = name;
         this.age = age;
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public User(String username) {

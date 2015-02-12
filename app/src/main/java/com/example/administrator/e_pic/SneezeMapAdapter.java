@@ -13,6 +13,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.TreeMap;
 
 /**
  * Created by Administrator on 12/02/2015.
@@ -22,26 +23,20 @@ public class SneezeMapAdapter extends BaseAdapter {
 
     private Context context;
     private int resource;
-    private HashMap<Integer, ArrayList<Sneeze>> sneezeMap = new HashMap<>();
+    private TreeMap<Integer, Sneeze> sneezeMap = new TreeMap<>();
     private ArrayList<Sneeze> allSneezes;
 
     private String[] mKeys;
 
 
-        public SneezeMapAdapter(Context context, int resource, HashMap<Integer, ArrayList<Sneeze>> sneezeMap){
+        public SneezeMapAdapter(Context context, int resource, TreeMap<Integer, Sneeze> sneezeMap){
             this.context = context;
             this.resource = resource;
             this.sneezeMap  = sneezeMap;
 
             allSneezes = new ArrayList<>();
-            for (ArrayList<Sneeze> sneezeArrayList : sneezeMap.values()) {
-
-
-                for(Sneeze s : sneezeArrayList) {
-                    allSneezes.add(s);
-
-
-                }
+            for (Integer integer : sneezeMap.keySet()) {
+                allSneezes.add(sneezeMap.get(integer));
             }
         }
 
@@ -74,16 +69,16 @@ public class SneezeMapAdapter extends BaseAdapter {
 
             }
 
-            TextView dateView = (TextView) v.findViewById(R.id.sneeze_date_list_item);
-            TextView userView = (TextView) v.findViewById(R.id.sneeze_user_list_item);
+            TextView dateTextView = (TextView) v.findViewById(R.id.sneeze_date_list_item);
+            TextView userTextView = (TextView) v.findViewById(R.id.sneeze_user_list_item);
 
 
-            dateView.setText(allSneezes.get(pos).getTime());
+            dateTextView.setText(allSneezes.get(pos).getTime());
             java.sql.Timestamp timestamp = java.sql.Timestamp.valueOf(allSneezes.get(pos).getTime());
 
             Sneeze thisSneeze = allSneezes.get(pos);
-            String name = thisSneeze.getUser().getUsername() + " (" + thisSneeze.getUser().getFirstname()+ " " + thisSneeze.getUser().getName() + ")";
-            userView.setText(name);
+            String name = pos + ". " + thisSneeze.getUser().getUsername() + " (" + thisSneeze.getUser().getFirstname()+ " " + thisSneeze.getUser().getName() + ") ID: "+thisSneeze.getId();
+            userTextView.setText(name);
 
 
             return v;

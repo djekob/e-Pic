@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 //TODO connectie maken
 public class Connections extends Activity {
@@ -297,8 +298,6 @@ public class Connections extends Activity {
 
     class AllSneezes extends AsyncTask<String, String, Boolean> {
 
-        private ArrayList<String> sneezeList = new ArrayList<>();
-        private ArrayList<Sneeze> arrayListSneezes = new ArrayList<>();
 
         JSONArray sneezes = new JSONArray();
         @Override
@@ -310,13 +309,13 @@ public class Connections extends Activity {
 
             List<NameValuePair> params = new ArrayList<>();
 
-            HashMap<Integer, ArrayList<Sneeze>> sneezeMap ;
+            TreeMap<Integer, Sneeze> sneezeHashMapDef;
 
             JSONParser jsonParser = new JSONParser();
             JSONObject json = jsonParser.makeHttpRequest(URL_ALL_SNEEZES,"GET", params);
 
             try {
-                sneezeMap = new HashMap<>();
+                sneezeHashMapDef = new TreeMap<>();
                 int success = json.getInt(TAG_SUCCESS);
 
                     if (success == 1) {
@@ -339,23 +338,10 @@ public class Connections extends Activity {
                             String leeftijd2 = c.getString(TAG_LEEFTIJD);
                             int leeftijd = Integer.parseInt(leeftijd2);
 
-                            User user = new User(name, firstname, secondname, leeftijd);
+                            User user = new User(name, firstname, secondname, leeftijd, id);
                             Sneeze sneeze = new Sneeze(time, user, sneeze_id);
 
-                            temporarySneezes.add(sneeze);
-
-                            if(sneezeMap.containsKey(id)) {
-                                ArrayList<Sneeze> sneezekes = new ArrayList<>();
-                                sneezekes = sneezeMap.get(id);
-                                sneezekes.add(sneeze);
-                                sneezeMap.remove(id);
-                                sneezeMap.put(id, sneezekes);
-
-                            } else {
-                                ArrayList<Sneeze> sneezekes = new ArrayList<>();
-                                sneezekes.add(sneeze);
-                                sneezeMap.put(id, sneezekes);
-                            }
+                            sneezeHashMapDef.put(sneeze_id, sneeze);
                         }
                         // successfully created product
 
@@ -365,8 +351,8 @@ public class Connections extends Activity {
                         Intent ik = new Intent(context, SneezeListActivity.class);
                         ik.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         ik.putExtra(NAAM_VAR_USER, username);
-                        ik.putExtra(TAG_SNEEZES, sneezeMap);
-                        System.out.println("jolaaaa " + sneezeMap);
+                        ik.putExtra(TAG_SNEEZES, sneezeHashMapDef);
+
                         context.startActivity(ik);
 
                     } else {
