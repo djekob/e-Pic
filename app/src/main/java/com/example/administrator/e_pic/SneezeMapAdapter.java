@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.security.Timestamp;
+import java.sql.Date;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -76,8 +79,10 @@ public class SneezeMapAdapter extends BaseAdapter {
 
 
             dateView.setText(allSneezes.get(pos).getTime());
+            java.sql.Timestamp timestamp = java.sql.Timestamp.valueOf(allSneezes.get(pos).getTime());
+
             Sneeze thisSneeze = allSneezes.get(pos);
-            String name = pos + ". " +thisSneeze.getUser().getUsername() + " (" + thisSneeze.getUser().getFirstname()+ " " + thisSneeze.getUser().getName() + ")";
+            String name = thisSneeze.getUser().getUsername() + " (" + thisSneeze.getUser().getFirstname()+ " " + thisSneeze.getUser().getName() + ")";
             userView.setText(name);
 
 

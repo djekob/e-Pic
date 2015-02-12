@@ -263,6 +263,7 @@ public class Connections {
                 int success = json.getInt(TAG_SUCCESS);
 
                 if (success == 1) {
+                    Toast.makeText(context, "cva", Toast.LENGTH_LONG).show();
                     // successfully created product
                     /*Intent i = new Intent(context, iSneezeActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -386,7 +387,7 @@ public class Connections {
     }
 
 
-    /*class GetUsers extends AsyncTask<String, String, Boolean> {
+    class GetUsers extends AsyncTask<String, String, Boolean> {
 
 
         private ArrayList<String> users;
@@ -450,5 +451,5 @@ public class Connections {
             return false;
 
         }
-    }*/
+    }
 }
