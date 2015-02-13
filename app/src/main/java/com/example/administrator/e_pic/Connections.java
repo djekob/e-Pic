@@ -30,14 +30,14 @@ public class Connections extends Activity {
     private static final String URL_ADD_SNEEZE = "http://unuzeleirstest.netau.net/add_sneeze.php";
     private static final String URL_CHECK_LOGIN = "http://unuzeleirstest.netau.net/check_login.php";
     private static final String URL_ALL_SNEEZES = "http://unuzeleirstest.netau.net/get_all_sneezes.php";
-    public static final String URL_GET_USERS_NOT_FRIEND = "http://unuzeleirstest.netau.net/get_users_not_friend.php";
+    public static final String URL_GET_USERS_NOT_FRIEND = "http://unuzeleirstest.netau.net/get_users_not_friends.php";
     public static final String NAAM_VAR_USER = "Username";
     public static final String NAAM_VAR_USERS_NOT_FRIEND = "Users not friends";
     public static final String TAG_SNEEZES = "sneezes";
     public static final String TAG_USER_ID = "User_id";
     public static final String TAG_TIME = "Time";
     public static final String TAG_LOGINNAME = "Loginnaam";
-    public static final String TAG_USERS_NOT_FRIEND= "Users";
+    public static final String TAG_USERS_NOT_FRIEND= "users";
     public static final String TAG_ID = "_id";
     public static final String TAG_VOORNAAM = "Voornaam";
     public static final String TAG_ACHTERNAAM = "Achternaam";
@@ -403,24 +403,22 @@ public class Connections extends Activity {
 
             JSONParser jsonParser = new JSONParser();
 
-            JSONObject json = jsonParser.makeHttpRequest(URL_GET_USERS_NOT_FRIEND,"GET", params);
+            JSONObject json = jsonParser.makeHttpRequest(URL_GET_USERS_NOT_FRIEND,"POST", params);
 
+            System.err.println("tot hier ok");
             try {
                 users = new ArrayList<>();
                 int success = json.getInt(TAG_SUCCESS);
-                System.out.println(success);
                 if (success == 1) {
                     JSONArray userkes = json.getJSONArray(TAG_USERS_NOT_FRIEND);
 
-                    System.out.println(userkes);
-
+                    Log.e("FUCK OFF","D i t zijn d e userkes " + userkes + " ! lol");
                     for (int i = 0; i < userkes.length(); i++) {
-                        JSONObject c = userkes.getJSONObject(i);
 
+                        String k = userkes.getString(i);
 
-                        String name = c.getString(TAG_LOGINNAME);
-
-                        users.add(name);
+                        System.out.println(k);
+                        users.add(k);
                     }
 
                     System.out.println("DIT ZIJN ZE:" + users);
