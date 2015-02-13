@@ -5,9 +5,7 @@
 
     <!-- TODO icoontje laten werken -->
         <item
-            android:id="@+id/go_to_all_sneezes_list"
-            android:icon="@drawable/friends_30x30"
+            android:id="@+id/go_to_all_sneezes_list_action_bar"
             android:title="@string/all_sneezes"
-            android:showAsAction="always"
-            tools:ignore="AppCompatResource" />
+            android:icon="@drawable/ic_action_group"/>
 </menu>
