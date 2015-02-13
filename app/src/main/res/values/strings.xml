@@ -24,5 +24,7 @@
     <string name="suggestion_text_search_friend">Type the name of a friend!</string>
     <string name="add_friend_button">Add Friend</string>
     <string name="kies_geboortedatum">Kies geboortedatum</string>
+    <string name="add_friend">Add Friend</string>
+    <string name="search">Search</string>
 
 </resources>

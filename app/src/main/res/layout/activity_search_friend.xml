@@ -7,14 +7,26 @@
     android:orientation="vertical"
     tools:context="com.example.administrator.e_pic.SneezeListActivity">
 
-    <EditText
-        android:id="@+id/friends_search_edit_text"
-        android:hint="@string/suggestion_text_search_friend"
-        android:textSize="20dp"
-        android:textStyle="bold"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:editable="true"/>
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/friends_search_edit_text"
+            android:hint="@string/suggestion_text_search_friend"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:editable="true"/>
+        <Button
+            android:id="@+id/search_button_search_friend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/search"
+            android:layout_weight="25"/>
+    </LinearLayout>
     <ListView
         android:id="@+id/all_friends_suggestions_list"
         android:layout_width="match_parent"

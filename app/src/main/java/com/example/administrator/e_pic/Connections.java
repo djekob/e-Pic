@@ -47,6 +47,7 @@ public class Connections extends Activity {
 
     public static final int CREATE_SNEEZE_CODE = 1;
     public static final int GET_ALL_SNEEZES_CODE = 2;
+    public static final int GET_ALL_USERS_NO_FRIENDS = 3;
 
 
     //public static final int ADD_USER = 0;
@@ -63,6 +64,8 @@ public class Connections extends Activity {
             new CreateSneeze().execute();
         } else if (code == GET_ALL_SNEEZES_CODE) {
             new AllSneezes().execute();
+        } else if (code == GET_ALL_USERS_NO_FRIENDS) {
+            new GetUsers().execute();
         }
 
     }
@@ -393,6 +396,7 @@ public class Connections extends Activity {
 
         protected Boolean doInBackground(String... args) {
 
+
             List<NameValuePair> params = new ArrayList<>();
 
             params.add(new BasicNameValuePair(TAG_LOGINNAME, username));
@@ -402,27 +406,22 @@ public class Connections extends Activity {
             JSONObject json = jsonParser.makeHttpRequest(URL_GET_USERS_NOT_FRIEND,"GET", params);
 
             try {
-                users = new ArrayList<String>();
+                users = new ArrayList<>();
                 int success = json.getInt(TAG_SUCCESS);
-
+                System.out.println(success);
                 if (success == 1) {
-                    // products found
-                    // Getting Array of Products
-                    JSONArray sneezes = json.getJSONArray(TAG_USERS_NOT_FRIEND);
+                    JSONArray userkes = json.getJSONArray(TAG_USERS_NOT_FRIEND);
 
+                    System.out.println(userkes);
 
-                    // looping through All Products
-                    for (int i = 0; i < sneezes.length(); i++) {
-                        JSONObject c = sneezes.getJSONObject(i);
+                    for (int i = 0; i < userkes.length(); i++) {
+                        JSONObject c = userkes.getJSONObject(i);
 
-                        // Storing each json item in variable
 
                         String name = c.getString(TAG_LOGINNAME);
+
                         users.add(name);
                     }
-                    // successfully created product
-
-                    // closing this screen
 
                     System.out.println("DIT ZIJN ZE:" + users);
                     Intent ik = new Intent(context, SearchFriendActivity.class);
@@ -443,5 +442,13 @@ public class Connections extends Activity {
             return false;
 
         }
+
+        protected void onPostExecute(Boolean b) {
+            super.onPostExecute(b);
+            if (b) Toast.makeText(context, "Laden users mislukt.", Toast.LENGTH_LONG).show();
+
+
+        }
+
     }
 }

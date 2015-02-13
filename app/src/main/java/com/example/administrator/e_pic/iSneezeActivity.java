@@ -23,6 +23,9 @@ public class iSneezeActivity extends ActionBarActivity {
     private String myName;
     private Connections c;
     private ImageButton isneeze_image_button;
+    private String username;
+
+    public static final String ADD_FRIEND_CODE = "add_friend";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +34,7 @@ public class iSneezeActivity extends ActionBarActivity {
 
         myName = getIntent().getExtras().getString(Connections.NAAM_VAR_USER);
 
+        username = myName;
         myNameTextView = (TextView) findViewById(R.id.my_name_textview);
         isneeze_image_button = (ImageButton) findViewById(R.id.isneeze_image_button);
 
@@ -64,7 +68,10 @@ public class iSneezeActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         if (id == R.id.go_to_all_sneezes_list_action_bar) {
-            new Connections(this, myName, Connections.GET_ALL_SNEEZES_CODE);
+            new Connections(this, username, Connections.GET_ALL_SNEEZES_CODE);
+        } else if (id == R.id.add_friend_action_bar) {
+            new Connections(this, username, Connections.GET_ALL_USERS_NO_FRIENDS);
+
         }
 
         return super.onOptionsItemSelected(item);
