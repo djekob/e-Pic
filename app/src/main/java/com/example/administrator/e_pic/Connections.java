@@ -48,6 +48,7 @@ public class Connections extends Activity {
     public static final int CREATE_SNEEZE_CODE = 1;
     public static final int GET_ALL_SNEEZES_CODE = 2;
     public static final int GET_ALL_USERS_NO_FRIENDS = 3;
+    public static final int ADD_FRIEND_CODE = 4;
 
 
     //public static final int ADD_USER = 0;
@@ -70,6 +71,15 @@ public class Connections extends Activity {
 
     }
 
+    public Connections(Context context, String username, int code, String friendname) {
+        this.context = context;
+        this.username = username;
+
+        if(code == ADD_FRIEND_CODE) {
+            new AddFriend().execute();
+        }
+    }
+
 
 
     public Connections(Context context, String username, String password){
@@ -90,11 +100,8 @@ public class Connections extends Activity {
         new CreateNewUser().execute();
     }
 
-    /**
-     * Background Async Task to Create new user
-     * */
 
-     private class Login extends AsyncTask<String, String, Boolean> {
+    private class Login extends AsyncTask<String, String, Boolean> {
 
         @Override
         protected void onPreExecute() {
@@ -159,7 +166,7 @@ public class Connections extends Activity {
 
 
     }
-     class CreateNewUser extends AsyncTask<String, String, String> {
+    private class CreateNewUser extends AsyncTask<String, String, String> {
 
 
         /**
@@ -231,8 +238,7 @@ public class Connections extends Activity {
         }
 
     }
-
-    class CreateSneeze extends AsyncTask<String, String, String>{
+    private class CreateSneeze extends AsyncTask<String, String, String>{
 
         @Override
         protected void onPreExecute() {
@@ -298,8 +304,7 @@ public class Connections extends Activity {
             //pDialog.dismiss();
         }
     }
-
-    class AllSneezes extends AsyncTask<String, String, Boolean> {
+    private class AllSneezes extends AsyncTask<String, String, Boolean> {
 
 
         JSONArray sneezes = new JSONArray();
@@ -380,9 +385,7 @@ public class Connections extends Activity {
 
         }
     }
-
-
-    class GetUsers extends AsyncTask<String, String, Boolean> {
+    private class GetUsers extends AsyncTask<String, String, Boolean> {
 
 
         private ArrayList<String> users;
@@ -405,23 +408,17 @@ public class Connections extends Activity {
 
             JSONObject json = jsonParser.makeHttpRequest(URL_GET_USERS_NOT_FRIEND,"POST", params);
 
-            System.err.println("tot hier ok");
             try {
                 users = new ArrayList<>();
                 int success = json.getInt(TAG_SUCCESS);
                 if (success == 1) {
                     JSONArray userkes = json.getJSONArray(TAG_USERS_NOT_FRIEND);
 
-                    Log.e("FUCK OFF","D i t zijn d e userkes " + userkes + " ! lol");
                     for (int i = 0; i < userkes.length(); i++) {
-
                         String k = userkes.getString(i);
-
-                        System.out.println(k);
                         users.add(k);
                     }
 
-                    System.out.println("DIT ZIJN ZE:" + users);
                     Intent ik = new Intent(context, SearchFriendActivity.class);
                     ik.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     ik.putExtra(NAAM_VAR_USERS_NOT_FRIEND, users);
@@ -448,5 +445,13 @@ public class Connections extends Activity {
 
         }
 
+    }
+
+    private class AddFriend extends AsyncTask<String, String, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            return null;
+        }
     }
 }

@@ -28,7 +28,6 @@ public class DatePickerFragment extends android.support.v4.app.DialogFragment im
 
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-        System.out.println(year + "/" + monthOfYear + "/" + dayOfMonth);
         TextView geboorteDatumTextView = (TextView) getActivity().findViewById(R.id.date_of_birth_text_view);
         geboorteDatumTextView.setText(year + "/" + monthOfYear + "/" + dayOfMonth);
 
