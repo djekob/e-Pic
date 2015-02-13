@@ -18,6 +18,13 @@ public class User implements Serializable {
         this.id = id;
     }
 
+    public User(String username, String firstname, String secondname,int id) {
+        this.username = username;
+        this.firstname=firstname;
+        this.name=secondname;
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }

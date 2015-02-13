@@ -31,6 +31,7 @@ public class Connections extends Activity {
     private static final String URL_CHECK_LOGIN = "http://unuzeleirstest.netau.net/check_login.php";
     private static final String URL_ALL_SNEEZES = "http://unuzeleirstest.netau.net/get_all_sneezes.php";
     public static final String URL_GET_USERS_NOT_FRIEND = "http://unuzeleirstest.netau.net/get_users_not_friends.php";
+    public static final String URL_GET_ONE_USER = "http://unuzeleirstest.netau.net/get_one_user.php";
     public static final String NAAM_VAR_USER = "Username";
     public static final String NAAM_VAR_USERS_NOT_FRIEND = "Users not friends";
     public static final String TAG_SNEEZES = "sneezes";
@@ -42,6 +43,7 @@ public class Connections extends Activity {
     public static final String TAG_VOORNAAM = "Voornaam";
     public static final String TAG_ACHTERNAAM = "Achternaam";
     public static final String TAG_LEEFTIJD = "Leeftijd";
+    public static final String TAG_USER = "users";
 
 
 
@@ -49,6 +51,7 @@ public class Connections extends Activity {
     public static final int GET_ALL_SNEEZES_CODE = 2;
     public static final int GET_ALL_USERS_NO_FRIENDS = 3;
     public static final int ADD_FRIEND_CODE = 4;
+    public static final int GET_ONE_USER_CODE = 5;
 
 
     //public static final int ADD_USER = 0;
@@ -61,12 +64,15 @@ public class Connections extends Activity {
         this.context = context;
         this.username = username;
 
+
         if(code==CREATE_SNEEZE_CODE) {
             new CreateSneeze().execute();
         } else if (code == GET_ALL_SNEEZES_CODE) {
             new AllSneezes().execute();
         } else if (code == GET_ALL_USERS_NO_FRIENDS) {
             new GetUsers().execute();
+        } else if(code == GET_ONE_USER_CODE) {
+            new GetOneUser().execute();
         }
 
     }
@@ -446,12 +452,105 @@ public class Connections extends Activity {
         }
 
     }
+    private class GetOneUser extends AsyncTask<String, String, User> {
+
+
+        private User gebruiker;
+
+        //JSONArray sneezes = new JSONArray();
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        protected User doInBackground(String... args) {
+
+
+            List<NameValuePair> params = new ArrayList<>();
+
+            params.add(new BasicNameValuePair(TAG_LOGINNAME, username));
+
+            JSONParser jsonParser = new JSONParser();
+
+            JSONObject json = jsonParser.makeHttpRequest(URL_GET_ONE_USER,"POST", params);
+
+            try {
+
+                int success = json.getInt(TAG_SUCCESS);
+                if (success == 1) {
+                    JSONArray userkes = json.getJSONArray(TAG_USER);
+
+
+                    for (int i = 0; i < userkes.length(); i++) {
+                        JSONObject c = userkes.getJSONObject(i);
+
+
+                        int id = c.getInt(TAG_ID);
+
+                        String firstname = c.getString(TAG_VOORNAAM);
+                        String secondname = c.getString(TAG_ACHTERNAAM);
+
+                        gebruiker = new User(username, firstname, secondname, id);
+
+                    }
+
+                    return gebruiker;
+                } else {
+
+
+                    return gebruiker;
+
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return gebruiker;
+
+        }
+
+        protected void onPostExecute(User user) {
+            super.onPostExecute(user);
+
+
+        }
+
+    }
 
     private class AddFriend extends AsyncTask<String, String, String> {
 
         @Override
-        protected String doInBackground(String... params) {
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        protected String doInBackground(String... args) {
+            List<NameValuePair> params = new ArrayList<>();
+            params.add(new BasicNameValuePair(TAG_LOGINNAME, username));
+
+
+            JSONParser jsonParser = new JSONParser();
+
+
+            JSONObject json = jsonParser.makeHttpRequest(URL_CREATE_USER,
+                    "POST", params);
+
+            try {
+                int success = json.getInt(TAG_SUCCESS);
+
+                if (success == 1) {
+
+
+                } else {
+
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
             return null;
+
         }
     }
 }
