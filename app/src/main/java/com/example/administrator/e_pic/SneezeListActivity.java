@@ -9,15 +9,18 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 
 public class SneezeListActivity extends ActionBarActivity {
 
-    private ListAdapter SneezeListAdapter;
     private ListView mListView;
     private ArrayList<Sneeze> sneezeList;
-    HashMap<Integer, ArrayList<Sneeze>> sneezeMap;
+    TreeMap<Integer, Sneeze> sneezeMapDef;
 
 
     @Override
@@ -27,40 +30,33 @@ public class SneezeListActivity extends ActionBarActivity {
 
         mListView = (ListView) findViewById(R.id.all_sneezes_list);
         ArrayListVuller();
-        SneezeListAdapter = new SneezeMapAdapter(getApplicationContext(), R.layout.sneeze_list_item, sneezeMap);
+        SneezeMapAdapter adapter= new SneezeMapAdapter(getApplicationContext(), R.layout.sneeze_list_item, sneezeMapDef);
 
-        mListView.setAdapter(SneezeListAdapter);
+        mListView.setAdapter(adapter);
     }
 
     private void ArrayListVuller() {
 
         sneezeList = new ArrayList<>();
 
-        sneezeMap= new HashMap<>();
-        sneezeMap = (HashMap<Integer, ArrayList<Sneeze>>) getIntent().getSerializableExtra(Connections.TAG_SNEEZES);
+        sneezeMapDef= new TreeMap<>((Map<Integer, Sneeze>)  getIntent().getSerializableExtra(Connections.TAG_SNEEZES));
 
-        for(Integer i : sneezeMap.keySet()) {
-            for(Sneeze sneeze : sneezeMap.get(i)) {
-                sneezeList.add(sneeze);
-            }
+        for(Integer i : sneezeMapDef.keySet()) {
+                sneezeList.add(sneezeMapDef.get(i));
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+
         getMenuInflater().inflate(R.menu.menu_sneeze_list, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }

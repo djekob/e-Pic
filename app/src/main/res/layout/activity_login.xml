@@ -21,6 +21,7 @@
         />
     <EditText
         android:id="@+id/password_edit_text_login"
+        android:password="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/password"/>

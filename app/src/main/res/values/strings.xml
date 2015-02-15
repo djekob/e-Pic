@@ -2,12 +2,12 @@
 <resources>
 
     <string name="app_name">E-Pic</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">Welkom!</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="isneeze">iSneeze</string>
-    <string name="title_activity_i_sneeze">iSneezeActivity</string>
-    <string name="title_activity_register">RegisterActivity</string>
+    <string name="title_activity_i_sneeze">iSneeze</string>
+    <string name="title_activity_register">Registreer</string>
     <string name="register">Register</string>
     <string name="ok">OK</string>
     <string name="voornaam">Voornaam</string>
@@ -15,13 +15,16 @@
     <string name="password">Password</string>
     <string name="username">Username</string>
     <string name="loginnaam">Loginnaam</string>
-    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_login">Log in</string>
     <string name="login">Login</string>
     <string name="i_just_sneezed">I just SNEEZED!!!</string>
-    <string name="title_activity_sneeze_list">SneezeListActivity</string>
+    <string name="title_activity_sneeze_list">Alle Sneezes</string>
     <string name="all_sneezes">All Sneezes</string>
     <string name="title_activity_add_friend">AddFriend</string>
     <string name="suggestion_text_search_friend">Type the name of a friend!</string>
     <string name="add_friend_button">Add Friend</string>
+    <string name="kies_geboortedatum">Kies geboortedatum</string>
+    <string name="add_friend">Add Friend</string>
+    <string name="search">Search</string>
 
 </resources>
