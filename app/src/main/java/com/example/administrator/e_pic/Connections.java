@@ -130,10 +130,10 @@ public class Connections extends Activity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = new ProgressDialog(context);
+            /*pDialog = new ProgressDialog(context);
             pDialog.setMessage("Creating Login..");
             pDialog.setCancelable(true);
-            pDialog.show();
+            pDialog.show();*/
         }
 
         protected Boolean doInBackground(String... args) {
@@ -577,6 +577,48 @@ public class Connections extends Activity {
             if(aBoolean) {
                 ((SearchFriendActivity) context).adapter.changeOriginalUser(friendname);
             }
+        }
+    }
+
+    private class PendingFriends extends AsyncTask<String, String, Boolean> {
+
+        ArrayList<String> pendingFriends;
+
+        @Override
+        protected Boolean doInBackground(String... args) {
+
+
+            List<NameValuePair> params = new ArrayList<>();
+
+            params.add(new BasicNameValuePair(TAG_LOGINNAME, username));
+
+            JSONParser jsonParser = new JSONParser();
+
+            JSONObject json = jsonParser.makeHttpRequest(URL_GET_PENDING_FRIENDS,"POST", params);
+
+            try {
+                pendingFriends = new ArrayList<>();
+                int success = json.getInt(TAG_SUCCESS);
+                if (success == 1) {
+                    JSONArray userkes = json.getJSONArray(TAG_USERS_NOT_FRIEND);
+
+                    for (int i = 0; i < userkes.length(); i++) {
+                        String k = userkes.getString(i);
+                        pendingFriends.add(k);
+                    }
+
+                    return false;
+
+                } else {
+                    return true;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return false;
+
+
         }
     }
 }
