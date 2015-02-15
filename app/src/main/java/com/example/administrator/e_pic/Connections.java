@@ -20,9 +20,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 //TODO connectie maken
-public class Connections {
+public class Connections extends Activity {
 
     private static final String TAG_SUCCESS = "success";
     private static final String URL_CREATE_USER = "http://unuzeleirstest.netau.net/create_user.php";
@@ -30,22 +31,27 @@ public class Connections {
     private static final String URL_CHECK_LOGIN = "http://unuzeleirstest.netau.net/check_login.php";
     private static final String URL_ALL_SNEEZES = "http://unuzeleirstest.netau.net/get_all_sneezes.php";
     public static final String URL_GET_USERS_NOT_FRIEND = "http://unuzeleirstest.netau.net/get_users_not_friends.php";
+    public static final String URL_GET_ONE_USER = "http://unuzeleirstest.netau.net/get_one_user.php";
     public static final String NAAM_VAR_USER = "Username";
     public static final String NAAM_VAR_USERS_NOT_FRIEND = "Users not friends";
     public static final String TAG_SNEEZES = "sneezes";
     public static final String TAG_USER_ID = "User_id";
     public static final String TAG_TIME = "Time";
     public static final String TAG_LOGINNAME = "Loginnaam";
-    public static final String TAG_USERS_NOT_FRIEND= "Users";
+    public static final String TAG_USERS_NOT_FRIEND= "users";
     public static final String TAG_ID = "_id";
     public static final String TAG_VOORNAAM = "Voornaam";
     public static final String TAG_ACHTERNAAM = "Achternaam";
     public static final String TAG_LEEFTIJD = "Leeftijd";
+    public static final String TAG_USER = "users";
 
 
 
     public static final int CREATE_SNEEZE_CODE = 1;
     public static final int GET_ALL_SNEEZES_CODE = 2;
+    public static final int GET_ALL_USERS_NO_FRIENDS = 3;
+    public static final int ADD_FRIEND_CODE = 4;
+    public static final int GET_ONE_USER_CODE = 5;
 
 
     //public static final int ADD_USER = 0;
@@ -58,12 +64,26 @@ public class Connections {
         this.context = context;
         this.username = username;
 
+
         if(code==CREATE_SNEEZE_CODE) {
             new CreateSneeze().execute();
         } else if (code == GET_ALL_SNEEZES_CODE) {
             new AllSneezes().execute();
+        } else if (code == GET_ALL_USERS_NO_FRIENDS) {
+            new GetUsers().execute();
+        } else if(code == GET_ONE_USER_CODE) {
+            new GetOneUser().execute();
         }
 
+    }
+
+    public Connections(Context context, String username, int code, String friendname) {
+        this.context = context;
+        this.username = username;
+
+        if(code == ADD_FRIEND_CODE) {
+            new AddFriend().execute();
+        }
     }
 
 
@@ -86,11 +106,8 @@ public class Connections {
         new CreateNewUser().execute();
     }
 
-    /**
-     * Background Async Task to Create new user
-     * */
 
-     private class Login extends AsyncTask<String, String, Boolean> {
+    private class Login extends AsyncTask<String, String, Boolean> {
 
         @Override
         protected void onPreExecute() {
@@ -155,7 +172,7 @@ public class Connections {
 
 
     }
-     class CreateNewUser extends AsyncTask<String, String, String> {
+    private class CreateNewUser extends AsyncTask<String, String, String> {
 
 
         /**
@@ -227,8 +244,7 @@ public class Connections {
         }
 
     }
-
-    class CreateSneeze extends AsyncTask<String, String, String>{
+    private class CreateSneeze extends AsyncTask<String, String, String>{
 
         @Override
         protected void onPreExecute() {
@@ -263,6 +279,12 @@ public class Connections {
                 int success = json.getInt(TAG_SUCCESS);
 
                 if (success == 1) {
+
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(context, "Sneeze added ;)", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                     // successfully created product
                     /*Intent i = new Intent(context, iSneezeActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -281,17 +303,15 @@ public class Connections {
             return null;
         }
 
+
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             //pDialog.dismiss();
         }
     }
+    private class AllSneezes extends AsyncTask<String, String, Boolean> {
 
-    class AllSneezes extends AsyncTask<String, String, Boolean> {
-
-        private ArrayList<String> sneezeList = new ArrayList<>();
-        private ArrayList<Sneeze> arrayListSneezes = new ArrayList<>();
 
         JSONArray sneezes = new JSONArray();
         @Override
@@ -303,71 +323,58 @@ public class Connections {
 
             List<NameValuePair> params = new ArrayList<>();
 
-            HashMap<Integer, ArrayList<Sneeze>> sneezeMap ;
+            TreeMap<Integer, Sneeze> sneezeHashMapDef;
 
             JSONParser jsonParser = new JSONParser();
             JSONObject json = jsonParser.makeHttpRequest(URL_ALL_SNEEZES,"GET", params);
 
             try {
-                sneezeMap = new HashMap<>();
+                sneezeHashMapDef = new TreeMap<>();
                 int success = json.getInt(TAG_SUCCESS);
 
-                    if (success == 1) {
-                        // products found
-                        // Getting Array of Products
-                        sneezes = json.getJSONArray(TAG_SNEEZES);
+                if (success == 1) {
+                    // products found
+                    // Getting Array of Products
+                    sneezes = json.getJSONArray(TAG_SNEEZES);
 
-                        ArrayList<Sneeze> temporarySneezes = new ArrayList<>();
-                        // looping through All Products
-                        for (int i = 0; i < sneezes.length(); i++) {
-                            JSONObject c = sneezes.getJSONObject(i);
+                    ArrayList<Sneeze> temporarySneezes = new ArrayList<>();
+                    // looping through All Products
+                    for (int i = 0; i < sneezes.length(); i++) {
+                        JSONObject c = sneezes.getJSONObject(i);
 
-                            // Storing each json item in variable
-                            int id = c.getInt(TAG_USER_ID);
-                            String time = c.getString(TAG_TIME);
-                            String name = c.getString(TAG_LOGINNAME);
-                            int sneeze_id = c.getInt(TAG_ID);
-                            String firstname = c.getString(TAG_VOORNAAM);
-                            String secondname = c.getString(TAG_ACHTERNAAM);
-                            String leeftijd2 = c.getString(TAG_LEEFTIJD);
-                            int leeftijd = Integer.parseInt(leeftijd2);
+                        // Storing each json item in variable
+                        int id = c.getInt(TAG_USER_ID);
+                        String time = c.getString(TAG_TIME);
+                        String name = c.getString(TAG_LOGINNAME);
+                        int sneeze_id = c.getInt(TAG_ID);
+                        String firstname = c.getString(TAG_VOORNAAM);
+                        String secondname = c.getString(TAG_ACHTERNAAM);
+                        String leeftijd2 = c.getString(TAG_LEEFTIJD);
+                        int leeftijd = Integer.parseInt(leeftijd2);
 
-                            User user = new User(name, firstname, secondname, leeftijd);
-                            Sneeze sneeze = new Sneeze(time, user, sneeze_id);
+                        User user = new User(name, firstname, secondname, leeftijd, id);
+                        Sneeze sneeze = new Sneeze(time, user, sneeze_id);
 
-                            temporarySneezes.add(sneeze);
-
-                            if(sneezeMap.containsKey(id)) {
-                                ArrayList<Sneeze> sneezekes = new ArrayList<>();
-                                sneezekes = sneezeMap.get(id);
-                                sneezekes.add(sneeze);
-                                sneezeMap.remove(id);
-                                sneezeMap.put(id, sneezekes);
-
-                            } else {
-                                ArrayList<Sneeze> sneezekes = new ArrayList<>();
-                                sneezekes.add(sneeze);
-                                sneezeMap.put(id, sneezekes);
-                            }
-                        }
-                        // successfully created product
-
-                        // closing this screen
-
-
-                        Intent ik = new Intent(context, SneezeListActivity.class);
-                        ik.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        ik.putExtra(NAAM_VAR_USER, username);
-                        ik.putExtra(TAG_SNEEZES, sneezeMap);
-                        System.out.println("jolaaaa " + sneezeMap);
-                        context.startActivity(ik);
-
-                    } else {
-
-
-                        return true;
-                        // failed to create product
+                        sneezeHashMapDef.put(sneeze_id, sneeze);
                     }
+                    // successfully created product
+
+                    // closing this screen
+
+
+                    Intent ik = new Intent(context, SneezeListActivity.class);
+                    ik.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    ik.putExtra(NAAM_VAR_USER, username);
+                    ik.putExtra(TAG_SNEEZES, sneezeHashMapDef);
+
+                    context.startActivity(ik);
+
+                } else {
+
+
+                    return true;
+                    // failed to create product
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -384,9 +391,7 @@ public class Connections {
 
         }
     }
-
-
-    /*class GetUsers extends AsyncTask<String, String, Boolean> {
+    private class GetUsers extends AsyncTask<String, String, Boolean> {
 
 
         private ArrayList<String> users;
@@ -400,38 +405,26 @@ public class Connections {
 
         protected Boolean doInBackground(String... args) {
 
+
             List<NameValuePair> params = new ArrayList<>();
 
             params.add(new BasicNameValuePair(TAG_LOGINNAME, username));
 
             JSONParser jsonParser = new JSONParser();
 
-            JSONObject json = jsonParser.makeHttpRequest(URL_GET_USERS_NOT_FRIEND,"GET", params);
+            JSONObject json = jsonParser.makeHttpRequest(URL_GET_USERS_NOT_FRIEND,"POST", params);
 
             try {
-                users = new ArrayList<String>();
+                users = new ArrayList<>();
                 int success = json.getInt(TAG_SUCCESS);
-
                 if (success == 1) {
-                    // products found
-                    // Getting Array of Products
-                    JSONArray sneezes = json.getJSONArray(TAG_USERS_NOT_FRIEND);
+                    JSONArray userkes = json.getJSONArray(TAG_USERS_NOT_FRIEND);
 
-
-                    // looping through All Products
-                    for (int i = 0; i < sneezes.length(); i++) {
-                        JSONObject c = sneezes.getJSONObject(i);
-
-                        // Storing each json item in variable
-
-                        String name = c.getString(TAG_LOGINNAME);
-                        users.add(name);
+                    for (int i = 0; i < userkes.length(); i++) {
+                        String k = userkes.getString(i);
+                        users.add(k);
                     }
-                    // successfully created product
 
-                    // closing this screen
-
-                    System.out.println("DIT ZIJN ZE:" + users);
                     Intent ik = new Intent(context, SearchFriendActivity.class);
                     ik.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     ik.putExtra(NAAM_VAR_USERS_NOT_FRIEND, users);
@@ -450,5 +443,114 @@ public class Connections {
             return false;
 
         }
-    }*/
+
+        protected void onPostExecute(Boolean b) {
+            super.onPostExecute(b);
+            if (b) Toast.makeText(context, "Laden users mislukt.", Toast.LENGTH_LONG).show();
+
+
+        }
+
+    }
+    private class GetOneUser extends AsyncTask<String, String, User> {
+
+
+        private User gebruiker;
+
+        //JSONArray sneezes = new JSONArray();
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        protected User doInBackground(String... args) {
+
+
+            List<NameValuePair> params = new ArrayList<>();
+
+            params.add(new BasicNameValuePair(TAG_LOGINNAME, username));
+
+            JSONParser jsonParser = new JSONParser();
+
+            JSONObject json = jsonParser.makeHttpRequest(URL_GET_ONE_USER,"POST", params);
+
+            try {
+
+                int success = json.getInt(TAG_SUCCESS);
+                if (success == 1) {
+                    JSONArray userkes = json.getJSONArray(TAG_USER);
+
+
+                    for (int i = 0; i < userkes.length(); i++) {
+                        JSONObject c = userkes.getJSONObject(i);
+
+
+                        int id = c.getInt(TAG_ID);
+
+                        String firstname = c.getString(TAG_VOORNAAM);
+                        String secondname = c.getString(TAG_ACHTERNAAM);
+
+                        gebruiker = new User(username, firstname, secondname, id);
+
+                    }
+
+                    return gebruiker;
+                } else {
+
+
+                    return gebruiker;
+
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return gebruiker;
+
+        }
+
+        protected void onPostExecute(User user) {
+            super.onPostExecute(user);
+
+
+        }
+
+    }
+
+    private class AddFriend extends AsyncTask<String, String, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        protected String doInBackground(String... args) {
+            List<NameValuePair> params = new ArrayList<>();
+            params.add(new BasicNameValuePair(TAG_LOGINNAME, username));
+
+
+            JSONParser jsonParser = new JSONParser();
+
+
+            JSONObject json = jsonParser.makeHttpRequest(URL_CREATE_USER,
+                    "POST", params);
+
+            try {
+                int success = json.getInt(TAG_SUCCESS);
+
+                if (success == 1) {
+
+
+                } else {
+
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+
+        }
+    }
 }
