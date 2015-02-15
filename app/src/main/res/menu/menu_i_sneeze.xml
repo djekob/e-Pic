@@ -7,7 +7,7 @@
         <item
             android:id="@+id/go_to_all_sneezes_list_action_bar"
             android:title="@string/all_sneezes"
-            android:icon="@drawable/ic_action_group"/>
+            android:icon="@drawable/sneeze_icon"/>
     <item
         android:id="@+id/add_friend_action_bar"
         android:title="@string/add_friend"

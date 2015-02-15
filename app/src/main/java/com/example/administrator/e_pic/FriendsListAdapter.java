@@ -2,6 +2,9 @@ package com.example.administrator.e_pic;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +13,7 @@ import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,6 +72,7 @@ public class FriendsListAdapter extends ArrayAdapter implements Filterable {
 
             userTextView = (TextView) v.findViewById(R.id.search_friend_option_list_item);
             addFriendButton = (Button) v.findViewById(R.id.add_friend_button_list_item);
+            addFriendButton.setOnClickListener(new OnFriendClickListener(filteredUsers.get(position)));
 
             String friend = filteredUsers.get(position);
             userTextView.setText(friend);
@@ -125,6 +130,27 @@ public class FriendsListAdapter extends ArrayAdapter implements Filterable {
             notifyDataSetChanged();
         }
 
+    }
+
+    private class OnFriendClickListener implements View.OnClickListener {
+        private final Handler handler = new Handler(Looper.getMainLooper());
+        private final Runnable updateResults = new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, "Vriend: " + username + " toegevoegd.", Toast.LENGTH_LONG).show();
+            }
+        };
+        private String username = "";
+
+        public OnFriendClickListener(String username){
+            this.username = username;
+        }
+
+        @Override
+        public void onClick(View v) {
+            v.setBackgroundColor(Color.RED);
+            handler.post(updateResults);
+        }
     }
 
 
