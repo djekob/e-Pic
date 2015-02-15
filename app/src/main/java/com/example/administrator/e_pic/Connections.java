@@ -34,6 +34,7 @@ public class Connections extends Activity {
     private static final String URL_ALL_SNEEZES = "http://unuzeleirstest.netau.net/get_all_sneezes.php";
     public static final String URL_GET_USERS_NOT_FRIEND = "http://unuzeleirstest.netau.net/get_users_not_friends.php";
     public static final String URL_GET_ONE_USER = "http://unuzeleirstest.netau.net/get_one_user.php";
+    public static final String URL_ADD_FRIEND_REQUEST = "http://unuzeleirstest.netau.net/add_friend_request.php";
     public static final String NAAM_VAR_USER = "Username";
     public static final String NAAM_VAR_USERS_NOT_FRIEND = "Users not friends";
     public static final String TAG_SNEEZES = "sneezes";
@@ -46,6 +47,7 @@ public class Connections extends Activity {
     public static final String TAG_ACHTERNAAM = "Achternaam";
     public static final String TAG_LEEFTIJD = "Leeftijd";
     public static final String TAG_USER = "users";
+    public static final String TAG_FRIENDNAME = "Friend";
 
 
 
@@ -461,6 +463,7 @@ public class Connections extends Activity {
                 Intent ik = new Intent(context, SearchFriendActivity.class);
                 ik.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 ik.putExtra(NAAM_VAR_USERS_NOT_FRIEND, users);
+                ik.putExtra(iSneezeActivity.ADD_FRIEND_CODE, username);
                 context.startActivity(ik);
             }
 
@@ -541,30 +544,30 @@ public class Connections extends Activity {
         }
 
         protected Boolean doInBackground(String... args) {
-            /*List<NameValuePair> params = new ArrayList<>();
+            List<NameValuePair> params = new ArrayList<>();
             params.add(new BasicNameValuePair(TAG_LOGINNAME, username));
+            params.add(new BasicNameValuePair(TAG_FRIENDNAME, friendname));
 
 
             JSONParser jsonParser = new JSONParser();
 
 
-            JSONObject json = jsonParser.makeHttpRequest(URL_CREATE_USER,
+            JSONObject json = jsonParser.makeHttpRequest(URL_ADD_FRIEND_REQUEST,
                     "POST", params);
 
             try {
                 int success = json.getInt(TAG_SUCCESS);
 
                 if (success == 1) {
-
-
+                    return true;
                 } else {
-
+                    return false;
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
-            }*/
+            }
 
-            return true;
+            return false;
 
         }
 
@@ -572,7 +575,6 @@ public class Connections extends Activity {
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
             if(aBoolean) {
-
                 ((SearchFriendActivity) context).adapter.changeOriginalUser(friendname);
             }
         }
