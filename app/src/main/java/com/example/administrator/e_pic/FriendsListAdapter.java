@@ -15,8 +15,11 @@ import android.widget.Filterable;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 /**
  * Created by Administrator on 13/02/2015.
@@ -24,22 +27,25 @@ import java.util.List;
 public class FriendsListAdapter extends ArrayAdapter implements Filterable {
 
 
-    private ArrayList<String> originalUsers, filteredUsers;
+    private TreeMap<String, Integer> originalUsers;
+    private ArrayList<String> filteredUsers;
     private int resource;
     private Context context;
     private ItemFilter mFilter = new ItemFilter();
     private TextView userTextView;
     private Button addFriendButton;
-    private int plaats;
     private String username;
 
     public FriendsListAdapter(Context context, int resource, ArrayList<String> arrayList, String username) {
-            super(context, resource, arrayList);
-            this.context = context;
-            this.resource = resource;
-            originalUsers = arrayList;
-            filteredUsers = arrayList;
-            this.username = username;
+        super(context, resource, arrayList);
+        this.context = context;
+        this.resource = resource;
+        filteredUsers = arrayList;
+        originalUsers = new TreeMap<String, Integer>();
+        for(String s : arrayList){
+            originalUsers.put(s,0);
+        }
+        this.username = username;
     }
 
     public int getCount() {
@@ -47,48 +53,35 @@ public class FriendsListAdapter extends ArrayAdapter implements Filterable {
     }
 
     public Object getItem(int position) {
-        plaats = position;
         return filteredUsers.get(position);
     }
 
     public long getItemId(int position) {
-        plaats = position;
         return position;
     }
 
     @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, ViewGroup parent) {
 
-            View v = convertView;
+        View v = convertView;
 
-            plaats = position;
-            if (v != null) {
-
-
-            } else {
-                v = LayoutInflater.from(context).inflate(resource, null);
-
-            }
-
-            userTextView = (TextView) v.findViewById(R.id.search_friend_option_list_item);
-            addFriendButton = (Button) v.findViewById(R.id.add_friend_button_list_item);
-            addFriendButton.setOnClickListener(new OnFriendClickListener(filteredUsers.get(position)));
-
-            String friend = filteredUsers.get(position);
-            userTextView.setText(friend);
+        if (v != null) {
 
 
-            return v;
+        } else {
+            v = LayoutInflater.from(context).inflate(resource, null);
+
         }
 
-    private class addFriendButtonOnClickListener implements View.OnClickListener {
+        userTextView = (TextView) v.findViewById(R.id.search_friend_option_list_item);
+        addFriendButton = (Button) v.findViewById(R.id.add_friend_button_list_item);
 
-
-        @Override
-        public void onClick(View v) {
-            String friendname = filteredUsers.get(plaats);
-            Connections connections= new Connections(getContext(), username, Connections.ADD_FRIEND_CODE, friendname);
-        }
+        String friend = filteredUsers.get(position);
+        addFriendButton.setOnClickListener(new OnFriendClickListener(friend, position));
+        if(originalUsers.get(friend)>0) addFriendButton.setBackgroundColor(Color.RED);
+        else addFriendButton.setBackgroundColor(Color.TRANSPARENT);
+        userTextView.setText(friend);
+        return v;
     }
 
     public Filter getFilter() {
@@ -103,15 +96,13 @@ public class FriendsListAdapter extends ArrayAdapter implements Filterable {
 
             FilterResults results = new FilterResults();
 
-            final List<String> list = originalUsers;
+            final TreeMap<String, Integer> list = originalUsers;
 
-            int count = list.size();
-            final ArrayList<String> nlist = new ArrayList<>(count);
+            final ArrayList<String> nlist = new ArrayList<>();
 
-            String filterableString ;
-
-            for (int i = 0; i < count; i++) {
-                filterableString = list.get(i);
+            String filterableString;
+            for(String s : list.keySet()){
+                filterableString = s;
                 if (filterableString.toLowerCase().contains(filterString)) {
                     nlist.add(filterableString);
                 }
@@ -126,33 +117,44 @@ public class FriendsListAdapter extends ArrayAdapter implements Filterable {
         @SuppressWarnings("unchecked")
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            filteredUsers = (ArrayList<String>) results.values;
+            filteredUsers = (ArrayList<String> )results.values;
             notifyDataSetChanged();
         }
 
     }
 
-    private class OnFriendClickListener implements View.OnClickListener {
-        private final Handler handler = new Handler(Looper.getMainLooper());
+    public class OnFriendClickListener implements View.OnClickListener {
+        /*private final Handler handler = new Handler(Looper.getMainLooper());
         private final Runnable updateResults = new Runnable() {
             @Override
             public void run() {
                 Toast.makeText(context, "Vriend: " + username + " toegevoegd.", Toast.LENGTH_LONG).show();
             }
-        };
-        private String username = "";
+        };*/
+        private String friendname;
+        private int position;
 
-        public OnFriendClickListener(String username){
-            this.username = username;
+        public OnFriendClickListener(String friendname, int position){
+            this.friendname = friendname;
+            this.position = position;
         }
 
         @Override
         public void onClick(View v) {
-            v.setBackgroundColor(Color.RED);
-            handler.post(updateResults);
+            new Connections(context, username, friendname, position, originalUsers ,Connections.ADD_FRIEND_CODE);
+            //v.setBackgroundColor(Color.RED);
+
+            //handler.post(updateResults);
         }
+
+
     }
 
+    public void changeOriginalUser(String friendname){
+        originalUsers.remove(friendname);
+        originalUsers.put(friendname, 1);
+        notifyDataSetChanged();
+    }
 
 }
 

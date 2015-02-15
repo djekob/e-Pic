@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import org.apache.http.NameValuePair;
@@ -57,8 +59,13 @@ public class Connections extends Activity {
     //public static final int ADD_USER = 0;
     private ProgressDialog pDialog;
     private Context context;
+    private View buttonView;
     private String prename = null, name = null, username = null, password = null;
     private int age;
+    private String friendname;
+    private int position;
+    private TreeMap<String, Integer> originalUsers;
+
 
     public Connections(Context context, String username, int code){
         this.context = context;
@@ -77,10 +84,18 @@ public class Connections extends Activity {
 
     }
 
-    public Connections(Context context, String username, int code, String friendname) {
+    public Connections(Context context, View v, String username, int code){
+        this.context = context;
+        this.buttonView = buttonView;
+
+    }
+
+    public Connections(Context context, String username, String friendname, int position, TreeMap<String, Integer> originalUsers, int code) {
         this.context = context;
         this.username = username;
-
+        this.friendname = friendname;
+        this.position = position;
+        this.originalUsers = originalUsers;
         if(code == ADD_FRIEND_CODE) {
             new AddFriend().execute();
         }
@@ -425,10 +440,7 @@ public class Connections extends Activity {
                         users.add(k);
                     }
 
-                    Intent ik = new Intent(context, SearchFriendActivity.class);
-                    ik.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    ik.putExtra(NAAM_VAR_USERS_NOT_FRIEND, users);
-                    context.startActivity(ik);
+                    return false;
 
                 } else {
 
@@ -447,7 +459,12 @@ public class Connections extends Activity {
         protected void onPostExecute(Boolean b) {
             super.onPostExecute(b);
             if (b) Toast.makeText(context, "Laden users mislukt.", Toast.LENGTH_LONG).show();
-
+            else {
+                Intent ik = new Intent(context, SearchFriendActivity.class);
+                ik.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                ik.putExtra(NAAM_VAR_USERS_NOT_FRIEND, users);
+                context.startActivity(ik);
+            }
 
         }
 
@@ -518,15 +535,15 @@ public class Connections extends Activity {
 
     }
 
-    private class AddFriend extends AsyncTask<String, String, String> {
+    private class AddFriend extends AsyncTask<String, String, Boolean> {
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
         }
 
-        protected String doInBackground(String... args) {
-            List<NameValuePair> params = new ArrayList<>();
+        protected Boolean doInBackground(String... args) {
+            /*List<NameValuePair> params = new ArrayList<>();
             params.add(new BasicNameValuePair(TAG_LOGINNAME, username));
 
 
@@ -547,10 +564,19 @@ public class Connections extends Activity {
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
+            }*/
+
+            return true;
+
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            if(aBoolean) {
+
+                ((SearchFriendActivity) context).adapter.changeOriginalUser(friendname);
             }
-
-            return null;
-
         }
     }
 }

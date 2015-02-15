@@ -22,7 +22,7 @@ public class SearchFriendActivity extends ActionBarActivity {
     private EditText friendsNameEditText;
     private ListView listView;
     private ArrayList<String> users;
-    private FriendsListAdapter adapter;
+    public FriendsListAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
