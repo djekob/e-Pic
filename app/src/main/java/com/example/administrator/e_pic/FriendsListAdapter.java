@@ -101,7 +101,7 @@ public class FriendsListAdapter extends ArrayAdapter implements Filterable {
             final List<String> list = originalUsers;
 
             int count = list.size();
-            final ArrayList<String> nlist = new ArrayList<String>(count);
+            final ArrayList<String> nlist = new ArrayList<>(count);
 
             String filterableString ;
 
