@@ -54,6 +54,7 @@ public class Connections extends Activity {
     public static final int GET_ALL_USERS_NO_FRIENDS = 3;
     public static final int ADD_FRIEND_CODE = 4;
     public static final int GET_ONE_USER_CODE = 5;
+    public static final int GET_PENDING_FRIENDS = 6;
 
 
     //public static final int ADD_USER = 0;

@@ -26,5 +26,10 @@
     <string name="kies_geboortedatum">Kies geboortedatum</string>
     <string name="add_friend">Add Friend</string>
     <string name="search">Search</string>
+    <string name="login_capital">LOGIN</string>
+    <string name="registreer_capital">REGISTREER</string>
+    <string name="title_activity_friend_requests">FriendRequestsActivity</string>
+    <string name="accept">Accept</string>
+    <string name="pending_friends">Pending friends</string>
 
 </resources>

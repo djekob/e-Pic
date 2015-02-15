@@ -71,7 +71,8 @@ public class iSneezeActivity extends ActionBarActivity {
             new Connections(this, username, Connections.GET_ALL_SNEEZES_CODE);
         } else if (id == R.id.add_friend_action_bar) {
             new Connections(this, username, Connections.GET_ALL_USERS_NO_FRIENDS);
-
+        } else if (id == R.id.pending_friends_action_bar) {
+            new Connections(this, username, Connections.GET_PENDING_FRIENDS);
         }
 
         return super.onOptionsItemSelected(item);

@@ -4,13 +4,16 @@
 
 
     <!-- TODO icoontje laten werken -->
-        <item
-            android:id="@+id/go_to_all_sneezes_list_action_bar"
-            android:title="@string/all_sneezes"
-            android:icon="@drawable/sneeze_icon"/>
+    <item
+        android:id="@+id/go_to_all_sneezes_list_action_bar"
+        android:title="@string/all_sneezes"
+        android:icon="@drawable/sneeze_icon"/>
     <item
         android:id="@+id/add_friend_action_bar"
         android:title="@string/add_friend"
         />
+    <item
+        android:id="@+id/pending_friends_action_bar"
+        android:title="@string/pending_friends"/>
 
 </menu>
