@@ -128,10 +128,10 @@ public class Connections extends Activity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            /*pDialog = new ProgressDialog(context);
+            pDialog = new ProgressDialog(context);
             pDialog.setMessage("Creating Login..");
             pDialog.setCancelable(true);
-            pDialog.show();*/
+            pDialog.show();
         }
 
         protected Boolean doInBackground(String... args) {
