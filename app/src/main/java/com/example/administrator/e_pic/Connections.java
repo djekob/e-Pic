@@ -443,10 +443,7 @@ public class Connections extends Activity {
                     return false;
 
                 } else {
-
-
                     return true;
-                    // failed to create product
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
