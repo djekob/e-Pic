@@ -40,10 +40,13 @@ public class FriendsListAdapter extends ArrayAdapter implements Filterable {
         super(context, resource, arrayList);
         this.context = context;
         this.resource = resource;
-        filteredUsers = arrayList;
         originalUsers = new TreeMap<String, Integer>();
         for(String s : arrayList){
             originalUsers.put(s,0);
+        }
+        filteredUsers = new ArrayList<>();
+        for(String s : originalUsers.keySet()){
+            filteredUsers.add(s);
         }
         this.username = username;
     }
