@@ -35,6 +35,7 @@ public class Connections extends Activity {
     public static final String URL_GET_USERS_NOT_FRIEND = "http://unuzeleirstest.netau.net/get_users_not_friends.php";
     public static final String URL_GET_ONE_USER = "http://unuzeleirstest.netau.net/get_one_user.php";
     public static final String URL_ADD_FRIEND_REQUEST = "http://unuzeleirstest.netau.net/add_friend_request.php";
+    public static final String URL_GET_PENDING_FRIENDS = "" invullen;
     public static final String NAAM_VAR_USER = "Username";
     public static final String NAAM_VAR_USERS_NOT_FRIEND = "Users not friends";
     public static final String TAG_SNEEZES = "sneezes";
