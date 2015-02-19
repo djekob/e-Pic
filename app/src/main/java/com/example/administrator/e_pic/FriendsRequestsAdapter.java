@@ -65,6 +65,7 @@ public class FriendsRequestsAdapter extends ArrayAdapter {
         friendsNameTextView = (TextView) v.findViewById(R.id.friends_name_text_view_list_item);
         acceptFriendButton = (Button) v.findViewById(R.id.accept_friend_button_list_item);
 
+        friendsNameTextView.setText(friendsList.get(position));
 
 
         return v;
@@ -74,7 +75,7 @@ public class FriendsRequestsAdapter extends ArrayAdapter {
 
         @Override
         public void onClick(View v) {
-
+            new Connections(context, username, friendsNameTextView.getText().toString() , Connections.ACCEPT_FRIEND_CODE);
         }
     }
 }

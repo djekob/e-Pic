@@ -21,8 +21,7 @@
         </activity>
         <activity
             android:name=".iSneezeActivity"
-            android:label="@string/title_activity_i_sneeze"
-             android:theme="@style/CustomActionBarTheme">
+            android:label="@string/title_activity_i_sneeze">
         </activity>
         <activity
             android:name=".RegisterActivity"

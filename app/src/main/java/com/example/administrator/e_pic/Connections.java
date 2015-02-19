@@ -60,6 +60,7 @@ public class Connections extends Activity {
     public static final int ADD_FRIEND_CODE = 4;
     public static final int GET_ONE_USER_CODE = 5;
     public static final int GET_PENDING_FRIENDS = 6;
+    public static final int ACCEPT_FRIEND_CODE = 7;
 
 
     //public static final int ADD_USER = 0;
@@ -86,6 +87,8 @@ public class Connections extends Activity {
             new GetUsers().execute();
         } else if(code == GET_ONE_USER_CODE) {
             new GetOneUser().execute();
+        } else if(code == Connections.GET_PENDING_FRIENDS) {
+            new GetPendingFriends().execute();
         }
 
     }
@@ -107,7 +110,15 @@ public class Connections extends Activity {
         }
     }
 
+    public Connections(Context context, String username, String friendame, int code) {
+        this.context = context;
+        this.username = username;
+        this.friendname= friendame;
+        if (code== ACCEPT_FRIEND_CODE) {
+            new AcceptFriendRequest().execute();
+        }
 
+    }
 
     public Connections(Context context, String username, String password){
         this.context = context;
@@ -343,6 +354,7 @@ public class Connections extends Activity {
         protected Boolean doInBackground(String... args) {
 
             List<NameValuePair> params = new ArrayList<>();
+
 
             TreeMap<Integer, Sneeze> sneezeHashMapDef;
 
@@ -583,7 +595,7 @@ public class Connections extends Activity {
         }
     }
 
-    private class getPendingFriends extends AsyncTask<String, String, Boolean> {
+    private class GetPendingFriends extends AsyncTask<String, String, Boolean> {
 
         ArrayList<String> pendingFriends;
 
@@ -593,6 +605,7 @@ public class Connections extends Activity {
 
             List<NameValuePair> params = new ArrayList<>();
 
+            System.out.println("USERNAME: " + username);
             params.add(new BasicNameValuePair(TAG_LOGINNAME, username));
 
             JSONParser jsonParser = new JSONParser();
@@ -608,6 +621,7 @@ public class Connections extends Activity {
                     for (int i = 0; i < userkes.length(); i++) {
                         String k = userkes.getString(i);
                         pendingFriends.add(k);
+                        Log.e("VRIEND", k);
                     }
                     Intent i = new Intent(context, FriendRequestsActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -616,6 +630,13 @@ public class Connections extends Activity {
                     context.startActivity(i);
                     return false;
 
+                } else if (success ==2) {
+                    Intent i = new Intent(context, FriendRequestsActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    i.putExtra(NAAM_VAR_PENDING_FRIENDS, pendingFriends);
+                    i.putExtra(TAG_LOGINNAME, username);
+                    context.startActivity(i);
+                    return false;
                 } else {
                     return true;
                 }
@@ -628,4 +649,12 @@ public class Connections extends Activity {
 
         }
     }
-}
+
+    private class AcceptFriendRequest extends AsyncTask<String, String, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+            return null;
+        }
+    }
+ }

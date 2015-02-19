@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -18,7 +19,7 @@ import android.widget.Toast;
 import java.util.Calendar;
 
 
-public class iSneezeActivity extends Activity {
+public class iSneezeActivity extends ActionBarActivity {
 
     private TextView myNameTextView;
     private String myName;
@@ -73,6 +74,7 @@ public class iSneezeActivity extends Activity {
         } else if (id == R.id.add_friend_action_bar) {
             new Connections(this, username, Connections.GET_ALL_USERS_NO_FRIENDS);
         } else if (id == R.id.pending_friends_action_bar) {
+            Log.i("PENDING FRIENDS KLIK", " hopelijk werkt het");
             new Connections(this, username, Connections.GET_PENDING_FRIENDS);
         }
 

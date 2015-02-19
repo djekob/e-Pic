@@ -31,5 +31,6 @@
     <string name="title_activity_friend_requests">FriendRequestsActivity</string>
     <string name="accept">Accept</string>
     <string name="pending_friends">Pending friends</string>
+    <string name="no_friend_requests">No friends requests</string>
 
 </resources>
