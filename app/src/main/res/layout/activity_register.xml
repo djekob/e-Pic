@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/registreer_capital"
-        android:textColor="#5F021F"
+        android:textColor="@color/titles_activities"
         android:textStyle="bold"
         android:textSize="20sp"
         android:paddingBottom="10sp"/>
@@ -25,10 +25,12 @@
         android:background="@drawable/omkadering">
     <EditText
         android:id="@+id/first_name_edit_text"
+        android:textColor="@color/titles_activities"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/voornaam"/>
     <EditText
+        android:textColor="@color/titles_activities"
         android:id="@+id/achternaam_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -36,11 +38,13 @@
 
     <EditText
         android:id="@+id/username_edit_text"
+        android:textColor="@color/titles_activities"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/loginnaam"/>
     <EditText
         android:id="@+id/password_edit_text"
+        android:textColor="@color/titles_activities"
         android:password="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

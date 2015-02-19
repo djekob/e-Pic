@@ -612,6 +612,7 @@ public class Connections extends Activity {
                     Intent i = new Intent(context, FriendRequestsActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     i.putExtra(NAAM_VAR_PENDING_FRIENDS, pendingFriends);
+                    i.putExtra(TAG_LOGINNAME, username);
                     context.startActivity(i);
                     return false;
 
