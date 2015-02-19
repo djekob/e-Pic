@@ -38,6 +38,7 @@ public class Connections extends Activity {
     public static final String URL_GET_PENDING_FRIENDS = "http://unuzeleirstest.netau.net/get_pending_friends.php";
     public static final String NAAM_VAR_USER = "Username";
     public static final String NAAM_VAR_USERS_NOT_FRIEND = "Users not friends";
+    public static final String NAAM_VAR_PENDING_FRIENDS = "pending friends";
     public static final String TAG_SNEEZES = "sneezes";
     public static final String TAG_USER_ID = "User_id";
     public static final String TAG_TIME = "Time";
@@ -49,6 +50,7 @@ public class Connections extends Activity {
     public static final String TAG_LEEFTIJD = "Leeftijd";
     public static final String TAG_USER = "users";
     public static final String TAG_FRIENDNAME = "Friend";
+    public static final String TAG_PENDING_FRIENDS = "Pending_Friends";
 
 
 
@@ -581,7 +583,7 @@ public class Connections extends Activity {
         }
     }
 
-    private class PendingFriends extends AsyncTask<String, String, Boolean> {
+    private class getPendingFriends extends AsyncTask<String, String, Boolean> {
 
         ArrayList<String> pendingFriends;
 
@@ -601,13 +603,16 @@ public class Connections extends Activity {
                 pendingFriends = new ArrayList<>();
                 int success = json.getInt(TAG_SUCCESS);
                 if (success == 1) {
-                    JSONArray userkes = json.getJSONArray(TAG_USERS_NOT_FRIEND);
+                    JSONArray userkes = json.getJSONArray(TAG_PENDING_FRIENDS);
 
                     for (int i = 0; i < userkes.length(); i++) {
                         String k = userkes.getString(i);
                         pendingFriends.add(k);
                     }
-
+                    Intent i = new Intent(context, FriendRequestsActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    i.putExtra(NAAM_VAR_PENDING_FRIENDS, pendingFriends);
+                    context.startActivity(i);
                     return false;
 
                 } else {
@@ -617,7 +622,7 @@ public class Connections extends Activity {
                 e.printStackTrace();
             }
 
-            return false;
+            return true;
 
 
         }
