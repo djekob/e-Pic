@@ -8,7 +8,8 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
+
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main" >
@@ -20,7 +21,8 @@
         </activity>
         <activity
             android:name=".iSneezeActivity"
-            android:label="@string/title_activity_i_sneeze" >
+            android:label="@string/title_activity_i_sneeze"
+             android:theme="@style/CustomActionBarTheme">
         </activity>
         <activity
             android:name=".RegisterActivity"

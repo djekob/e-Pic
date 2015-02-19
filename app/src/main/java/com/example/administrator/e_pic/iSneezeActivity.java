@@ -1,5 +1,6 @@
 package com.example.administrator.e_pic;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -17,7 +18,7 @@ import android.widget.Toast;
 import java.util.Calendar;
 
 
-public class iSneezeActivity extends ActionBarActivity {
+public class iSneezeActivity extends Activity {
 
     private TextView myNameTextView;
     private String myName;
