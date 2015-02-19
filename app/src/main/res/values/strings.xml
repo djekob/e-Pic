@@ -32,5 +32,6 @@
     <string name="accept">Accept</string>
     <string name="pending_friends">Pending friends</string>
     <string name="no_friend_requests">No friends requests</string>
+    <string name="title_activity_tab_view">test</string>
 
 </resources>

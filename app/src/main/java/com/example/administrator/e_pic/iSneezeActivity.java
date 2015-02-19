@@ -27,6 +27,7 @@ public class iSneezeActivity extends ActionBarActivity {
     private ImageButton isneeze_image_button;
     private String username;
 
+
     public static final String ADD_FRIEND_CODE = "add_friend";
 
     @Override
