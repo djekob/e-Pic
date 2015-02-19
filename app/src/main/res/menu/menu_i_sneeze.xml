@@ -1,7 +1,7 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.administrator.e_pic.iSneezeActivity">
-
 
     <!-- TODO icoontje laten werken -->
     <item
