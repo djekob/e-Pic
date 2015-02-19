@@ -453,7 +453,7 @@ public class Connections extends Activity {
                 e.printStackTrace();
             }
 
-            return false;
+            return true;
 
         }
 
