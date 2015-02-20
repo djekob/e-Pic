@@ -45,6 +45,10 @@
             android:name=".FriendRequestsActivity"
             android:label="@string/title_activity_friend_requests" >
         </activity>
+        <activity
+            android:name=".SneezeOverviewActivity"
+            android:label="@string/title_activity_sneeze_overview" >
+        </activity>
     </application>
 
 </manifest>

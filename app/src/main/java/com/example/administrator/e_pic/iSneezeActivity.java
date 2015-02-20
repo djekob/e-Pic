@@ -75,8 +75,9 @@ public class iSneezeActivity extends ActionBarActivity {
         } else if (id == R.id.add_friend_action_bar) {
             new Connections(this, username, Connections.GET_ALL_USERS_NO_FRIENDS);
         } else if (id == R.id.pending_friends_action_bar) {
-            Log.i("PENDING FRIENDS KLIK", " hopelijk werkt het");
             new Connections(this, username, Connections.GET_PENDING_FRIENDS);
+        } else if (id == R.id.go_to_all_sneezes_graph_action_bar) {
+            new Connections(this, username, Connections.GET_ALL_SNEEZES_GRAPH_CODE);
         }
 
         return super.onOptionsItemSelected(item);

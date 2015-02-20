@@ -16,4 +16,8 @@
         android:id="@+id/pending_friends_action_bar"
         android:title="@string/pending_friends"/>
 
+    <item
+        android:id="@+id/go_to_all_sneezes_graph_action_bar"
+        android:title="@string/all_sneezes_graph"/>
+
 </menu>

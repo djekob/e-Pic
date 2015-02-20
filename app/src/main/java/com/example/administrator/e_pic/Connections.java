@@ -18,6 +18,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Array;
+import java.security.Timestamp;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -61,6 +63,7 @@ public class Connections extends Activity {
     public static final int GET_ONE_USER_CODE = 5;
     public static final int GET_PENDING_FRIENDS = 6;
     public static final int ACCEPT_FRIEND_CODE = 7;
+    public static final int GET_ALL_SNEEZES_GRAPH_CODE = 8;
 
 
     //public static final int ADD_USER = 0;
@@ -89,6 +92,8 @@ public class Connections extends Activity {
             new GetOneUser().execute();
         } else if(code == Connections.GET_PENDING_FRIENDS) {
             new GetPendingFriends().execute();
+        } else if(code == Connections.GET_ALL_SNEEZES_GRAPH_CODE) {
+            new OpenSneezesGraph().execute();
         }
 
     }
@@ -136,6 +141,83 @@ public class Connections extends Activity {
         this.context = context;
 
         new CreateNewUser().execute();
+    }
+
+
+
+    private class OpenSneezesGraph extends AsyncTask<String, String ,Boolean>{
+
+        JSONArray sneezes = new JSONArray();
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        protected Boolean doInBackground(String... args) {
+
+            List<NameValuePair> params = new ArrayList<>();
+
+
+            TreeMap<Integer, Sneeze> sneezeHashMapDef;
+
+            JSONParser jsonParser = new JSONParser();
+            JSONObject json = jsonParser.makeHttpRequest(URL_ALL_SNEEZES,"GET", params);
+
+            try {
+                sneezeHashMapDef = new TreeMap<>();
+                int success = json.getInt(TAG_SUCCESS);
+
+                if (success == 1) {
+                    // products found
+                    // Getting Array of Products
+                    sneezes = json.getJSONArray(TAG_SNEEZES);
+
+                    ArrayList<Sneeze> temporarySneezes = new ArrayList<>();
+                    // looping through All Products
+                    for (int i = 0; i < sneezes.length(); i++) {
+                        JSONObject c = sneezes.getJSONObject(i);
+
+                        // Storing each json item in variable
+                        int id = c.getInt(TAG_USER_ID);
+                        String time = c.getString(TAG_TIME);
+                        String name = c.getString(TAG_LOGINNAME);
+                        int sneeze_id = c.getInt(TAG_ID);
+                        String firstname = c.getString(TAG_VOORNAAM);
+                        String secondname = c.getString(TAG_ACHTERNAAM);
+                        String leeftijd2 = c.getString(TAG_LEEFTIJD);
+                        int leeftijd = Integer.parseInt(leeftijd2);
+
+                        User user = new User(name, firstname, secondname, leeftijd, id);
+                        Sneeze sneeze = new Sneeze(time, user, sneeze_id);
+
+                        sneezeHashMapDef.put(sneeze_id, sneeze);
+                    }
+                    // successfully created product
+
+                    // closing this screen
+
+
+                    Intent ik = new Intent(context, SneezeOverviewActivity.class);
+                    ik.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    ik.putExtra(NAAM_VAR_USER, username);
+                    ik.putExtra(TAG_SNEEZES, sneezeHashMapDef);
+
+                    context.startActivity(ik);
+
+                } else {
+
+
+                    return true;
+                    // failed to create product
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return false;
+        }
+
+
     }
 
 
