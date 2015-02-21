@@ -28,7 +28,7 @@ public class ProfileActivity extends ActionBarActivity {
         initialization();
 
         username = getIntent().getStringExtra(Connections.TAG_LOGINNAME);
-        friendsList = (ArrayList) getIntent().getSerializableExtra(Connections.TAG_MY_FRIENDS);
+        friendsList = (ArrayList) getIntent().getSerializableExtra(Connections.TAG_FRIENDS);
 
 
         myNameTextView.setText(username);

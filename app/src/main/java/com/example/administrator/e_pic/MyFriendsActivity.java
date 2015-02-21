@@ -4,14 +4,20 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class MyFriendsActivity extends ActionBarActivity {
 
     private String username;
     private ArrayList<User> friends;
+    private ListView listView;
+    private MyFriendsListAdapter myFriendsListAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,8 +25,10 @@ public class MyFriendsActivity extends ActionBarActivity {
 
         username = getIntent().getStringExtra(Connections.NAAM_VAR_USER);
         friends = new ArrayList<>();
-        friends = (ArrayList) getIntent().getSerializableExtra(Connections.TAG_MY_FRIENDS);
-
+        friends = (ArrayList) getIntent().getSerializableExtra(Connections.TAG_FRIENDS);
+        listView = (ListView) findViewById(R.id.my_friends_list_view_my_friends_activity);
+        myFriendsListAdapter = new MyFriendsListAdapter(this, R.layout.friend_list_item, friends, username);
+        listView.setAdapter(myFriendsListAdapter);
     }
 
 

@@ -32,6 +32,7 @@ public class Connections extends Activity {
     public static final String URL_ADD_FRIEND_REQUEST = "http://unuzeleirstest.netau.net/add_friend_request.php";
     public static final String URL_GET_PENDING_FRIENDS = "http://unuzeleirstest.netau.net/get_pending_friends.php";
     public static final String URL_ACCEPT_FRIEND_REQUEST = "http://unuzeleirstest.netau.net/accept_friend_request.php";
+    public static final String URL_GET_FRIENDS = "http://unuzeleirstest.netau.net/get_friends.php";
 
     public static final String NAAM_VAR_USER = "Username";
     public static final String NAAM_VAR_USERS_NOT_FRIEND = "Users not friends";
@@ -49,7 +50,7 @@ public class Connections extends Activity {
     public static final String TAG_USER = "users";
     public static final String TAG_FRIENDNAME = "Friend";
     public static final String TAG_PENDING_FRIENDS = "Pending_Friends";
-    public static final String TAG_MY_FRIENDS = "My_Friends";
+    public static final String TAG_FRIENDS = "Friends";
 
 
 
@@ -96,12 +97,6 @@ public class Connections extends Activity {
         } else if(code == Connections.GET_ALL_FRIENDS_CODE) {
             new getFriends().execute();
         }
-
-    }
-
-    public Connections(Context context, View v, String username, int code){
-        this.context = context;
-        this.buttonView = buttonView;
 
     }
 
@@ -169,7 +164,7 @@ public class Connections extends Activity {
         protected Boolean doInBackground(String... params) {
 
             Intent i = new Intent(context, ProfileActivity.class);
-            i.putExtra(TAG_MY_FRIENDS, myFriends);
+            i.putExtra(TAG_FRIENDS, myFriends);
             return null;
         }
     }
@@ -767,7 +762,7 @@ public class Connections extends Activity {
 
 
             JSONParser jsonParser = new JSONParser();
-            JSONObject json = jsonParser.makeHttpRequest(URL_ALL_SNEEZES, "POST", pars);
+            JSONObject json = jsonParser.makeHttpRequest(URL_GET_FRIENDS, "POST", pars);
 
             try {
                 friends = new ArrayList<>();
@@ -776,23 +771,23 @@ public class Connections extends Activity {
 
                 if (success == 1) {
 
-                    friendsData = json.getJSONArray(TAG_MY_FRIENDS);
+                    friendsData = json.getJSONArray(TAG_FRIENDS);
 
 
                     for (int i = 0; i < friendsData.length(); i++) {
-                        JSONObject c = friendsData.getJSONObject(i);
+                        String name = friendsData.getString(i);//.getJSONObject(i);
 
 
-                        String name = c.getString(TAG_LOGINNAME);
-                        int totalSneezes = c.getInt(TAG_AANTAL_SNEEZES);
-                        User friend = new User(name, totalSneezes);
+                        //String name = c.getString(TAG_LOGINNAME);
+                        //int totalSneezes = c.getInt(TAG_AANTAL_SNEEZES);
+                        User friend = new User(name/*, totalSneezes*/);
                         friends.add(friend);
                     }
 
                     Intent ik = new Intent(context, MyFriendsActivity.class);
                     ik.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     ik.putExtra(NAAM_VAR_USER, username);
-                    ik.putExtra(TAG_MY_FRIENDS, friends);
+                    ik.putExtra(TAG_FRIENDS, friends);
 
                     context.startActivity(ik);
 

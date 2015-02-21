@@ -19,7 +19,6 @@ public class MyFriendsListAdapter extends ArrayAdapter implements Filterable {
     private ArrayList<User> myFriends;
     private int resource;
     private Context context;
-    private TextView friendsNameTextView, friendsSneezesTextView;
     private String username;
 
     public MyFriendsListAdapter(Context context, int resource, ArrayList<User> myFriends, String username) {
@@ -55,13 +54,14 @@ public class MyFriendsListAdapter extends ArrayAdapter implements Filterable {
 
         }
 
-        friendsNameTextView = (TextView) v.findViewById(R.id.friend_name_text_view_friends_list);
+        TextView friendsNameTextView = (TextView) v.findViewById(R.id.friend_name_text_view_friends_list);
+        TextView friendsSneezesTextView = (TextView) v.findViewById(R.id.number_of_sneezes_list_item);
 
 
         String friend = myFriends.get(position).getUsername();
-        int sneezes = myFriends.get(position).getNumberOfSneezes();
+        //int sneezes = myFriends.get(position).getNumberOfSneezes();
         friendsNameTextView.setText(friend);
-        friendsSneezesTextView.setText(sneezes);
+        friendsSneezesTextView.setText(""+0);
 
         v.setOnClickListener(new OnFriendClickListener(friend, position));
 
