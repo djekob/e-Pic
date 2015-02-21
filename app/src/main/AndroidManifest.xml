@@ -18,7 +18,7 @@
         </activity>
         <activity
             android:name=".iSneezeActivity"
-            android:label="@string/title_activity_i_sneeze" >
+            android:label="@string/title_activity_i_sneeze">
         </activity>
         <activity
             android:name=".RegisterActivity"
@@ -54,10 +54,10 @@
         </activity>
         <activity
             android:name=".RealMainActivity"
-            android:label="@string/title_activity_real_main" >
+            android:label="@string/title_activity_real_main"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

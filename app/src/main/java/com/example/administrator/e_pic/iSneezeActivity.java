@@ -80,6 +80,10 @@ public class iSneezeActivity extends ActionBarActivity {
             new Connections(this, username, Connections.GET_PENDING_FRIENDS);
         } else if (id == R.id.go_to_all_sneezes_graph_action_bar) {
             new Connections(this, username, Connections.GET_ALL_SNEEZES_GRAPH_CODE);
+        } else if (id == R.id.logout_user) {
+            SaveSharedPreference.setUserName(this, "");
+            Intent i = new Intent(this, FirstActivity.class);
+            startActivity(i);
         }
 
         return super.onOptionsItemSelected(item);
