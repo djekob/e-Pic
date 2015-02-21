@@ -5,10 +5,13 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:orientation="vertical"
+    android:background="@color/background_color"
     tools:context="com.example.administrator.e_pic.FriendRequestsActivity">
 
     <TextView
         android:id="@+id/zero_friends_text_view"
+        android:textSize="26sp"
+        android:textColor="@color/titles_activities"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <ListView

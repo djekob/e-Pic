@@ -253,9 +253,10 @@ public class Connections extends Activity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progress = ProgressDialog.show(context, "dialog title",
-                    "dialog message", true);
-            //handler.post(progressDialogShow);
+            progress = new ProgressDialog(context, R.style.MyTheme);
+            progress.setCancelable(false);
+            progress.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
+            progress.show();
         }
 
         protected Boolean doInBackground(String... args) {
@@ -338,6 +339,9 @@ public class Connections extends Activity {
                     i.putExtra(NAAM_VAR_USER, username);
                     context.startActivity(i);
 
+                    RegisterActivity registerActivity = (RegisterActivity) context;
+                    registerActivity.finish();
+
                 } else {
 
                 }
@@ -353,6 +357,7 @@ public class Connections extends Activity {
         }
 
     }
+
     private class CreateSneeze extends AsyncTask<String, String, String>{
 
         @Override
@@ -402,6 +407,7 @@ public class Connections extends Activity {
 
         }
     }
+
     private class GetAllSneezes extends AsyncTask<String, String, Boolean> {
 
 
@@ -483,6 +489,7 @@ public class Connections extends Activity {
 
         }
     }
+
     private class GetAllUsers extends AsyncTask<String, String, Boolean> {
 
 
@@ -544,6 +551,7 @@ public class Connections extends Activity {
         }
 
     }
+
     private class GetOneUser extends AsyncTask<String, String, User> {
 
 
