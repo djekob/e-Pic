@@ -24,12 +24,15 @@ public class SneezeOverviewActivity extends ActionBarActivity {
     private ArrayList<Sneeze> sneezeList;
     TreeMap<Integer, Sneeze> sneezeMapDef;
     private LineGraphSeries<DataPoint> series;
+    private String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sneeze_overview);
         GraphView graph = (GraphView) findViewById(R.id.graph);
+
+        username = getIntent().getStringExtra(Connections.NAAM_VAR_USER);
 
         ArrayListVuller();
 
@@ -73,9 +76,10 @@ public class SneezeOverviewActivity extends ActionBarActivity {
         for(int k=0;k<sneezeList.size();k++){
             DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             String s = sneezeList.get(k).getTime().substring(0,10);
+            String name = sneezeList.get(k).getUser().getName();
+            System.out.println(username + "=" + name);
             try {
-                System.out.println(datum + "=" + format.parse(s).getDate());
-                if((double) format.parse(s).getDate() == datum){
+                if((double) format.parse(s).getDate() == datum && name.compareToIgnoreCase(username)==0){
                     i++;
                 }
             } catch (ParseException e) {

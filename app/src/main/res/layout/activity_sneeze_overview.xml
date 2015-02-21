@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:id="@+id/graph"
         app:seriesType="line"
-        app:seriesColor="#ffee6f32" />
+        app:seriesColor="@color/orange" />
 
-    
+
 </LinearLayout>
