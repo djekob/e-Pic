@@ -86,7 +86,7 @@ public class iSneezeActivity extends ActionBarActivity {
             startActivity(i);
             this.finish();
         } else if (id == R.id.my_friends_action_bar) {
-            new Connections(getContext(), username, Connections.TAG_MY_FRIENDS);
+            new Connections(getContext(), username, Connections.GET_ALL_FRIENDS_CODE);
         }
 
         return super.onOptionsItemSelected(item);
