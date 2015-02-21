@@ -1,6 +1,7 @@
 package com.example.administrator.e_pic;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -40,7 +41,7 @@ public class MainActivity extends Activity {
 
         @Override
         public void onClick(View v) {
-            Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+            Intent i = new Intent(getContext(), LoginActivity.class);
             startActivity(i);
         }
     }
@@ -51,8 +52,12 @@ public class MainActivity extends Activity {
 
         @Override
         public void onClick(View v) {
-            Intent i = new Intent(getApplicationContext(), RegisterActivity.class);
+            Intent i = new Intent(getContext(), RegisterActivity.class);
             startActivity(i);
         }
+    }
+
+    private Context getContext(){
+        return this;
     }
 }

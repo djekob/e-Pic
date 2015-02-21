@@ -43,8 +43,7 @@ public class RegisterActivity extends Activity {
         @Override
         public void onClick(View v) {
             setValues();
-            Context context = getApplicationContext();
-            new Connections(voornaam, achternaam, username, password, age, Connections.ADD_FRIEND_CODE, context);
+            new Connections(voornaam, achternaam, username, password, age, Connections.ADD_FRIEND_CODE, getContext());
         }
     }
 
@@ -68,4 +67,7 @@ public class RegisterActivity extends Activity {
         //mAgePicker.setMaxValue(100);
     }
 
+    private Context getContext(){
+        return this;
+    }
 }

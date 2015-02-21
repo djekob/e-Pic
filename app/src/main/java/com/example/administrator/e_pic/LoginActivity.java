@@ -1,6 +1,7 @@
 package com.example.administrator.e_pic;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -33,8 +34,12 @@ public class LoginActivity extends Activity {
 
         @Override
         public void onClick(View v) {
-            new Connections(getApplicationContext(), mUsernameEditText.getText().toString(), mPasswordEditText.getText().toString());
+            new Connections(getContext(), mUsernameEditText.getText().toString(), mPasswordEditText.getText().toString());
 
         }
+    }
+
+    private Context getContext(){
+        return this;
     }
 }

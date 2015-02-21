@@ -1,5 +1,6 @@
 package com.example.administrator.e_pic;
 
+import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -30,7 +31,7 @@ public class SneezeListActivity extends ActionBarActivity {
 
         mListView = (ListView) findViewById(R.id.all_sneezes_list);
         ArrayListVuller();
-        SneezeMapAdapter adapter= new SneezeMapAdapter(getApplicationContext(), R.layout.sneeze_list_item, sneezeMapDef);
+        SneezeMapAdapter adapter= new SneezeMapAdapter(getContext(), R.layout.sneeze_list_item, sneezeMapDef);
 
         mListView.setAdapter(adapter);
     }
@@ -62,5 +63,9 @@ public class SneezeListActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private Context getContext(){
+        return this;
     }
 }

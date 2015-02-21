@@ -1,6 +1,7 @@
 package com.example.administrator.e_pic;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -55,7 +56,7 @@ public class iSneezeActivity extends ActionBarActivity {
         public void onClick(View v) {
 
             //TODO zorgen dat kleur neus verandert als op geduwd wordt isneeze_image_button.setColorFilter(Color.RED);
-            new Connections(getApplicationContext(), myName, Connections.CREATE_SNEEZE_CODE);
+            new Connections(getContext(), myName, Connections.CREATE_SNEEZE_CODE);
 
         }
     }
@@ -82,5 +83,9 @@ public class iSneezeActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private Context getContext(){
+        return this;
     }
 }

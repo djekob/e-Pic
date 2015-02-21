@@ -80,7 +80,7 @@ public class Connections extends Activity {
     private TreeMap<String, Integer> originalUsers;
     private ArrayList<User> myFriends;
 
-    private final Handler handler = new Handler(Looper.getMainLooper());
+    /*private final Handler handler = new Handler(Looper.getMainLooper());
     private ProgressDialog progressDialog;
     private final Runnable progressDialogShow = new Runnable() {
         @Override
@@ -94,7 +94,7 @@ public class Connections extends Activity {
         public void run() {
             progressDialog.dismiss();
         }
-    };
+    };*/
 
 
     public Connections(Context context, String username, int code){
@@ -277,7 +277,7 @@ public class Connections extends Activity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            handler.post(progressDialogShow);
+            //handler.post(progressDialogShow);
         }
 
         protected Boolean doInBackground(String... args) {
@@ -315,7 +315,7 @@ public class Connections extends Activity {
         protected void onPostExecute(Boolean b) {
             super.onPostExecute(b);
             if (b) Toast.makeText(context, "Login mislukt", Toast.LENGTH_LONG).show();
-            handler.post(progressDialogClose);
+            //handler.post(progressDialogClose);
         }
 
 
