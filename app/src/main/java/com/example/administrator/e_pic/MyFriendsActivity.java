@@ -5,13 +5,22 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+
 
 public class MyFriendsActivity extends ActionBarActivity {
 
+    private String username;
+    private ArrayList<User> friends;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_friends_list);
+
+        username = getIntent().getStringExtra(Connections.NAAM_VAR_USER);
+        friends = new ArrayList<>();
+        friends = (ArrayList) getIntent().getSerializableExtra(Connections.TAG_MY_FRIENDS);
+
     }
 
 

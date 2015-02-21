@@ -4,28 +4,19 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
-import java.security.Timestamp;
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.TreeMap;
 
 //TODO connectie maken
@@ -46,6 +37,7 @@ public class Connections extends Activity {
     public static final String NAAM_VAR_USERS_NOT_FRIEND = "Users not friends";
     public static final String NAAM_VAR_PENDING_FRIENDS = "pending friends";
     public static final String TAG_SNEEZES = "sneezes";
+    public static final String TAG_AANTAL_SNEEZES = "Sneezes";
     public static final String TAG_USER_ID = "User_id";
     public static final String TAG_TIME = "Time";
     public static final String TAG_LOGINNAME = "Loginnaam";
@@ -71,6 +63,7 @@ public class Connections extends Activity {
     public static final int ACCEPT_FRIEND_CODE = 7;
     public static final int GET_ALL_SNEEZES_GRAPH_CODE = 8;
     public static final int GO_TO_FRIENDS_PROFILE_CODE = 9;
+    public static final int GET_ALL_FRIENDS_CODE = 10;
 
 
     private Context context;
@@ -91,15 +84,17 @@ public class Connections extends Activity {
         if(code==CREATE_SNEEZE_CODE) {
             new CreateSneeze().execute();
         } else if (code == GET_ALL_SNEEZES_CODE) {
-            new AllSneezes().execute();
+            new GetAllSneezes().execute();
         } else if (code == GET_ALL_USERS_NO_FRIENDS) {
-            new GetUsers().execute();
+            new GetAllUsers().execute();
         } else if(code == GET_ONE_USER_CODE) {
             new GetOneUser().execute();
         } else if(code == Connections.GET_PENDING_FRIENDS) {
             new GetPendingFriends().execute();
         } else if(code == Connections.GET_ALL_SNEEZES_GRAPH_CODE) {
             new OpenSneezesGraph().execute();
+        } else if(code == Connections.GET_ALL_FRIENDS_CODE) {
+            new getFriends().execute();
         }
 
     }
@@ -410,7 +405,7 @@ public class Connections extends Activity {
 
         }
     }
-    private class AllSneezes extends AsyncTask<String, String, Boolean> {
+    private class GetAllSneezes extends AsyncTask<String, String, Boolean> {
 
 
         JSONArray sneezes = new JSONArray();
@@ -491,7 +486,7 @@ public class Connections extends Activity {
 
         }
     }
-    private class GetUsers extends AsyncTask<String, String, Boolean> {
+    private class GetAllUsers extends AsyncTask<String, String, Boolean> {
 
 
         private ArrayList<String> users;
@@ -754,6 +749,61 @@ public class Connections extends Activity {
             if(aBoolean) {
                 ((FriendRequestsActivity) context).adapter.changePendingFriends(friendname);
             }
+        }
+    }
+
+    private class getFriends extends AsyncTask<String, String, Boolean> {
+
+        private ArrayList<User> friends;
+        private JSONArray friendsData;
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+            List<NameValuePair> pars = new ArrayList<>();
+
+            pars.add(new BasicNameValuePair(TAG_LOGINNAME, username));
+
+
+            JSONParser jsonParser = new JSONParser();
+            JSONObject json = jsonParser.makeHttpRequest(URL_ALL_SNEEZES, "POST", pars);
+
+            try {
+                friends = new ArrayList<>();
+
+                int success = json.getInt(TAG_SUCCESS);
+
+                if (success == 1) {
+
+                    friendsData = json.getJSONArray(TAG_MY_FRIENDS);
+
+
+                    for (int i = 0; i < friendsData.length(); i++) {
+                        JSONObject c = friendsData.getJSONObject(i);
+
+
+                        String name = c.getString(TAG_LOGINNAME);
+                        int totalSneezes = c.getInt(TAG_AANTAL_SNEEZES);
+                        User friend = new User(name, totalSneezes);
+                        friends.add(friend);
+                    }
+
+                    Intent ik = new Intent(context, MyFriendsActivity.class);
+                    ik.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    ik.putExtra(NAAM_VAR_USER, username);
+                    ik.putExtra(TAG_MY_FRIENDS, friends);
+
+                    context.startActivity(ik);
+
+                } else {
+
+
+                    return true;
+
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
         }
     }
  }

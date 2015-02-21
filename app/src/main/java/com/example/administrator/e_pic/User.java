@@ -25,6 +25,10 @@ public class User implements Serializable {
         this.name=secondname;
         this.id = id;
     }
+    public User(String username, int aantal) {
+        this.numberOfSneezes = aantal;
+        this.username = username;
+    }
 
     public int getNumberOfSneezes() {
         return numberOfSneezes;

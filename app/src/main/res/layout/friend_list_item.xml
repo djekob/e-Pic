@@ -23,11 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         </LinearLayout>
-    <Button
-        android:id="@+id/go_to_profile_button_list_item"
-        android:layout_weight="5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+
 
 
 </LinearLayout>

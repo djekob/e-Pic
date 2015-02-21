@@ -20,7 +20,6 @@ public class MyFriendsListAdapter extends ArrayAdapter implements Filterable {
     private int resource;
     private Context context;
     private TextView friendsNameTextView, friendsSneezesTextView;
-    private Button goToProfile;
     private String username;
 
     public MyFriendsListAdapter(Context context, int resource, ArrayList<User> myFriends, String username) {
@@ -57,14 +56,15 @@ public class MyFriendsListAdapter extends ArrayAdapter implements Filterable {
         }
 
         friendsNameTextView = (TextView) v.findViewById(R.id.friend_name_text_view_friends_list);
-        goToProfile = (Button) v.findViewById(R.id.go_to_profile_button_list_item);
+
 
         String friend = myFriends.get(position).getUsername();
         int sneezes = myFriends.get(position).getNumberOfSneezes();
-        goToProfile.setOnClickListener(new OnFriendClickListener(friend, position));
-
         friendsNameTextView.setText(friend);
         friendsSneezesTextView.setText(sneezes);
+
+        v.setOnClickListener(new OnFriendClickListener(friend, position));
+
         return v;
     }
     public class OnFriendClickListener implements View.OnClickListener {
@@ -81,9 +81,7 @@ public class MyFriendsListAdapter extends ArrayAdapter implements Filterable {
         @Override
         public void onClick(View v) {
             new Connections(context, username, friendname, position, myFriends ,Connections.GO_TO_FRIENDS_PROFILE_CODE);
-            //v.setBackgroundColor(Color.RED);
 
-            //handler.post(updateResults);
         }
 
 
