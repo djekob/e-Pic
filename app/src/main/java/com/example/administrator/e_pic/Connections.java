@@ -40,6 +40,8 @@ public class Connections extends Activity {
     public static final String URL_GET_ONE_USER = "http://unuzeleirstest.netau.net/get_one_user.php";
     public static final String URL_ADD_FRIEND_REQUEST = "http://unuzeleirstest.netau.net/add_friend_request.php";
     public static final String URL_GET_PENDING_FRIENDS = "http://unuzeleirstest.netau.net/get_pending_friends.php";
+    public static final String URL_ACCEPT_FRIEND_REQUEST = "http://unuzeleirstest.netau.net/accept_friend_request.php";
+
     public static final String NAAM_VAR_USER = "Username";
     public static final String NAAM_VAR_USERS_NOT_FRIEND = "Users not friends";
     public static final String NAAM_VAR_PENDING_FRIENDS = "pending friends";
@@ -79,22 +81,6 @@ public class Connections extends Activity {
     private int position;
     private TreeMap<String, Integer> originalUsers;
     private ArrayList<User> myFriends;
-
-    /*private final Handler handler = new Handler(Looper.getMainLooper());
-    private ProgressDialog progressDialog;
-    private final Runnable progressDialogShow = new Runnable() {
-        @Override
-        public void run() {
-            progressDialog = new ProgressDialog(context);
-            ProgressDialog.show(context, "laden", "tis aant laden");
-        }
-    };
-    private final Runnable progressDialogClose = new Runnable() {
-        @Override
-        public void run() {
-            progressDialog.dismiss();
-        }
-    };*/
 
 
     public Connections(Context context, String username, int code){
@@ -687,7 +673,6 @@ public class Connections extends Activity {
 
             List<NameValuePair> params = new ArrayList<>();
 
-            System.out.println("USERNAME: " + username);
             params.add(new BasicNameValuePair(TAG_LOGINNAME, username));
 
             JSONParser jsonParser = new JSONParser();
@@ -735,8 +720,40 @@ public class Connections extends Activity {
     private class AcceptFriendRequest extends AsyncTask<String, String, Boolean> {
 
         @Override
-        protected Boolean doInBackground(String... params) {
-            return null;
+        protected Boolean doInBackground(String... args) {
+
+
+            List<NameValuePair> params = new ArrayList<>();
+
+            params.add(new BasicNameValuePair(TAG_LOGINNAME, username));
+            params.add(new BasicNameValuePair(TAG_FRIENDNAME, friendname));
+
+            JSONParser jsonParser = new JSONParser();
+
+            JSONObject json = jsonParser.makeHttpRequest(URL_ACCEPT_FRIEND_REQUEST, "POST", params);
+
+            try {
+                int success = json.getInt(TAG_SUCCESS);
+
+                if (success == 1) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return false;
+
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            if(aBoolean) {
+                ((FriendRequestsActivity) context).adapter.changePendingFriends(friendname);
+            }
         }
     }
  }

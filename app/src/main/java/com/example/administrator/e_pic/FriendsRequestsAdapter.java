@@ -10,7 +10,10 @@ import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.TreeMap;
 
 /**
@@ -22,8 +25,6 @@ public class FriendsRequestsAdapter extends ArrayAdapter {
     private String username;
     private ArrayList<String> friendsList;
     private int resource;
-    private TextView friendsNameTextView;
-    private Button acceptFriendButton;
 
     public FriendsRequestsAdapter(Context context, int resource) {
         super(context, resource);
@@ -34,6 +35,7 @@ public class FriendsRequestsAdapter extends ArrayAdapter {
         this.context = context;
         this.resource = resource;
         friendsList = friendsRequestList;
+        Collections.sort(friendsList);
         this.username = username;
     }
 
@@ -62,20 +64,30 @@ public class FriendsRequestsAdapter extends ArrayAdapter {
 
         }
 
-        friendsNameTextView = (TextView) v.findViewById(R.id.friends_name_text_view_list_item);
-        acceptFriendButton = (Button) v.findViewById(R.id.accept_friend_button_list_item);
+        TextView friendsNameTextView = (TextView) v.findViewById(R.id.friends_name_text_view_list_item);
+        Button acceptFriendButton = (Button) v.findViewById(R.id.accept_friend_button_list_item);
 
-        friendsNameTextView.setText(friendsList.get(position));
+        String friend = friendsList.get(position);
+        friendsNameTextView.setText(friend);
 
-
+        acceptFriendButton.setOnClickListener(new acceptFriendOnClickListener(friend));
         return v;
     }
 
     public class acceptFriendOnClickListener implements View.OnClickListener{
+        String friend;
+        public acceptFriendOnClickListener(String friend){
+            this.friend = friend;
+        }
 
         @Override
         public void onClick(View v) {
-            new Connections(context, username, friendsNameTextView.getText().toString() , Connections.ACCEPT_FRIEND_CODE);
+            new Connections(context, username, friend , Connections.ACCEPT_FRIEND_CODE);
         }
+    }
+
+    public void changePendingFriends(String friendname){
+        friendsList.remove(friendname);
+        notifyDataSetChanged();
     }
 }

@@ -17,6 +17,7 @@ public class FriendRequestsActivity extends ActionBarActivity {
     private ArrayList<String> pendingFriends;
     private String username;
     private TextView noFriendsTextView;
+    public FriendsRequestsAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +33,7 @@ public class FriendRequestsActivity extends ActionBarActivity {
         }
         username = getIntent().getStringExtra(Connections.TAG_LOGINNAME);
 
-        FriendsRequestsAdapter adapter = new FriendsRequestsAdapter(this, R.layout.friend_request_list_item, pendingFriends, username);
+        adapter = new FriendsRequestsAdapter(this, R.layout.friend_request_list_item, pendingFriends, username);
 
         pendingFriendsListView.setAdapter(adapter);
 
