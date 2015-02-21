@@ -46,6 +46,7 @@ public class iSneezeActivity extends ActionBarActivity {
 
         isneeze_image_button.setOnClickListener(new SneezeClickListener());
 
+
     }
 
     public class SneezeClickListener implements View.OnClickListener {

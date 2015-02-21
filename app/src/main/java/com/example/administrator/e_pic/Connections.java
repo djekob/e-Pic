@@ -53,9 +53,11 @@ public class Connections extends Activity {
     public static final String TAG_USER = "users";
     public static final String TAG_FRIENDNAME = "Friend";
     public static final String TAG_PENDING_FRIENDS = "Pending_Friends";
+    public static final String TAG_MY_FRIENDS = "My_Friends";
 
 
 
+    public static final int ADD_USER = 0;
     public static final int CREATE_SNEEZE_CODE = 1;
     public static final int GET_ALL_SNEEZES_CODE = 2;
     public static final int GET_ALL_USERS_NO_FRIENDS = 3;
@@ -64,10 +66,9 @@ public class Connections extends Activity {
     public static final int GET_PENDING_FRIENDS = 6;
     public static final int ACCEPT_FRIEND_CODE = 7;
     public static final int GET_ALL_SNEEZES_GRAPH_CODE = 8;
+    public static final int GO_TO_FRIENDS_PROFILE_CODE = 9;
 
 
-    //public static final int ADD_USER = 0;
-    private ProgressDialog pDialog;
     private Context context;
     private View buttonView;
     private String prename = null, name = null, username = null, password = null;
@@ -75,6 +76,7 @@ public class Connections extends Activity {
     private String friendname;
     private int position;
     private TreeMap<String, Integer> originalUsers;
+    private ArrayList<User> myFriends;
 
 
     public Connections(Context context, String username, int code){
@@ -132,19 +134,46 @@ public class Connections extends Activity {
         new Login().execute();
     }
 
-    public Connections(String prename, String name, String username, String password, int age, Context context) {
-        this.prename = prename;
-        this.name = name;
-        this.username = username;
-        this.password = password;
-        this.age = age;
-        this.context = context;
+    public Connections(String prename, String name, String username, String password, int age, int code, Context context) {
+        if (code == ADD_FRIEND_CODE) {
+            this.prename = prename;
+            this.name = name;
+            this.username = username;
+            this.password = password;
+            this.age = age;
+            this.context = context;
 
-        new CreateNewUser().execute();
+            new CreateNewUser().execute();
+        } else if(code == 234435) {
+
+        }
+    }
+
+    public Connections(Context context, String username, String friendname, int position, ArrayList<User> myFriends , int code) {
+        myFriends = new ArrayList<User>();
+        if (code== GO_TO_FRIENDS_PROFILE_CODE) {
+            this.context = context;
+            this.username = username;
+            this.friendname = friendname;
+            this.position = position;
+            this.myFriends = myFriends;
+
+            new GoToFriendsProfile().execute();
+        }
     }
 
 
 
+    private class GoToFriendsProfile extends AsyncTask<String, String, Boolean> {
+    //TODO volledige klasse schrijven  + php
+        @Override
+        protected Boolean doInBackground(String... params) {
+
+            Intent i = new Intent(context, ProfileActivity.class);
+            i.putExtra(TAG_MY_FRIENDS, myFriends);
+            return null;
+        }
+    }
     private class OpenSneezesGraph extends AsyncTask<String, String ,Boolean>{
 
         JSONArray sneezes = new JSONArray();
@@ -187,7 +216,11 @@ public class Connections extends Activity {
                         String leeftijd2 = c.getString(TAG_LEEFTIJD);
                         int leeftijd = Integer.parseInt(leeftijd2);
 
-                        User user = new User(name, firstname, secondname, leeftijd, id);
+                        //TODO sneezes ophalen
+
+                        int totalSneezes = 0;
+
+                        User user = new User(name, firstname, secondname, leeftijd, id, totalSneezes);
                         Sneeze sneeze = new Sneeze(time, user, sneeze_id);
 
                         sneezeHashMapDef.put(sneeze_id, sneeze);
@@ -226,47 +259,31 @@ public class Connections extends Activity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            /*pDialog = new ProgressDialog(context);
-            pDialog.setMessage("Creating Login..");
-            pDialog.setCancelable(true);
-            pDialog.show();*/
         }
 
         protected Boolean doInBackground(String... args) {
-
-            // Building Parameters
             List<NameValuePair> params = new ArrayList<>();
             params.add(new BasicNameValuePair("Loginnaam", username));
             params.add(new BasicNameValuePair("Password", password));
 
-            // getting JSON Object
-            // Note that create product url accepts POST method
             JSONParser jsonParser = new JSONParser();
 
 
             JSONObject json = jsonParser.makeHttpRequest(URL_CHECK_LOGIN,
                     "POST", params);
 
-            // check log cat fro response
-
-            // check for success tag
             try {
                 int success = json.getInt(TAG_SUCCESS);
 
                 if (success == 1) {
-                    // successfully created product
                     Intent i = new Intent(context, iSneezeActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     i.putExtra(NAAM_VAR_USER, username);
                     context.startActivity(i);
 
-                    // closing this screen
-
-
                 } else {
 
                     return true;
-                    // failed to create product
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -278,10 +295,7 @@ public class Connections extends Activity {
         @Override
         protected void onPostExecute(Boolean b) {
             super.onPostExecute(b);
-            //pDialog.dismiss();
             if (b) Toast.makeText(context, "Login mislukt", Toast.LENGTH_LONG).show();
-
-
         }
 
 
@@ -295,52 +309,34 @@ public class Connections extends Activity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            /*pDialog = new ProgressDialog(context);
-            pDialog.setMessage("Creating Login..");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(false);
-            pDialog.show();*/
         }
 
-        /**
-         * Creating product
-         * */
         protected String doInBackground(String... args) {
 
-            // Building Parameters
             List<NameValuePair> params = new ArrayList<>();
             params.add(new BasicNameValuePair("Voornaam", prename));
             params.add(new BasicNameValuePair("Achternaam", name));
             params.add(new BasicNameValuePair("Loginnaam", username));
             params.add(new BasicNameValuePair("Password", password));
             params.add(new BasicNameValuePair("Leeftijd", age+""));
-
-            // getting JSON Object
-            // Note that create product url accepts POST method
             JSONParser jsonParser = new JSONParser();
 
 
             JSONObject json = jsonParser.makeHttpRequest(URL_CREATE_USER,
                     "POST", params);
 
-            // check log cat fro response
-
-            // check for success tag
             try {
                 int success = json.getInt(TAG_SUCCESS);
 
                 if (success == 1) {
-                    // successfully created product
+
                     Intent i = new Intent(context, iSneezeActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     i.putExtra(NAAM_VAR_USER, username);
                     context.startActivity(i);
 
-                    // closing this screen
-
-
                 } else {
-                    // failed to create product
+
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -349,12 +345,8 @@ public class Connections extends Activity {
             return null;
         }
 
-        /**
-         * After completing background task Dismiss the progress dialog
-         * **/
         protected void onPostExecute(String file_url) {
-            // dismiss the dialog once done
-            //pDialog.dismiss();
+
         }
 
     }
@@ -363,32 +355,21 @@ public class Connections extends Activity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            /*pDialog = new ProgressDialog(context);
-            pDialog.setMessage("Add sneeze..");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(false);
-            pDialog.show();*/
-        }
+
+           }
 
         @Override
         protected String doInBackground(String... args) {
 
-            // Building Parameters
+
             List<NameValuePair> params = new ArrayList<>();
             params.add(new BasicNameValuePair("Loginnaam", username));
-            //params.add(new BasicNameValuePair("Timestamp", timestamp));
-
-            // getting JSON Object
-            // Note that create product url accepts POST method
             JSONParser jsonParser = new JSONParser();
 
 
             JSONObject json = jsonParser.makeHttpRequest(URL_ADD_SNEEZE,
                     "POST", params);
 
-            // check log cat fro response
-
-            // check for success tag
             try {
                 int success = json.getInt(TAG_SUCCESS);
 
@@ -399,16 +380,10 @@ public class Connections extends Activity {
                             Toast.makeText(context, "Sneeze added ;)", Toast.LENGTH_SHORT).show();
                         }
                     });
-                    // successfully created product
-                    /*Intent i = new Intent(context, iSneezeActivity.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(i);*/
 
-                    // closing this screen
 
 
                 } else {
-                    // failed to create product
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -421,7 +396,7 @@ public class Connections extends Activity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            //pDialog.dismiss();
+
         }
     }
     private class AllSneezes extends AsyncTask<String, String, Boolean> {
@@ -448,16 +423,15 @@ public class Connections extends Activity {
                 int success = json.getInt(TAG_SUCCESS);
 
                 if (success == 1) {
-                    // products found
-                    // Getting Array of Products
+
                     sneezes = json.getJSONArray(TAG_SNEEZES);
 
                     ArrayList<Sneeze> temporarySneezes = new ArrayList<>();
-                    // looping through All Products
+
                     for (int i = 0; i < sneezes.length(); i++) {
                         JSONObject c = sneezes.getJSONObject(i);
 
-                        // Storing each json item in variable
+
                         int id = c.getInt(TAG_USER_ID);
                         String time = c.getString(TAG_TIME);
                         String name = c.getString(TAG_LOGINNAME);
@@ -467,15 +441,15 @@ public class Connections extends Activity {
                         String leeftijd2 = c.getString(TAG_LEEFTIJD);
                         int leeftijd = Integer.parseInt(leeftijd2);
 
-                        User user = new User(name, firstname, secondname, leeftijd, id);
+
+                        //TODO sneezes ophalen
+                        int totalSneezes = 0;
+
+                        User user = new User(name, firstname, secondname, leeftijd, id, totalSneezes);
                         Sneeze sneeze = new Sneeze(time, user, sneeze_id);
 
                         sneezeHashMapDef.put(sneeze_id, sneeze);
                     }
-                    // successfully created product
-
-                    // closing this screen
-
 
                     Intent ik = new Intent(context, SneezeListActivity.class);
                     ik.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -488,7 +462,7 @@ public class Connections extends Activity {
 
 
                     return true;
-                    // failed to create product
+
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

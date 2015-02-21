@@ -8,14 +8,15 @@ import java.io.Serializable;
 public class User implements Serializable {
 
     private String username, firstname, name;
-    private int age, id;
+    private int age, id, numberOfSneezes;
 
-    public User(String username, String firstname, String name, int age, int id) {
+    public User(String username, String firstname, String name, int age, int id, int numberOfSneezes) {
         this.username = username;
         this.firstname = firstname;
         this.name = name;
         this.age = age;
         this.id = id;
+        this.numberOfSneezes = numberOfSneezes;
     }
 
     public User(String username, String firstname, String secondname,int id) {
@@ -23,6 +24,14 @@ public class User implements Serializable {
         this.firstname=firstname;
         this.name=secondname;
         this.id = id;
+    }
+
+    public int getNumberOfSneezes() {
+        return numberOfSneezes;
+    }
+
+    public void setNumberOfSneezes(int numberOfSneezes) {
+        this.numberOfSneezes = numberOfSneezes;
     }
 
     public int getId() {

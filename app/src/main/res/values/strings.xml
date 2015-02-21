@@ -34,8 +34,7 @@
     <string name="no_friend_requests">No friends requests</string>
     <string name="title_activity_sneeze_overview">All Sneezes Graph</string>
     <string name="all_sneezes_graph">Graph Overview</string>
-
-
-
+    <string name="title_activity_get_friends_list">GetFriendsListActivity</string>
+    <string name="title_activity_profile">ProfileActivity</string>
 
 </resources>

@@ -44,7 +44,7 @@ public class RegisterActivity extends Activity {
         public void onClick(View v) {
             setValues();
             Context context = getApplicationContext();
-            new Connections(voornaam, achternaam, username, password, age, context);
+            new Connections(voornaam, achternaam, username, password, age, Connections.ADD_FRIEND_CODE, context);
         }
     }
 
