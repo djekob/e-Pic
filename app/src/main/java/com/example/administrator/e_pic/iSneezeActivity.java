@@ -84,6 +84,9 @@ public class iSneezeActivity extends ActionBarActivity {
             SaveSharedPreference.setUserName(this, "");
             Intent i = new Intent(this, FirstActivity.class);
             startActivity(i);
+            this.finish();
+        } else if (id == R.id.my_friends_action_bar) {
+            new Connections(getContext(), username, Connections.TAG_MY_FRIENDS);
         }
 
         return super.onOptionsItemSelected(item);

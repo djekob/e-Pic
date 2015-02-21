@@ -283,6 +283,8 @@ public class Connections extends Activity {
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     i.putExtra(NAAM_VAR_USER, username);
                     context.startActivity(i);
+                    LoginActivity loginActivity = (LoginActivity) context;
+                    loginActivity.finish();
 
                 } else {
 

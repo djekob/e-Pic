@@ -29,6 +29,7 @@ public class RealMainActivity extends Activity {
         {
             Intent i = new Intent(context, FirstActivity.class);
             startActivity(i);
+            this.finish();
         }
         else
         {
@@ -36,6 +37,7 @@ public class RealMainActivity extends Activity {
             String username = SaveSharedPreference.getUserName(context);
             i.putExtra(Connections.NAAM_VAR_USER, username);
             startActivity(i);
+            this.finish();
 
         }
 
