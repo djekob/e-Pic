@@ -13,7 +13,7 @@ import android.widget.Button;
 import java.security.Timestamp;
 
 
-public class MainActivity extends Activity {
+public class FirstActivity extends Activity {
 
     private Button mLoginButton, mRegisterButton;
 

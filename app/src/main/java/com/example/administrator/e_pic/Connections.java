@@ -297,6 +297,7 @@ public class Connections extends Activity {
                 int success = json.getInt(TAG_SUCCESS);
 
                 if (success == 1) {
+                    SaveSharedPreference.setUserName(context, username);
                     Intent i = new Intent(context, iSneezeActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     i.putExtra(NAAM_VAR_USER, username);
@@ -353,6 +354,7 @@ public class Connections extends Activity {
 
                 if (success == 1) {
 
+                    SaveSharedPreference.setUserName(context, username);
                     Intent i = new Intent(context, iSneezeActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     i.putExtra(NAAM_VAR_USER, username);
