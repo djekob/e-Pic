@@ -98,8 +98,7 @@ public class SneezeOverviewActivity extends ActionBarActivity {
         for(int k=0;k<sneezeList.size();k++){
             DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             String s = sneezeList.get(k).getTime().substring(0,10);
-            String name = sneezeList.get(k).getUser().getName();
-            System.out.println(username + "=" + name);
+            String name = sneezeList.get(k).getUser().getUsername();
             try {
                 if((double) format.parse(s).getDate() == datum && name.compareToIgnoreCase(username)==0){
                     i++;
