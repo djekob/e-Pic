@@ -4,6 +4,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
@@ -25,6 +26,7 @@ public class SneezeOverviewActivity extends ActionBarActivity {
     TreeMap<Integer, Sneeze> sneezeMapDef;
     private LineGraphSeries<DataPoint> series;
     private String username;
+    private TextView title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +35,32 @@ public class SneezeOverviewActivity extends ActionBarActivity {
         GraphView graph = (GraphView) findViewById(R.id.graph);
 
         username = getIntent().getStringExtra(Connections.NAAM_VAR_USER);
+        title=(TextView) findViewById(R.id.title_graphView);
 
         ArrayListVuller();
 
-        series = new LineGraphSeries<DataPoint>(generateData());
-        graph.addSeries(series);
+        int width = 5;
+
+        boolean empty = true;
+
+        DataPoint[] Data = generateData(width);
+
+        for (int i=0;i<width;i++) {
+            if (empty) {
+                if (Data[i].getY() != 0) {
+                    empty = false;
+                }
+            }
+        }
+
+        if(!empty){
+            series = new LineGraphSeries<DataPoint>(Data);
+            graph.addSeries(series);
+            title.setText("Overzicht van uw Sneezes van de laatste " + width + " dagen!");
+        }
+        else{
+            title.setText("Je hebt de laatste " + width + " dagen niet geniest!");
+        }
 
     }
 
@@ -52,8 +75,7 @@ public class SneezeOverviewActivity extends ActionBarActivity {
         }
     }
 
-    private DataPoint[] generateData()  {
-        int width = 5;
+    private DataPoint[] generateData(int width)  {
         DataPoint values[] = new DataPoint[width];
 
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -86,7 +108,6 @@ public class SneezeOverviewActivity extends ActionBarActivity {
                 e.printStackTrace();
             }
         }
-
         return i;
     }
 }
