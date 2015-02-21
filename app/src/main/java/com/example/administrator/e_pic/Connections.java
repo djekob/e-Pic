@@ -273,10 +273,12 @@ public class Connections extends Activity {
 
 
     private class Login extends AsyncTask<String, String, Boolean> {
-
+        ProgressDialog progress;
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            progress = ProgressDialog.show(context, "dialog title",
+                    "dialog message", true);
             //handler.post(progressDialogShow);
         }
 
@@ -315,6 +317,7 @@ public class Connections extends Activity {
         protected void onPostExecute(Boolean b) {
             super.onPostExecute(b);
             if (b) Toast.makeText(context, "Login mislukt", Toast.LENGTH_LONG).show();
+            progress.dismiss();
             //handler.post(progressDialogClose);
         }
 
