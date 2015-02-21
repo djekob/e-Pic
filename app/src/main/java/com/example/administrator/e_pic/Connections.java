@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -77,6 +79,22 @@ public class Connections extends Activity {
     private int position;
     private TreeMap<String, Integer> originalUsers;
     private ArrayList<User> myFriends;
+
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private ProgressDialog progressDialog;
+    private final Runnable progressDialogShow = new Runnable() {
+        @Override
+        public void run() {
+            progressDialog = new ProgressDialog(context);
+            ProgressDialog.show(context, "laden", "tis aant laden");
+        }
+    };
+    private final Runnable progressDialogClose = new Runnable() {
+        @Override
+        public void run() {
+            progressDialog.dismiss();
+        }
+    };
 
 
     public Connections(Context context, String username, int code){
@@ -259,6 +277,7 @@ public class Connections extends Activity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            handler.post(progressDialogShow);
         }
 
         protected Boolean doInBackground(String... args) {
@@ -296,6 +315,7 @@ public class Connections extends Activity {
         protected void onPostExecute(Boolean b) {
             super.onPostExecute(b);
             if (b) Toast.makeText(context, "Login mislukt", Toast.LENGTH_LONG).show();
+            handler.post(progressDialogClose);
         }
 
 
@@ -612,6 +632,7 @@ public class Connections extends Activity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+
         }
 
         protected Boolean doInBackground(String... args) {
