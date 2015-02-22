@@ -5,6 +5,15 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
+    <permission
+        android:name="com.example.gcm.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.example.gcm.permission.C2D_MESSAGE" />
 
     <application
         android:allowBackup="true"
@@ -14,11 +23,10 @@
         <activity
             android:name=".FirstActivity"
             android:label="@string/title_activity_main" >
-
         </activity>
         <activity
             android:name=".iSneezeActivity"
-            android:label="@string/title_activity_i_sneeze">
+            android:label="@string/title_activity_i_sneeze" >
         </activity>
         <activity
             android:name=".RegisterActivity"
@@ -55,9 +63,10 @@
         <activity
             android:name=".RealMainActivity"
             android:label="@string/title_activity_real_main"
-            android:noHistory="true">
+            android:noHistory="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
