@@ -17,6 +17,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.TreeMap;
 
 //TODO connectie maken
@@ -296,6 +297,7 @@ public class Connections extends Activity {
             super.onPostExecute(b);
             if (b) Toast.makeText(context, "Login mislukt", Toast.LENGTH_LONG).show();
             progress.dismiss();
+
             //handler.post(progressDialogClose);
         }
 
@@ -350,16 +352,19 @@ public class Connections extends Activity {
         }
 
         protected void onPostExecute(String file_url) {
-
+            progress.dismiss();
         }
 
     }
 
     private class CreateSneeze extends AsyncTask<String, String, String>{
 
+        ProgressDialog progress;
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            progress =RandomShit.getProgressDialog(context);
+            progress.show();
 
            }
 
@@ -401,17 +406,21 @@ public class Connections extends Activity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            progress.dismiss();
 
         }
     }
 
     private class GetAllSneezes extends AsyncTask<String, String, Boolean> {
 
+        ProgressDialog progress;
 
         JSONArray sneezes = new JSONArray();
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            progress = RandomShit.getProgressDialog(context);
+            progress.show();
         }
 
         protected Boolean doInBackground(String... args) {
@@ -482,7 +491,7 @@ public class Connections extends Activity {
             super.onPostExecute(b);
             //pDialog.dismiss();
             if (b) Toast.makeText(context, "Laden sneezes mislukt.", Toast.LENGTH_LONG).show();
-
+            progress.dismiss();
 
         }
     }
@@ -491,12 +500,15 @@ public class Connections extends Activity {
 
 
         private ArrayList<String> users;
+        ProgressDialog progress;
 
         //JSONArray sneezes = new JSONArray();
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            progress = RandomShit.getProgressDialog(context);
+            progress.show();
         }
 
         protected Boolean doInBackground(String... args) {
@@ -543,6 +555,7 @@ public class Connections extends Activity {
                 ik.putExtra(NAAM_VAR_USERS_NOT_FRIEND, users);
                 ik.putExtra(iSneezeActivity.ADD_FRIEND_CODE, username);
                 context.startActivity(ik);
+                progress.dismiss();
             }
 
         }
@@ -552,6 +565,7 @@ public class Connections extends Activity {
     private class GetOneUser extends AsyncTask<String, String, User> {
 
 
+        ProgressDialog progress;
         private User gebruiker;
 
         //JSONArray sneezes = new JSONArray();
@@ -559,6 +573,8 @@ public class Connections extends Activity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            progress = RandomShit.getProgressDialog(context);
+            progress.show();
         }
 
         protected User doInBackground(String... args) {
@@ -609,7 +625,7 @@ public class Connections extends Activity {
 
         protected void onPostExecute(User user) {
             super.onPostExecute(user);
-
+            progress.dismiss();
 
         }
 
@@ -617,9 +633,12 @@ public class Connections extends Activity {
 
     private class AddFriend extends AsyncTask<String, String, Boolean> {
 
+        ProgressDialog progress;
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            progress = RandomShit.getProgressDialog(context);
+            progress.show();
 
         }
 
@@ -656,6 +675,7 @@ public class Connections extends Activity {
             super.onPostExecute(aBoolean);
             if(aBoolean) {
                 ((SearchFriendActivity) context).adapter.changeOriginalUser(friendname);
+                progress.dismiss();
             }
         }
     }
@@ -663,6 +683,20 @@ public class Connections extends Activity {
     private class GetPendingFriends extends AsyncTask<String, String, Boolean> {
 
         ArrayList<String> pendingFriends;
+        ProgressDialog progress;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progress= RandomShit.getProgressDialog(context);
+            progress.show();
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            progress.dismiss();
+        }
 
         @Override
         protected Boolean doInBackground(String... args) {
@@ -716,6 +750,8 @@ public class Connections extends Activity {
 
     private class AcceptFriendRequest extends AsyncTask<String, String, Boolean> {
 
+        ProgressDialog progress;
+
         @Override
         protected Boolean doInBackground(String... args) {
 
@@ -746,16 +782,25 @@ public class Connections extends Activity {
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progress = RandomShit.getProgressDialog(context);
+            progress.show();
+        }
+
+        @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
             if(aBoolean) {
                 ((FriendRequestsActivity) context).adapter.changePendingFriends(friendname);
+                progress.dismiss();
             }
         }
     }
 
     private class getFriends extends AsyncTask<String, String, Boolean> {
 
+        private ProgressDialog progress;
         private ArrayList<User> friends;
         private JSONArray friendsData;
 
@@ -806,6 +851,19 @@ public class Connections extends Activity {
                 e.printStackTrace();
             }
             return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progress = RandomShit.getProgressDialog(context);
+            progress.show();
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            progress.dismiss();
         }
     }
  }
