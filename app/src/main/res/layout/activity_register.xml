@@ -25,12 +25,14 @@
         android:background="@drawable/omkadering">
     <EditText
         android:id="@+id/first_name_edit_text"
+        android:capitalize="words"
         android:textColor="@color/titles_activities"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/voornaam"/>
     <EditText
         android:textColor="@color/titles_activities"
+        android:capitalize="words"
         android:id="@+id/achternaam_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -38,6 +40,7 @@
 
     <EditText
         android:id="@+id/username_edit_text"
+        android:capitalize="words"
         android:textColor="@color/titles_activities"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

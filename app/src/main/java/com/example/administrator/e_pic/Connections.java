@@ -253,9 +253,7 @@ public class Connections extends Activity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progress = new ProgressDialog(context, R.style.MyTheme);
-            progress.setCancelable(false);
-            progress.setProgressStyle(android.R.style.Widget_ProgressBar_Small);
+            progress = RandomShit.getProgressDialog(context);
             progress.show();
         }
 
@@ -305,13 +303,12 @@ public class Connections extends Activity {
     }
     private class CreateNewUser extends AsyncTask<String, String, String> {
 
-
-        /**
-         * Before starting background thread Show Progress Dialog
-         * */
+        private ProgressDialog progress;
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            progress = RandomShit.getProgressDialog(context);
+            progress.show();
         }
 
         protected String doInBackground(String... args) {
