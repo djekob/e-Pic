@@ -22,12 +22,14 @@ import java.util.TreeMap;
 
 //TODO connectie maken
 public class Connections extends Activity {
+    public static final String GOOGLE_SENDER_ID = "AIzaSyDz_sHiGxVmguNkncDI6KAk9S88U4j6VVo";
 
     private static final String TAG_SUCCESS = "success";
     private static final String URL_CREATE_USER = "http://unuzeleirstest.netau.net/create_user.php";
     private static final String URL_ADD_SNEEZE = "http://unuzeleirstest.netau.net/add_sneeze.php";
     private static final String URL_CHECK_LOGIN = "http://unuzeleirstest.netau.net/check_login.php";
     private static final String URL_ALL_SNEEZES = "http://unuzeleirstest.netau.net/get_all_sneezes.php";
+    private static final String URL_ALL_FRIEND_SNEEZES = "http://unuzeleirstest.netau.net/get_all_friend_sneezes.php";
     public static final String URL_GET_USERS_NOT_FRIEND = "http://unuzeleirstest.netau.net/get_users_not_friends.php";
     public static final String URL_GET_ONE_USER = "http://unuzeleirstest.netau.net/get_one_user.php";
     public static final String URL_ADD_FRIEND_REQUEST = "http://unuzeleirstest.netau.net/add_friend_request.php";
@@ -66,11 +68,13 @@ public class Connections extends Activity {
     public static final int GET_ALL_SNEEZES_GRAPH_CODE = 8;
     public static final int GO_TO_FRIENDS_PROFILE_CODE = 9;
     public static final int GET_ALL_FRIENDS_CODE = 10;
+    public static final int GET_ALL_FRIEND_SNEEZES_CODE = 11;
+    public static final int REGISTER_CODE = 12;
 
 
     private Context context;
     private View buttonView;
-    private String prename = null, name = null, username = null, password = null;
+    private String prename = null, name = null, username = null, password = null, regid = null;
     private int age;
     private String friendname;
     private int position;
@@ -85,8 +89,8 @@ public class Connections extends Activity {
 
         if(code==CREATE_SNEEZE_CODE) {
             new CreateSneeze().execute();
-        } else if (code == GET_ALL_SNEEZES_CODE) {
-            new GetAllSneezes().execute();
+        } else if (code == GET_ALL_FRIEND_SNEEZES_CODE) {
+            new GetAllFriendSneezes().execute();
         } else if (code == GET_ALL_USERS_NO_FRIENDS) {
             new GetAllUsers().execute();
         } else if(code == GET_ONE_USER_CODE) {
@@ -129,13 +133,14 @@ public class Connections extends Activity {
         new Login().execute();
     }
 
-    public Connections(String prename, String name, String username, String password, int age, int code, Context context) {
-        if (code == ADD_FRIEND_CODE) {
+    public Connections(String prename, String name, String username, String password, int age, String regid ,int code, Context context) {
+        if (code == REGISTER_CODE) {
             this.prename = prename;
             this.name = name;
             this.username = username;
             this.password = password;
             this.age = age;
+            this.regid = regid;
             this.context = context;
 
             new CreateNewUser().execute();
@@ -321,6 +326,8 @@ public class Connections extends Activity {
             params.add(new BasicNameValuePair("Loginnaam", username));
             params.add(new BasicNameValuePair("Password", password));
             params.add(new BasicNameValuePair("Leeftijd", age+""));
+            params.add(new BasicNameValuePair("Regid", regid));
+            System.out.println(regid);
             JSONParser jsonParser = new JSONParser();
 
 
@@ -382,6 +389,7 @@ public class Connections extends Activity {
 
             try {
                 int success = json.getInt(TAG_SUCCESS);
+
 
                 if (success == 1) {
 
@@ -866,4 +874,86 @@ public class Connections extends Activity {
             progress.dismiss();
         }
     }
- }
+    private class GetAllFriendSneezes extends AsyncTask<String, String, Boolean> {
+
+
+        JSONArray sneezes = new JSONArray();
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        protected Boolean doInBackground(String... args) {
+
+            List<NameValuePair> params = new ArrayList<>();
+            params.add(new BasicNameValuePair(TAG_LOGINNAME, username));
+
+            TreeMap<Integer, Sneeze> sneezeHashMapDef;
+
+            JSONParser jsonParser = new JSONParser();
+            JSONObject json = jsonParser.makeHttpRequest(URL_ALL_FRIEND_SNEEZES,"POST", params);
+
+            try {
+                sneezeHashMapDef = new TreeMap<>();
+                int success = json.getInt(TAG_SUCCESS);
+
+                if (success == 1) {
+
+                    sneezes = json.getJSONArray(TAG_SNEEZES);
+
+                    ArrayList<Sneeze> temporarySneezes = new ArrayList<>();
+
+                    for (int i = 0; i < sneezes.length(); i++) {
+                        JSONObject c = sneezes.getJSONObject(i);
+
+
+                        int id = c.getInt(TAG_USER_ID);
+                        String time = c.getString(TAG_TIME);
+                        String name = c.getString(TAG_LOGINNAME);
+                        int sneeze_id = c.getInt(TAG_ID);
+                        String firstname = c.getString(TAG_VOORNAAM);
+                        String secondname = c.getString(TAG_ACHTERNAAM);
+                        String leeftijd2 = c.getString(TAG_LEEFTIJD);
+                        int leeftijd = Integer.parseInt(leeftijd2);
+
+
+                        //TODO sneezes ophalen
+                        int totalSneezes = 0;
+
+                        User user = new User(name, firstname, secondname, leeftijd, id, totalSneezes);
+                        Sneeze sneeze = new Sneeze(time, user, sneeze_id);
+
+                        sneezeHashMapDef.put(sneeze_id, sneeze);
+                    }
+
+                    Intent ik = new Intent(context, SneezeListActivity.class);
+                    ik.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    ik.putExtra(NAAM_VAR_USER, username);
+                    ik.putExtra(TAG_SNEEZES, sneezeHashMapDef);
+
+                    context.startActivity(ik);
+
+                } else {
+
+
+                    return true;
+
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean b) {
+            super.onPostExecute(b);
+            //pDialog.dismiss();
+            if (b) Toast.makeText(context, "Laden sneezes mislukt.", Toast.LENGTH_LONG).show();
+
+
+        }
+    }
+
+}
