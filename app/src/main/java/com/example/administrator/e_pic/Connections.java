@@ -34,20 +34,22 @@ import java.util.concurrent.TimeoutException;
 
 //TODO connectie maken
 public class Connections {
-    public static final String GOOGLE_SENDER_ID = "AIzaSyDz_sHiGxVmguNkncDI6KAk9S88U4j6VVo";
+    public static final String GOOGLE_API_KEY = "AIzaSyAm2MCwTfk5Yqbmsv2XYl-w4vUN1TJMHr0";
 
     private static final String TAG_SUCCESS = "success";
-    private static final String URL_CREATE_USER = "http://unuzeleirstest.netau.net/create_user.php";
-    private static final String URL_ADD_SNEEZE = "http://unuzeleirstest.netau.net/add_sneeze.php";
-    private static final String URL_CHECK_LOGIN = "http://unuzeleirstest.netau.net/check_login.php";
-    private static final String URL_ALL_SNEEZES = "http://unuzeleirstest.netau.net/get_all_sneezes.php";
-    private static final String URL_ALL_FRIEND_SNEEZES = "http://unuzeleirstest.netau.net/get_all_friend_sneezes.php";
-    public static final String URL_GET_USERS_NOT_FRIEND = "http://unuzeleirstest.netau.net/get_users_not_friends.php";
-    public static final String URL_GET_ONE_USER = "http://unuzeleirstest.netau.net/get_one_user.php";
-    public static final String URL_ADD_FRIEND_REQUEST = "http://unuzeleirstest.netau.net/add_friend_request.php";
-    public static final String URL_GET_PENDING_FRIENDS = "http://unuzeleirstest.netau.net/get_pending_friends.php";
-    public static final String URL_ACCEPT_FRIEND_REQUEST = "http://unuzeleirstest.netau.net/accept_friend_request.php";
-    public static final String URL_GET_FRIENDS = "http://unuzeleirstest.netau.net/get_friends.php";
+
+    private static final String IP = "http://130.211.57.199/";
+    private static final String URL_CREATE_USER = IP+"create_user.php";
+    private static final String URL_ADD_SNEEZE = IP+"add_sneeze.php";
+    private static final String URL_CHECK_LOGIN = IP+"check_login.php";
+    private static final String URL_ALL_SNEEZES = IP+"get_all_sneezes.php";
+    private static final String URL_ALL_FRIEND_SNEEZES = IP+ "get_all_friend_sneezes.php";
+    public static final String URL_GET_USERS_NOT_FRIEND = IP+ "get_users_not_friends.php";
+    public static final String URL_GET_ONE_USER = IP+"get_one_user.php";
+    public static final String URL_ADD_FRIEND_REQUEST = IP+"add_friend_request.php";
+    public static final String URL_GET_PENDING_FRIENDS = IP+"get_pending_friends.php";
+    public static final String URL_ACCEPT_FRIEND_REQUEST = IP+"accept_friend_request.php";
+    public static final String URL_GET_FRIENDS = IP+"get_friends.php";
 
     public static final String NAAM_VAR_USER = "Username";
     public static final String NAAM_VAR_USERS_NOT_FRIEND = "Users not friends";
@@ -188,10 +190,13 @@ public class Connections {
     }
     private class OpenSneezesGraph extends AsyncTask<String, String ,Boolean>{
 
+        ProgressDialog progress;
         JSONArray sneezes = new JSONArray();
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            progress= RandomShit.getProgressDialog(context);
+            progress.show();
         }
 
         protected Boolean doInBackground(String... args) {
@@ -263,6 +268,11 @@ public class Connections {
         }
 
 
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            progress.dismiss();
+        }
     }
 
 

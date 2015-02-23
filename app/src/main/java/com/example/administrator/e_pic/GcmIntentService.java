@@ -20,6 +20,7 @@ package com.example.administrator.e_pic;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import android.app.IntentService;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -28,6 +29,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.RemoteViews;
 
 /**
  * This {@code IntentService} does the actual handling of the GCM message.
@@ -67,17 +69,17 @@ public class GcmIntentService extends IntentService {
                 // If it's a regular GCM message, do some work.
             } else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
                 // This loop represents the service doing some work.
-                for (int i = 0; i < 5; i++) {
+                /*for (int i = 0; i < 5; i++) {
                     Log.i(TAG, "Working... " + (i + 1)
                             + "/5 @ " + SystemClock.elapsedRealtime());
                     try {
                         Thread.sleep(5000);
                     } catch (InterruptedException e) {
                     }
-                }
+                }*/
                 Log.i(TAG, "Completed work @ " + SystemClock.elapsedRealtime());
                 // Post notification of received message.
-                sendNotification("Received: " + extras.toString());
+                sendNotification("Jakob has sneezed");
                 Log.i(TAG, "Received: " + extras.toString());
             }
         }
@@ -97,13 +99,17 @@ public class GcmIntentService extends IntentService {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.ic_launcher)
-                        .setContentTitle("GCM Notification")
+                        .setSmallIcon(R.drawable.sneeze_icon)
+                        .setContentTitle("iSneeze")
                         .setStyle(new NotificationCompat.BigTextStyle()
                                 .bigText(msg))
-                        .setContentText(msg);
+                        .setContentText(msg)
+                        .setTicker("fuck offfff allemaaal");
 
+        mBuilder.setAutoCancel(true);
         mBuilder.setContentIntent(contentIntent);
+
+        RemoteViews contiView = new RemoteViews(getApplicationContext().getPackageName(), R.layout.notification_layout);
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
     }
 }

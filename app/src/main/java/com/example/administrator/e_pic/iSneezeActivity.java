@@ -27,6 +27,7 @@ public class iSneezeActivity extends ActionBarActivity {
     private Connections c;
     private ImageButton isneeze_image_button;
     private String username;
+    private Context context;
 
 
     public static final String ADD_FRIEND_CODE = "add_friend";
@@ -36,7 +37,9 @@ public class iSneezeActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_i_sneeze);
 
-        myName = getIntent().getExtras().getString(Connections.NAAM_VAR_USER);
+        context = this;
+
+        myName = SaveSharedPreference.getUserName(context);
 
         username = myName;
         myNameTextView = (TextView) findViewById(R.id.my_name_textview);
