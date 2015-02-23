@@ -109,7 +109,6 @@ public class GcmIntentService extends IntentService {
         mBuilder.setAutoCancel(true);
         mBuilder.setContentIntent(contentIntent);
 
-        RemoteViews contiView = new RemoteViews(getApplicationContext().getPackageName(), R.layout.notification_layout);
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
     }
 }

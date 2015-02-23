@@ -68,6 +68,7 @@ public class Connections {
     public static final String TAG_FRIENDNAME = "Friend";
     public static final String TAG_PENDING_FRIENDS = "Pending_Friends";
     public static final String TAG_FRIENDS = "Friends";
+    public static final String TAG_NOTIFICATIONS ="notifications";
 
 
 
@@ -84,6 +85,7 @@ public class Connections {
     public static final int GET_ALL_FRIENDS_CODE = 10;
     public static final int GET_ALL_FRIEND_SNEEZES_CODE = 11;
     public static final int REGISTER_CODE = 12;
+    public static final int DELETE_REGID_CODE = 13;
 
 
     private Context context;
@@ -115,6 +117,8 @@ public class Connections {
             new OpenSneezesGraph().execute();
         } else if(code == Connections.GET_ALL_FRIENDS_CODE) {
             new getFriends().execute();
+        } else if(code == Connections.DELETE_REGID_CODE) {
+            //new DeleteRegId().execute();
         }
 
     }
@@ -177,6 +181,14 @@ public class Connections {
     }
 
 
+    private class DeleteRegId extends AsyncTask<String, String, Boolean> {
+
+        //TODO de REGID van de gebruiker die zich afmeldt verwijderen uit de mysql tabel USERS
+        @Override
+        protected Boolean doInBackground(String... params) {
+            return null;
+        }
+    }
 
     private class GoToFriendsProfile extends AsyncTask<String, String, Boolean> {
     //TODO volledige klasse schrijven  + php
@@ -185,6 +197,7 @@ public class Connections {
 
             Intent i = new Intent(context, ProfileActivity.class);
             i.putExtra(TAG_FRIENDS, myFriends);
+            context.startActivity(i);
             return null;
         }
     }
@@ -991,7 +1004,7 @@ public class Connections {
     public class GCMRegister implements Runnable {
         private GoogleCloudMessaging gcm;
         public String regid;
-        private String SENDER_ID = "975569586744";
+        private String SENDER_ID = "952325312721";
         public static final String PROPERTY_REG_ID = "registration_id";
         private static final String PROPERTY_APP_VERSION = "appVersion";
         private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
@@ -1066,13 +1079,14 @@ public class Connections {
          * @param regId registration ID
          */
         private void storeRegistrationId(Context context, String regId) {
-            final SharedPreferences prefs = getGcmPreferences(context);
+            /*final SharedPreferences prefs = getGcmPreferences(context);
             int appVersion = getAppVersion(context);
             Log.i("storeRegistrationId", "Saving regId on app version " + appVersion);
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString(PROPERTY_REG_ID, regId);
             editor.putInt(PROPERTY_APP_VERSION, appVersion);
-            editor.commit();
+            editor.commit();*/
+            SaveSharedPreference.setRegid(context, regId);
         }
 
         /**
@@ -1110,12 +1124,12 @@ public class Connections {
 
 
         private String getRegistrationId(Context context) {
-            final SharedPreferences prefs = getGcmPreferences(context);
+            /*final SharedPreferences prefs = getGcmPreferences(context);
             String registrationId = prefs.getString(PROPERTY_REG_ID, "");
             if (registrationId.isEmpty()) {
                 Log.i("getRegistrationId", "Registration not found.");
                 return "";
-            }
+            }*/
             // Check if app was updated; if so, it must clear the registration ID
             // since the existing regID is not guaranteed to work with the new
             // app version.
@@ -1125,7 +1139,7 @@ public class Connections {
             Log.i("getRegistrationId", "App version changed.");
             return "";
         }*/
-            return registrationId;
+            return SaveSharedPreference.getRegid(context);
         }
 
 

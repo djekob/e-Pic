@@ -85,6 +85,9 @@ public class iSneezeActivity extends ActionBarActivity {
             new Connections(this, username, Connections.GET_ALL_SNEEZES_GRAPH_CODE);
         } else if (id == R.id.logout_user) {
             SaveSharedPreference.setUserName(this, "");
+            SaveSharedPreference.setRegid(this, "");
+
+            new Connections(this, username, Connections.DELETE_REGID_CODE);
             Intent i = new Intent(this, FirstActivity.class);
             startActivity(i);
             this.finish();

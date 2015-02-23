@@ -10,6 +10,7 @@ import android.preference.PreferenceManager;
 public class SaveSharedPreference
 {
     public static final String TAG_USERNAME= "username";
+    public static final String TAG_REG_ID = Connections.GCMRegister.PROPERTY_REG_ID;
 
     static SharedPreferences getSharedPreferences(Context ctx) {
         return PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -22,8 +23,19 @@ public class SaveSharedPreference
         editor.commit();
     }
 
+    public static void setRegid(Context context, String regid) {
+        SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+        editor.putString(TAG_REG_ID, regid);
+        editor.commit();
+    }
     public static String getUserName(Context ctx)
     {
         return getSharedPreferences(ctx).getString(TAG_USERNAME, "");
     }
+    public static String getRegid(Context context) {
+        return getSharedPreferences(context).getString(TAG_REG_ID, "");
+    }
+
+
+
 }
