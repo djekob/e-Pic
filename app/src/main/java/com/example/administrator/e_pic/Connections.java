@@ -71,6 +71,7 @@ public class Connections {
     public static final String TAG_PENDING_FRIENDS = "Pending_Friends";
     public static final String TAG_FRIENDS = "Friends";
     public static final String TAG_NOTIFICATIONS ="notifications";
+    public static final String TAG_AANTAL = "Aantal";
 
 
 
@@ -226,12 +227,12 @@ public class Connections {
     }
 
     private class GoToFriendsProfile extends AsyncTask<String, String, Boolean> {
-    //TODO volledige klasse schrijven  + php
+
         @Override
         protected Boolean doInBackground(String... params) {
 
             Intent i = new Intent(context, ProfileActivity.class);
-            i.putExtra(TAG_FRIENDS, myFriends);
+            i.putExtra(TAG_FRIENDNAME, friendname);
             context.startActivity(i);
             return null;
         }
@@ -922,12 +923,11 @@ public class Connections {
 
 
                     for (int i = 0; i < friendsData.length(); i++) {
-                        String name = friendsData.getString(i);//.getJSONObject(i);
 
+                        String name = friendsData.getJSONObject(i).getString(TAG_LOGINNAME);
+                        int aantalSneezes = friendsData.getJSONObject(i).getInt(TAG_AANTAL);
 
-                        //String name = c.getString(TAG_LOGINNAME);
-                        //int totalSneezes = c.getInt(TAG_AANTAL_SNEEZES);
-                        User friend = new User(name/*, totalSneezes*/);
+                        User friend = new User(name, aantalSneezes);
                         friends.add(friend);
                     }
 
