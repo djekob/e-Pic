@@ -54,8 +54,10 @@ public class RegisterActivity extends Activity {
         public void onClick(View v) {
             setValues();
             if(!voornaam.trim().isEmpty() && !achternaam.trim().isEmpty() && !password.trim().isEmpty() && !username.trim().isEmpty()) {
+                Log.e("foutje", "dikke fout");
                 new Connections(voornaam, achternaam, username, password, 0 ,Connections.REGISTER_CODE, getContext());
             } else {
+                Log.e("ajaj", "ajaja");
                 warningTextView.setVisibility(View.VISIBLE);
             }
         }
@@ -67,7 +69,6 @@ public class RegisterActivity extends Activity {
         username = mUsernameEditText.getText().toString();
         password = mPasswordEditText.getText().toString();
 
-        mOkButton.setOnClickListener(new okOnClickListener());
 
     }
 
@@ -81,6 +82,8 @@ public class RegisterActivity extends Activity {
         mOkButton = (Button) findViewById(R.id.register_button);
 
         warningTextView.setVisibility(View.INVISIBLE);
+
+        mOkButton.setOnClickListener(new okOnClickListener());
 
     }
 

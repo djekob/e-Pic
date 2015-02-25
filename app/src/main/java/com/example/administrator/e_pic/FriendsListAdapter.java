@@ -82,10 +82,10 @@ public class FriendsListAdapter extends ArrayAdapter implements Filterable {
         String friend = filteredUsers.get(position);
         addFriendButton.setOnClickListener(new OnFriendClickListener(friend, position));
         if(originalUsers.get(friend)>0)  {
-            addFriendButton.setBackgroundColor(Color.YELLOW);
+            addFriendButton.setBackgroundResource(R.drawable.my_button_pressed);
         }
         else {
-            addFriendButton.setBackgroundColor(Color.GRAY);
+            addFriendButton.setBackgroundResource(R.drawable.my_button);
         }
         userTextView.setText(friend);
         return v;

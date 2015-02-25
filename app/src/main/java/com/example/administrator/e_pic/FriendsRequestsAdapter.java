@@ -81,10 +81,10 @@ public class FriendsRequestsAdapter extends ArrayAdapter {
         acceptFriendButton.setOnClickListener(new acceptFriendOnClickListener(friend));
 
         if(originalPendingFriends.get(friend)>0)  {
-            acceptFriendButton.setBackgroundColor(Color.YELLOW);
+            acceptFriendButton.setBackgroundResource(R.drawable.my_button_pressed);
         }
         else {
-            acceptFriendButton.setBackgroundColor(Color.GRAY);
+            acceptFriendButton.setBackgroundResource(R.drawable.my_button);
         }
         return v;
     }

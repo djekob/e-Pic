@@ -31,7 +31,7 @@ public class ProfileActivity extends ActionBarActivity {
         friendsList = (ArrayList) getIntent().getSerializableExtra(Connections.TAG_FRIENDS);
 
         myNameTextView.setText(username);
-        FriendsListProfileAdapter adapter = new FriendsListProfileAdapter(getApplicationContext(), R.layout.friend_list_item, friendsList, username);
+        MyFriendsListAdapter adapter = new MyFriendsListAdapter(this, R.layout.friend_list_item, friendsList, username);
         myFriendsListView.setAdapter(adapter);
 
     }

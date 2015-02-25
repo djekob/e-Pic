@@ -68,6 +68,7 @@
         android:textSize="20sp"
         android:layout_marginTop="30dp"
         android:layout_gravity="center_horizontal"
+        android:enabled="true"
         android:text="@string/ok"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

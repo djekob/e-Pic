@@ -163,7 +163,7 @@ public class Connections {
             this.age = age;
 
             this.context = context;
-
+            Log.e("raar", "raaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaar");
             new CreateNewUser().execute();
         } else if(code == 234435) {
 
@@ -228,14 +228,60 @@ public class Connections {
 
     private class GoToFriendsProfile extends AsyncTask<String, String, Boolean> {
 
+        private ArrayList<User> friendsOfFriend;
+        private JSONArray friendsData;
         @Override
         protected Boolean doInBackground(String... params) {
+            friendsOfFriend = new ArrayList<>();
 
-            Intent i = new Intent(context, ProfileActivity.class);
-            i.putExtra(TAG_FRIENDNAME, friendname);
-            context.startActivity(i);
+            List<NameValuePair> pars = new ArrayList<>();
+
+            pars.add(new BasicNameValuePair(TAG_LOGINNAME, friendname));
+
+
+            JSONParser jsonParser = new JSONParser();
+            JSONObject json = jsonParser.makeHttpRequest(URL_GET_FRIENDS, "POST", pars);
+
+            try {
+                friendsOfFriend = new ArrayList<>();
+
+                int success = json.getInt(TAG_SUCCESS);
+
+                if (success == 1) {
+
+                    friendsData = json.getJSONArray(TAG_FRIENDS);
+
+
+                    for (int i = 0; i < friendsData.length(); i++) {
+
+                        String name = friendsData.getJSONObject(i).getString(TAG_LOGINNAME);
+                        int aantalSneezes = friendsData.getJSONObject(i).getInt(TAG_AANTAL);
+
+                        User friend = new User(name, aantalSneezes);
+                        friendsOfFriend.add(friend);
+                    }
+
+                    Intent i = new Intent(context, ProfileActivity.class);
+                    i.putExtra(TAG_FRIENDNAME, friendname);
+                    i.putExtra(TAG_FRIENDS, friendsOfFriend);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(i);
+                    Activity activity = (Activity) context;
+                    activity.finish();
+                    return null;
+
+                } else {
+
+
+                    return true;
+
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             return null;
         }
+
     }
 
     private class OpenSneezesGraph extends AsyncTask<String, String ,Boolean>{
@@ -395,6 +441,7 @@ public class Connections {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            Log.e("plooooooooooooooooons", "plons");
             progress = RandomShit.getProgressDialog(context);
                 progress.show();
 
@@ -1061,10 +1108,11 @@ public class Connections {
             if (checkPlayServices()) {
 
                 regid = getRegistrationId(context.getApplicationContext());
-
+                System.out.println(regid);
                 if (regid.isEmpty()) {
                     Thread thread = new Thread(this);
                     thread.start();
+                    System.out.println("dmsqlkfj 0000000000000000000000000 ");
                     try {
                         thread.join(60000);
                     } catch (InterruptedException e) {
@@ -1079,6 +1127,7 @@ public class Connections {
 
                     Log.i("registerinback", "begonnen");
                 }
+                else return true;
             } else {
                 Log.i("GPS APK", "No valid Google Play Services APK found.");
             }
@@ -1183,6 +1232,7 @@ public class Connections {
             Log.i("getRegistrationId", "App version changed.");
             return "";
         }*/
+
             return SaveSharedPreference.getRegid(context);
         }
 
