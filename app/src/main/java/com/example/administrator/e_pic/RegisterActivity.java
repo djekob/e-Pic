@@ -31,11 +31,10 @@ public class RegisterActivity extends Activity {
 
     private EditText mVoornaamEditText, mAchternaamEditText, mPasswordEditText, mUsernameEditText;
 
-    private TextView birthDateTextView;
+    private TextView warningTextView;
     private Button mOkButton, datePickerButton;
     private String voornaam, achternaam, password, username;
-    private int age;
-    private int month, year, day;
+
 
     //TODO age afleiden uit textView die wordt aangepast door DatePickerFragment
 
@@ -46,7 +45,6 @@ public class RegisterActivity extends Activity {
 
         initialization();
 
-        mOkButton.setOnClickListener(new okOnClickListener());
 
     }
 
@@ -55,7 +53,11 @@ public class RegisterActivity extends Activity {
         @Override
         public void onClick(View v) {
             setValues();
-            new Connections(voornaam, achternaam, username, password, age ,Connections.REGISTER_CODE, getContext());
+            if(!voornaam.trim().isEmpty() && !achternaam.trim().isEmpty() && !password.trim().isEmpty() && !username.trim().isEmpty()) {
+                new Connections(voornaam, achternaam, username, password, 0 ,Connections.REGISTER_CODE, getContext());
+            } else {
+                warningTextView.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -64,19 +66,22 @@ public class RegisterActivity extends Activity {
         achternaam = mAchternaamEditText.getText().toString();
         username = mUsernameEditText.getText().toString();
         password = mPasswordEditText.getText().toString();
-        //age = mAgePicker.getValue();
+
+        mOkButton.setOnClickListener(new okOnClickListener());
+
     }
 
     private void initialization() {
 
+        warningTextView = (TextView) findViewById(R.id.warning_text_view_register_activity);
         mVoornaamEditText = (EditText) findViewById(R.id.first_name_edit_text);
         mAchternaamEditText = (EditText) findViewById(R.id.achternaam_edit_text);
         mPasswordEditText = (EditText) findViewById(R.id.password_edit_text);
         mUsernameEditText = (EditText) findViewById(R.id.username_edit_text);
         mOkButton = (Button) findViewById(R.id.register_button);
 
-        //mAgePicker.setMinValue(0);
-        //mAgePicker.setMaxValue(100);
+        warningTextView.setVisibility(View.INVISIBLE);
+
     }
 
     private Context getContext(){

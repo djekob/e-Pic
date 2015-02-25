@@ -97,6 +97,7 @@ public class GcmIntentService extends IntentService {
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                 new Intent(this, iSneezeActivity.class), 0);
 
+        long[] vibrate = {130, 100, 130, 100};
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.sneeze_icon)
@@ -104,7 +105,8 @@ public class GcmIntentService extends IntentService {
                         .setStyle(new NotificationCompat.BigTextStyle()
                                 .bigText(msg))
                         .setContentText(msg)
-                        .setTicker("fuck offfff allemaaal");
+                        .setTicker("A friend sneezed")
+                        .setVibrate(vibrate);
 
         mBuilder.setAutoCancel(true);
         mBuilder.setContentIntent(contentIntent);

@@ -16,12 +16,15 @@ import java.security.Timestamp;
 public class FirstActivity extends Activity {
 
     private Button mLoginButton, mRegisterButton;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+        context = this;
+
         mLoginButton = (Button) findViewById(R.id.login_button_main);
         mRegisterButton = (Button) findViewById(R.id.register_button_main);
 
@@ -35,25 +38,26 @@ public class FirstActivity extends Activity {
 
     }
 
+
     private class loginOnClickListener implements View.OnClickListener {
-
-
 
         @Override
         public void onClick(View v) {
             Intent i = new Intent(getContext(), LoginActivity.class);
             startActivity(i);
+            FirstActivity firstActivity = (FirstActivity) context;
+            firstActivity.finish();
         }
     }
 
     private class registerOnClickListener implements View.OnClickListener {
 
-
-
         @Override
         public void onClick(View v) {
             Intent i = new Intent(getContext(), RegisterActivity.class);
             startActivity(i);
+            FirstActivity firstActivity = (FirstActivity) context;
+            firstActivity.finish();
         }
     }
 

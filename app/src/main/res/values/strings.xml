@@ -40,5 +40,6 @@
     <string name="logout">Logout</string>
     <string name="my_friends">My Friends</string>
     <string name="go_to_friends_profile">See profile</string>
+    <string name="vul_alle_velden_in">Vul alle velden in!</string>
 
 </resources>

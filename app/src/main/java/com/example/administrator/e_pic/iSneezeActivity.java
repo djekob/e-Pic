@@ -84,13 +84,7 @@ public class iSneezeActivity extends ActionBarActivity {
         } else if (id == R.id.go_to_all_sneezes_graph_action_bar) {
             new Connections(this, username, Connections.GET_ALL_SNEEZES_GRAPH_CODE);
         } else if (id == R.id.logout_user) {
-            SaveSharedPreference.setUserName(this, "");
-            SaveSharedPreference.setRegid(this, "");
-
             new Connections(this, username, Connections.DELETE_REGID_CODE);
-            Intent i = new Intent(this, FirstActivity.class);
-            startActivity(i);
-            this.finish();
         } else if (id == R.id.my_friends_action_bar) {
             new Connections(getContext(), username, Connections.GET_ALL_FRIENDS_CODE);
         }

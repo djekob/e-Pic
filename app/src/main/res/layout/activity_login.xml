@@ -40,6 +40,15 @@
             android:layout_height="wrap_content"
             android:hint="@string/password"/>
     </LinearLayout>
+    <TextView
+        android:id="@+id/warning_text_view_login_activity"
+        android:textColor="@color/red"
+        android:textStyle="bold"
+        android:layout_marginTop="6dp"
+        android:text="@string/vul_alle_velden_in"
+        android:textSize="18sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
     <Button
         android:id="@+id/ok_button_login"
         android:text="@string/ok"

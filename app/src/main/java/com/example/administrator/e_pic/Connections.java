@@ -51,6 +51,7 @@ public class Connections {
     public static final String URL_GET_PENDING_FRIENDS = IP+"get_pending_friends.php";
     public static final String URL_ACCEPT_FRIEND_REQUEST = IP+"accept_friend_request.php";
     public static final String URL_GET_FRIENDS = IP+"get_friends.php";
+    public static final String URL_DELETE_REGID= IP+"logout.php";
 
     public static final String NAAM_VAR_USER = "Username";
     public static final String NAAM_VAR_USERS_NOT_FRIEND = "Users not friends";
@@ -119,7 +120,7 @@ public class Connections {
         } else if(code == Connections.GET_ALL_FRIENDS_CODE) {
             new getFriends().execute();
         } else if(code == Connections.DELETE_REGID_CODE) {
-            //new DeleteRegId().execute();
+            new DeleteRegId().execute();
         }
 
     }
@@ -184,10 +185,43 @@ public class Connections {
 
     private class DeleteRegId extends AsyncTask<String, String, Boolean> {
 
-        //TODO de REGID van de gebruiker die zich afmeldt verwijderen uit de mysql tabel USERS
+        private String username;
+
         @Override
         protected Boolean doInBackground(String... params) {
-            return null;
+
+            username = SaveSharedPreference.getUserName(context);
+            List<NameValuePair> pars = new ArrayList<>();
+            pars.add(new BasicNameValuePair("Loginnaam", username));
+
+
+            JSONParser jsonParser = new JSONParser();
+
+
+            JSONObject json = jsonParser.makeHttpRequest(URL_DELETE_REGID,
+                    "POST", pars);
+
+            try {
+                int success = json.getInt(TAG_SUCCESS);
+
+                if (success == 1) {
+                    SaveSharedPreference.setUserName(context, "");
+                    SaveSharedPreference.setRegid(context, "");
+
+                    Intent i = new Intent(context, FirstActivity.class);
+                    context.startActivity(i);
+                    iSneezeActivity iSneezeActivity= (iSneezeActivity) context;
+                    iSneezeActivity.finish();
+                } else {
+
+                    return true;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return false;
+
         }
     }
 
@@ -202,6 +236,7 @@ public class Connections {
             return null;
         }
     }
+
     private class OpenSneezesGraph extends AsyncTask<String, String ,Boolean>{
 
         ProgressDialog progress;
@@ -291,7 +326,8 @@ public class Connections {
 
 
     private class Login extends AsyncTask<String, String, Boolean> {
-        ProgressDialog progress;
+        private ProgressDialog progress;
+        private GCMRegister reg;
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -300,9 +336,16 @@ public class Connections {
         }
 
         protected Boolean doInBackground(String... args) {
+
+            reg = new GCMRegister();
+            boolean b = reg.execute();
+            if(!b) return false;
+            String regid = reg.regid;
+
             List<NameValuePair> params = new ArrayList<>();
             params.add(new BasicNameValuePair("Loginnaam", username));
             params.add(new BasicNameValuePair("Password", password));
+            params.add(new BasicNameValuePair("Regid", regid));
 
             JSONParser jsonParser = new JSONParser();
 

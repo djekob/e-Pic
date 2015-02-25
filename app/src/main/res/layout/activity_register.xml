@@ -53,6 +53,14 @@
         android:layout_height="wrap_content"
         android:hint="@string/password"/>
     </LinearLayout>
+    <TextView
+        android:id="@+id/warning_text_view_register_activity"
+        android:textColor="@color/red"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:text="@string/vul_alle_velden_in"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
     <Button
         android:id="@+id/register_button"
         android:textColor="@color/white"
