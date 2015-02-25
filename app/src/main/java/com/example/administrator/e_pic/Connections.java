@@ -41,6 +41,7 @@ public class Connections {
     private static final String IP = "http://130.211.57.199/";
     private static final String URL_CREATE_USER = IP+"create_user.php";
     private static final String URL_ADD_SNEEZE = IP+"add_sneeze.php";
+    private static final String URL_TEST = IP+"add_sneeze_test.php";
     private static final String URL_CHECK_LOGIN = IP+"check_login.php";
     private static final String URL_ALL_SNEEZES = IP+"get_all_sneezes.php";
     private static final String URL_ALL_FRIEND_SNEEZES = IP+ "get_all_friend_sneezes.php";
@@ -351,7 +352,7 @@ public class Connections {
         protected void onPreExecute() {
             super.onPreExecute();
             progress = RandomShit.getProgressDialog(context);
-            progress.show();
+                progress.show();
 
         }
 
@@ -412,7 +413,7 @@ public class Connections {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progress =RandomShit.getProgressDialog(context);
+            progress = RandomShit.getProgressDialog(context);
             progress.show();
 
            }
