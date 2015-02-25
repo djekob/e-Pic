@@ -20,7 +20,7 @@ import android.widget.Toast;
 import java.util.Calendar;
 
 
-public class iSneezeActivity extends ActionBarActivity {
+public class iSneezeActivity extends CustomActionBarActivity {
 
     private TextView myNameTextView;
     private String myName;

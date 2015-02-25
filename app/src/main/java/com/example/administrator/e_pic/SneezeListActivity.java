@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 
-public class SneezeListActivity extends ActionBarActivity {
+public class SneezeListActivity extends CustomActionBarActivity {
 
     private ListView mListView;
     private ArrayList<Sneeze> sneezeList;

@@ -41,5 +41,7 @@
     <string name="my_friends">My Friends</string>
     <string name="go_to_friends_profile">See profile</string>
     <string name="vul_alle_velden_in">Vul alle velden in!</string>
+    <string name="title_activity_custom">CustomActivity</string>
+    <string name="title_activity_custom_action_bar">CustomActionBarActivity</string>
 
 </resources>

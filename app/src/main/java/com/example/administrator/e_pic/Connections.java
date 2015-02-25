@@ -1012,12 +1012,15 @@ public class Connections {
         }
     }
     private class GetAllFriendSneezes extends AsyncTask<String, String, Boolean> {
+        private ProgressDialog progress;
 
 
-        JSONArray sneezes = new JSONArray();
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            progress = RandomShit.getProgressDialog(context);
+            progress.show();
+
         }
 
         protected Boolean doInBackground(String... args) {
@@ -1036,9 +1039,7 @@ public class Connections {
 
                 if (success == 1) {
 
-                    sneezes = json.getJSONArray(TAG_SNEEZES);
-
-                    ArrayList<Sneeze> temporarySneezes = new ArrayList<>();
+                    JSONArray sneezes = json.getJSONArray(TAG_SNEEZES);
 
                     for (int i = 0; i < sneezes.length(); i++) {
                         JSONObject c = sneezes.getJSONObject(i);
@@ -1054,7 +1055,6 @@ public class Connections {
                         int leeftijd = Integer.parseInt(leeftijd2);
 
 
-                        //TODO sneezes ophalen
                         int totalSneezes = 0;
 
                         User user = new User(name, firstname, secondname, leeftijd, id, totalSneezes);
@@ -1086,6 +1086,7 @@ public class Connections {
         @Override
         protected void onPostExecute(Boolean b) {
             super.onPostExecute(b);
+            progress.dismiss();
             //pDialog.dismiss();
             if (b) Toast.makeText(context, "Laden sneezes mislukt.", Toast.LENGTH_LONG).show();
 

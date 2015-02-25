@@ -12,7 +12,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 
-public class ProfileActivity extends ActionBarActivity {
+public class ProfileActivity extends CustomActionBarActivity {
 
     private TextView myNameTextView, mySneezesTextView;
     private ListView myFriendsListView;

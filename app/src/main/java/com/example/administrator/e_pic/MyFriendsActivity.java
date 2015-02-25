@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MyFriendsActivity extends ActionBarActivity {
+public class MyFriendsActivity extends CustomActionBarActivity {
 
     private String username;
     private ArrayList<User> friends;

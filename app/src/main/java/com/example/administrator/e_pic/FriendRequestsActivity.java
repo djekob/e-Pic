@@ -11,7 +11,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 
-public class FriendRequestsActivity extends ActionBarActivity {
+public class FriendRequestsActivity extends CustomActionBarActivity {
 
     private ListView pendingFriendsListView;
     private ArrayList<String> pendingFriends;

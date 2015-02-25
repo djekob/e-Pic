@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 
-public class SneezeOverviewActivity extends ActionBarActivity {
+public class SneezeOverviewActivity extends CustomActionBarActivity {
     private ArrayList<Sneeze> sneezeList;
     TreeMap<Integer, Sneeze> sneezeMapDef;
     private LineGraphSeries<DataPoint> series;

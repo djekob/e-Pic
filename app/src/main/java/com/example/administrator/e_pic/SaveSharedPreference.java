@@ -11,7 +11,6 @@ public class SaveSharedPreference
 {
     public static final String TAG_USERNAME= "username";
     public static final String TAG_REG_ID = Connections.GCMRegister.PROPERTY_REG_ID;
-    public static final String TAG_ID = "id";
 
     static SharedPreferences getSharedPreferences(Context ctx) {
         return PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -37,14 +36,11 @@ public class SaveSharedPreference
         return getSharedPreferences(context).getString(TAG_REG_ID, "");
     }
 
-    public static void setId(Context ctx, int id) {
-        SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
-        editor.putInt(TAG_ID, id);
+    public static void clear(Context context){
+        SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+        editor.putString(TAG_USERNAME, "");
+        editor.putString(TAG_REG_ID, "");
         editor.commit();
-    }
-
-    public static int getId(Context ctx) {
-        return getSharedPreferences(ctx).getInt(TAG_ID, -1);
     }
 
 }

@@ -19,6 +19,7 @@ package com.example.administrator.e_pic;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import android.app.ActivityManager;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -33,6 +34,8 @@ import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
+
+import java.util.List;
 
 /**
  * This {@code IntentService} does the actual handling of the GCM message.
@@ -54,12 +57,12 @@ public class GcmIntentService extends IntentService {
     private static final String TAG_NOTIFICATION_TYPE = "NotificationType";
     private static final int CODE_ADD_SNEEZE = 0;
     private static final int CODE_FRIEND_REQUEST = 1;
-
+    private static final int CODE_OTHER_LOGIN = 2;
     @Override
     protected void onHandleIntent(Intent intent) {
         Bundle extras = intent.getExtras();
         String from = extras.getString(TAG_RECEIVED_FROM);
-        int notType = extras.getInt(TAG_NOTIFICATION_TYPE);
+        int notType = Integer.parseInt(extras.getString(TAG_NOTIFICATION_TYPE));
         GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
         // The getMessageType() intent parameter must be the intent you received
         // in your BroadcastReceiver.
@@ -137,6 +140,13 @@ public class GcmIntentService extends IntentService {
                 //contentIntent = PendingIntent.getActivity(this, 0,
                   //      new Intent(this.getApplicationContext(), iSneezeActivity.class), 0);
                 break;
+            case CODE_OTHER_LOGIN:
+                SaveSharedPreference.clear(this);
+                if(isAppOnForeground(this)) {
+                    Intent i = new Intent(getApplicationContext(), RealMainActivity.class);
+                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(i);
+                }
             default: return;
         }
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -153,5 +163,20 @@ public class GcmIntentService extends IntentService {
 
 
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+    }
+
+    private boolean isAppOnForeground(Context context) {
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
+        if (appProcesses == null) {
+            return false;
+        }
+        final String packageName = context.getPackageName();
+        for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
+            if (appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND && appProcess.processName.equals(packageName)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

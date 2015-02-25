@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.TreeMap;
 
 
-public class SearchFriendActivity extends ActionBarActivity {
+public class SearchFriendActivity extends CustomActionBarActivity {
 
     private String username;
     private Button searchButton;
