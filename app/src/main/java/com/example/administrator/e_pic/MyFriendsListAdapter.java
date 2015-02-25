@@ -59,9 +59,9 @@ public class MyFriendsListAdapter extends ArrayAdapter implements Filterable {
 
 
         String friend = myFriends.get(position).getUsername();
-        //int sneezes = myFriends.get(position).getNumberOfSneezes();
         friendsNameTextView.setText(friend);
-        friendsSneezesTextView.setText(""+0);
+        int nrsneezes = myFriends.get(position).getNumberOfSneezes();
+        friendsSneezesTextView.setText(""+nrsneezes);
 
         v.setOnClickListener(new OnFriendClickListener(friend, position));
 

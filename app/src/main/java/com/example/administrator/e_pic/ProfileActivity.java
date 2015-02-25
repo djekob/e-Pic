@@ -27,11 +27,13 @@ public class ProfileActivity extends ActionBarActivity {
 
         initialization();
 
-        username = getIntent().getStringExtra(Connections.TAG_LOGINNAME);
+        username = getIntent().getStringExtra(Connections.TAG_FRIENDNAME);
         friendsList = (ArrayList) getIntent().getSerializableExtra(Connections.TAG_FRIENDS);
 
-
         myNameTextView.setText(username);
+        FriendsListProfileAdapter adapter = new FriendsListProfileAdapter(getApplicationContext(), R.layout.friend_list_item, friendsList, username);
+        myFriendsListView.setAdapter(adapter);
+
     }
 
     private void initialization() {
