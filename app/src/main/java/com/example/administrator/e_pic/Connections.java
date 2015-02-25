@@ -72,6 +72,7 @@ public class Connections {
     public static final String TAG_FRIENDS = "Friends";
     public static final String TAG_NOTIFICATIONS ="notifications";
     public static final String TAG_AANTAL = "Aantal";
+    public static final String TAG_NR_OF_SNEEZES_FRIEND = "Nr of sneezes friend";
 
 
 
@@ -99,6 +100,7 @@ public class Connections {
     private int position;
     private TreeMap<String, Integer> originalUsers;
     private ArrayList<User> myFriends;
+    private int nrOfSneezesFriend;
 
 
     public Connections(Context context, String username, int code){
@@ -170,7 +172,7 @@ public class Connections {
         }
     }
 
-    public Connections(Context context, String username, String friendname, int position, ArrayList<User> myFriends , int code) {
+    public Connections(Context context, String username, String friendname, int position, ArrayList<User> myFriends , int code, int nrOfSneezesFriend) {
         myFriends = new ArrayList<User>();
         if (code== GO_TO_FRIENDS_PROFILE_CODE) {
             this.context = context;
@@ -178,6 +180,7 @@ public class Connections {
             this.friendname = friendname;
             this.position = position;
             this.myFriends = myFriends;
+            this.nrOfSneezesFriend = nrOfSneezesFriend;
 
             new GoToFriendsProfile().execute();
         }
@@ -263,6 +266,7 @@ public class Connections {
 
                     Intent i = new Intent(context, ProfileActivity.class);
                     i.putExtra(TAG_FRIENDNAME, friendname);
+                    i.putExtra(TAG_NR_OF_SNEEZES_FRIEND, nrOfSneezesFriend);
                     i.putExtra(TAG_FRIENDS, friendsOfFriend);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(i);
@@ -271,10 +275,7 @@ public class Connections {
                     return null;
 
                 } else {
-
-
                     return true;
-
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

@@ -1,6 +1,7 @@
 package com.example.administrator.e_pic;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 /**
  * Created by Administrator on 9/02/2015.
@@ -8,6 +9,7 @@ import java.io.Serializable;
 public class Sneeze implements Serializable {
 
     private String time;
+
     private User user;
     int id;
 

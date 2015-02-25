@@ -13,7 +13,6 @@
         android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="lmdsqkfjkdlsjfsq"
         android:textSize="24sp"/>
     <ImageView
         android:id="@+id/my_profile_picture_profile_activity"
@@ -27,7 +26,6 @@
         android:id="@+id/number_of_sneezes_text_view_profile_activity"
         android:layout_below="@id/my_profile_picture_profile_activity"
         android:textSize="20sp"
-        android:text="30"
         android:textColor="@color/black"
         android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"

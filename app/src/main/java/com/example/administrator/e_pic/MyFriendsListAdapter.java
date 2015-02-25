@@ -20,6 +20,7 @@ public class MyFriendsListAdapter extends ArrayAdapter implements Filterable {
     private int resource;
     private Context context;
     private String username;
+    private int nrsneezes;
 
     public MyFriendsListAdapter(Context context, int resource, ArrayList<User> myFriends, String username) {
         super(context, resource, myFriends);
@@ -60,7 +61,7 @@ public class MyFriendsListAdapter extends ArrayAdapter implements Filterable {
 
         String friend = myFriends.get(position).getUsername();
         friendsNameTextView.setText(friend);
-        int nrsneezes = myFriends.get(position).getNumberOfSneezes();
+        nrsneezes= myFriends.get(position).getNumberOfSneezes();
         friendsSneezesTextView.setText(""+nrsneezes);
 
         v.setOnClickListener(new OnFriendClickListener(friend, position));
@@ -80,7 +81,7 @@ public class MyFriendsListAdapter extends ArrayAdapter implements Filterable {
 
         @Override
         public void onClick(View v) {
-            new Connections(context, username, friendname, position, myFriends ,Connections.GO_TO_FRIENDS_PROFILE_CODE);
+            new Connections(context, username, friendname, position, myFriends ,Connections.GO_TO_FRIENDS_PROFILE_CODE, myFriends.get(position).getNumberOfSneezes());
 
         }
 

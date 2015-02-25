@@ -19,6 +19,8 @@ public class ProfileActivity extends ActionBarActivity {
     private ImageView myProfilePictureImageView;
     private String username;
     private ArrayList<User> friendsList;
+    private int nrOfSneezesFriend;
+    private int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +31,9 @@ public class ProfileActivity extends ActionBarActivity {
 
         username = getIntent().getStringExtra(Connections.TAG_FRIENDNAME);
         friendsList = (ArrayList) getIntent().getSerializableExtra(Connections.TAG_FRIENDS);
-
+        nrOfSneezesFriend = getIntent().getIntExtra(Connections.TAG_NR_OF_SNEEZES_FRIEND, -500);
         myNameTextView.setText(username);
+        mySneezesTextView.setText(nrOfSneezesFriend+"");
         MyFriendsListAdapter adapter = new MyFriendsListAdapter(this, R.layout.friend_list_item, friendsList, username);
         myFriendsListView.setAdapter(adapter);
 

@@ -19,6 +19,8 @@ public class SneezeListAdapter extends ArrayAdapter<Sneeze> {
     private ArrayList<Sneeze> sneezeStrings;
     private int resource;
     private Context context;
+    private String time;
+    private String name;
 
     public SneezeListAdapter(Context context, int resource, ArrayList<Sneeze> arrayList) {
         super(context, resource, arrayList);
@@ -42,7 +44,12 @@ public class SneezeListAdapter extends ArrayAdapter<Sneeze> {
 
         TextView textView = (TextView) v.findViewById(R.id.sneeze_date_list_item);
         TextView dateView = (TextView) v.findViewById(R.id.sneeze_user_list_item);
-        textView.setText(sneezeStrings.get(position).toString());
+        Sneeze s = sneezeStrings.get(position);
+        name = s.getUser().getUsername();
+        time = s.getTime().substring(11);
+
+        textView.setText(name);
+        dateView.setText(time);
 
 
         return v;
