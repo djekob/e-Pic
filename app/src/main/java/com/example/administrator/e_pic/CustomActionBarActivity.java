@@ -16,7 +16,7 @@ public abstract class CustomActionBarActivity extends ActionBarActivity {
         if(SaveSharedPreference.getUserName(this) == "") {
 
             Intent i = new Intent(getApplicationContext(), RealMainActivity.class);
-            //i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(i);
         }
         //Toast.makeText(this, "onresume", Toast.LENGTH_SHORT).show();

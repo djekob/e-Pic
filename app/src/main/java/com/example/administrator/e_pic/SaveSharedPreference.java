@@ -64,6 +64,10 @@ public class SaveSharedPreference
         editor.putString(TAG_USERNAME, "");
         editor.commit();
     }
+
+    public static User getUser(Context context){
+        return new User(getUserName(context), getFirstname(context), getName(context));
+    }
     /*public static void setId(Context ctx, int id) {
         SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
         editor.putInt(TAG_ID, id);

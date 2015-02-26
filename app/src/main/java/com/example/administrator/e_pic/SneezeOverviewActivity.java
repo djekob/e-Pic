@@ -23,8 +23,6 @@ import java.util.TreeMap;
 
 public class SneezeOverviewActivity extends CustomActionBarActivity {
     private ArrayList<Sneeze> sneezeList;
-    TreeMap<Integer, Sneeze> sneezeMapDef;
-    private String username;
     private LineGraphSeries<DataPoint> series;
     private GraphView graph;
     private TextView startTitle;
@@ -98,7 +96,7 @@ public class SneezeOverviewActivity extends CustomActionBarActivity {
 
         DataPoint data[] = new DataPoint[(int)days];
         String[] dagen = new String[(int) days];
-        String[] xlabels = new String[(int) days];
+        //String[] xlabels = new String[(int) days];
 
         Calendar time = Calendar.getInstance();
 
@@ -118,20 +116,19 @@ public class SneezeOverviewActivity extends CustomActionBarActivity {
             }
             t=t+"-"+dag;
             dagen[i]=t;
-            xlabels[i]=dag+"/"+maand;
+            //xlabels[i]=dag+"/"+maand;
             DataPoint v = new DataPoint(myCalendarStart.getTimeInMillis() + (i * 24 * 60 * 60 * 1000),0); //x is time in milllis
             data[i]=v;
         }
 
         for(int k=0;k<sneezeList.size();k++) {
             String s = sneezeList.get(k).getTime().substring(0, 10);
-            String name = sneezeList.get(k).getUser().getUsername();
-            if (name.compareToIgnoreCase(username) == 0) {
-                for(int i=0;i<days;i++){
+            for(int i=0;i<days;i++){
+                System.out.println(dagen[i]);
+                System.out.println(s);
                     if(s.equals(dagen[i])){
                         data[i]=new DataPoint(data[i].getX(),data[i].getY()+1);
                     }
-                }
             }
         }
 
@@ -148,7 +145,7 @@ public class SneezeOverviewActivity extends CustomActionBarActivity {
         if(!empty){
             series.resetData(data);
             StaticLabelsFormatter labelsFormatter = new StaticLabelsFormatter(graph);
-            labelsFormatter.setHorizontalLabels(xlabels);
+            //labelsFormatter.setHorizontalLabels(xlabels);
             graph.getGridLabelRenderer().setLabelFormatter(labelsFormatter);
             graph.addSeries(series);
             graph.refreshDrawableState();
@@ -194,8 +191,6 @@ public class SneezeOverviewActivity extends CustomActionBarActivity {
         series = new LineGraphSeries<>();
         series.setColor(this.getResources().getColor(R.color.orange));
 
-        username = getIntent().getStringExtra(Connections.NAAM_VAR_USER);
-
         myCalendarEnd  =Calendar.getInstance();
         myCalendarStart = Calendar.getInstance();
         myCalendarStart.setTimeInMillis(myCalendarEnd.getTimeInMillis() - (4 * 24 * 60 * 60 * 1000));
@@ -210,12 +205,8 @@ public class SneezeOverviewActivity extends CustomActionBarActivity {
         startTitle.setText(sdf.format(myCalendarStart.getTime()));
         endTitle.setText(sdf.format(myCalendarEnd.getTime()));
 
-        sneezeList = new ArrayList<>();
-        sneezeMapDef = new TreeMap<>((Map<Integer, Sneeze>) getIntent().getSerializableExtra(Connections.TAG_SNEEZES));
+        sneezeList = (ArrayList<Sneeze>) getIntent().getSerializableExtra(Connections.TAG_SNEEZES);
 
-        for (Integer i : sneezeMapDef.keySet()) {
-            sneezeList.add(sneezeMapDef.get(i));
-        }
         update();
     }
 

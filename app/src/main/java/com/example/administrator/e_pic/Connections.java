@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -52,6 +53,7 @@ public class Connections {
     public static final String URL_ACCEPT_FRIEND_REQUEST = IP+"accept_friend_request.php";
     public static final String URL_GET_FRIENDS = IP+"get_friends.php";
     public static final String URL_DELETE_REGID= IP+"logout.php";
+    public static final String URL_GET_ALL_OWN_SNEEZES = IP + "get_all_own_sneezes.php";
 
     public static final String NAAM_VAR_USER = "Username";
     public static final String NAAM_VAR_USERS_NOT_FRIEND = "Users not friends";
@@ -291,7 +293,6 @@ public class Connections {
     private class OpenSneezesGraph extends AsyncTask<String, String ,Boolean>{
 
         ProgressDialog progress;
-        JSONArray sneezes = new JSONArray();
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -302,45 +303,28 @@ public class Connections {
         protected Boolean doInBackground(String... args) {
 
             List<NameValuePair> params = new ArrayList<>();
-
-
-            TreeMap<Integer, Sneeze> sneezeHashMapDef;
+            params.add(new BasicNameValuePair(TAG_LOGINNAME, SaveSharedPreference.getName(context)));
 
             JSONParser jsonParser = new JSONParser();
-            JSONObject json = jsonParser.makeHttpRequest(URL_ALL_SNEEZES,"GET", params);
+            JSONObject json = jsonParser.makeHttpRequest(URL_GET_ALL_OWN_SNEEZES,"POST", params);
 
             try {
-                sneezeHashMapDef = new TreeMap<>();
+                ArrayList<Sneeze> sneezes = new ArrayList<>();
                 int success = json.getInt(TAG_SUCCESS);
 
                 if (success == 1) {
                     // products found
                     // Getting Array of Products
-                    sneezes = json.getJSONArray(TAG_SNEEZES);
+                    JSONArray tijden = json.getJSONArray(TAG_SNEEZES);
 
-                    ArrayList<Sneeze> temporarySneezes = new ArrayList<>();
                     // looping through All Products
-                    for (int i = 0; i < sneezes.length(); i++) {
-                        JSONObject c = sneezes.getJSONObject(i);
-
+                    for (int i = 0; i < tijden.length(); i++) {
                         // Storing each json item in variable
-                        int id = c.getInt(TAG_USER_ID);
-                        String time = c.getString(TAG_TIME);
-                        String name = c.getString(TAG_LOGINNAME);
-                        int sneeze_id = c.getInt(TAG_ID);
-                        String firstname = c.getString(TAG_VOORNAAM);
-                        String secondname = c.getString(TAG_ACHTERNAAM);
-                        String leeftijd2 = c.getString(TAG_LEEFTIJD);
-                        int leeftijd = Integer.parseInt(leeftijd2);
+                        String time = tijden.getString(i);
 
-                        //TODO sneezes ophalen
+                        Sneeze sneeze = new Sneeze(time, SaveSharedPreference.getUser(context));
 
-                        int totalSneezes = 0;
-
-                        User user = new User(name, firstname, secondname, leeftijd, id, totalSneezes);
-                        Sneeze sneeze = new Sneeze(time, user, sneeze_id);
-
-                        sneezeHashMapDef.put(sneeze_id, sneeze);
+                        sneezes.add(sneeze);
                     }
                     // successfully created product
 
@@ -349,8 +333,7 @@ public class Connections {
 
                     Intent ik = new Intent(context, SneezeOverviewActivity.class);
                     ik.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    ik.putExtra(NAAM_VAR_USER, username);
-                    ik.putExtra(TAG_SNEEZES, sneezeHashMapDef);
+                    ik.putExtra(TAG_SNEEZES, sneezes);
 
                     context.startActivity(ik);
 
@@ -433,9 +416,8 @@ public class Connections {
         @Override
         protected void onPostExecute(Boolean b) {
             super.onPostExecute(b);
-            if (b) Toast.makeText(context, "Login mislukt", Toast.LENGTH_LONG).show();
             progress.dismiss();
-
+            if (b) Toast.makeText(context, "Login mislukt", Toast.LENGTH_LONG).show();
             //handler.post(progressDialogClose);
         }
 
