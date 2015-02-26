@@ -1,1 +1,1 @@
-include ':app', ':backend_module_messaging'
+include ':backend_module_messaging',':app'

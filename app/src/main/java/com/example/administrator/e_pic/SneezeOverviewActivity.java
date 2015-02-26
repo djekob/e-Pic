@@ -1,22 +1,22 @@
 package com.example.administrator.e_pic;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.DatePickerDialog;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
+import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.Viewport;
+import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -24,89 +24,199 @@ import java.util.TreeMap;
 public class SneezeOverviewActivity extends CustomActionBarActivity {
     private ArrayList<Sneeze> sneezeList;
     TreeMap<Integer, Sneeze> sneezeMapDef;
-    private LineGraphSeries<DataPoint> series;
     private String username;
-    private TextView title;
+    private LineGraphSeries<DataPoint> series;
+    private GraphView graph;
+    private TextView startTitle;
+    private TextView endTitle;
+    private Calendar myCalendarStart;
+    private Calendar myCalendarEnd;
+    private DatePickerDialog.OnDateSetListener dateStart;
+    private DatePickerDialog.OnDateSetListener dateEnd;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sneeze_overview);
-        GraphView graph = (GraphView) findViewById(R.id.graph);
+        initialize();
 
-        username = getIntent().getStringExtra(Connections.NAAM_VAR_USER);
-        title=(TextView) findViewById(R.id.title_graphView);
+        dateEnd = new DatePickerDialog.OnDateSetListener() {
 
-        ArrayListVuller();
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                myCalendarEnd.set(Calendar.YEAR,year);
+                myCalendarEnd.set(Calendar.MONTH, monthOfYear);
+                myCalendarEnd.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateLabelEnd();
+            }
 
-        int width = 5;
+        };
+
+         dateStart = new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                myCalendarStart.set(Calendar.YEAR, year);
+                myCalendarStart.set(Calendar.MONTH, monthOfYear);
+                myCalendarStart.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateLabelStart();
+            }
+
+        };
+
+        startTitle.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                DatePickerDialog dia = new DatePickerDialog(SneezeOverviewActivity.this, dateStart, myCalendarStart
+                        .get(Calendar.YEAR), myCalendarStart.get(Calendar.MONTH),
+                        myCalendarStart.get(Calendar.DAY_OF_MONTH));
+                dia.getDatePicker().setMaxDate(myCalendarEnd.getTime().getTime() - 24 * 60 * 60 * 1000);
+                dia.show();
+            }
+        });
+
+        endTitle.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                DatePickerDialog dia = new DatePickerDialog(SneezeOverviewActivity.this, dateEnd, myCalendarEnd
+                        .get(Calendar.YEAR), myCalendarEnd.get(Calendar.MONTH),
+                        myCalendarEnd.get(Calendar.DAY_OF_MONTH));
+                dia.getDatePicker().setMaxDate(new Date().getTime());
+                dia.show();
+            }
+        });
+    }
+
+    private void update(){
+        long diff =myCalendarEnd.getTimeInMillis()-myCalendarStart.getTimeInMillis();
+        long days = (diff / (24 * 60 * 60 * 1000))+1;
+        System.out.println("aantal dagen : " + days);
+
+        DataPoint data[] = new DataPoint[(int)days];
+        String[] dagen = new String[(int) days];
+        String[] xlabels = new String[(int) days];
+
+        Calendar time = Calendar.getInstance();
+
+        for(int i=0;i<days;i++){
+            time.setTimeInMillis(myCalendarStart.getTimeInMillis() + (i * 24 * 60 * 60 * 1000));
+
+            int dag = time.get(Calendar.DAY_OF_MONTH);
+            int maand = time.get(Calendar.MONTH)+1;
+            int jaar = time.get(Calendar.YEAR);
+
+            String t = jaar+"-";
+            if(maand>10){
+                t=t+maand;
+            }
+            else{
+                t=t+0+maand;
+            }
+            t=t+"-"+dag;
+            dagen[i]=t;
+            xlabels[i]=dag+"/"+maand;
+            DataPoint v = new DataPoint(myCalendarStart.getTimeInMillis() + (i * 24 * 60 * 60 * 1000),0); //x is time in milllis
+            data[i]=v;
+        }
+
+        for(int k=0;k<sneezeList.size();k++) {
+            String s = sneezeList.get(k).getTime().substring(0, 10);
+            String name = sneezeList.get(k).getUser().getUsername();
+            if (name.compareToIgnoreCase(username) == 0) {
+                for(int i=0;i<days;i++){
+                    if(s.equals(dagen[i])){
+                        data[i]=new DataPoint(data[i].getX(),data[i].getY()+1);
+                    }
+                }
+            }
+        }
 
         boolean empty = true;
 
-        DataPoint[] Data = generateData(width);
-
-        for (int i=0;i<width;i++) {
+        for(DataPoint d:data) {
             if (empty) {
-                if (Data[i].getY() != 0) {
+                if (d.getY() != 0) {
                     empty = false;
                 }
             }
         }
 
         if(!empty){
-            series = new LineGraphSeries<DataPoint>(Data);
+            series.resetData(data);
+            StaticLabelsFormatter labelsFormatter = new StaticLabelsFormatter(graph);
+            labelsFormatter.setHorizontalLabels(xlabels);
+            graph.getGridLabelRenderer().setLabelFormatter(labelsFormatter);
             graph.addSeries(series);
-            title.setText("Overzicht van uw Sneezes van de laatste " + width + " dagen!");
+            graph.refreshDrawableState();
         }
         else{
-            title.setText("Je hebt de laatste " + width + " dagen niet geniest!");
+            Toast.makeText(this,"Je hebt de laatste dagen niet geniest!",Toast.LENGTH_SHORT).show();
         }
-
     }
 
-    private void ArrayListVuller() {
+    private void updateLabelStart(){
+
+        String myFormat = "yyyy-MM-dd";
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat);
+
+        startTitle.setText(sdf.format(myCalendarStart.getTime()));
+        update();
+    }
+
+    private void updateLabelEnd(){
+
+        String myFormat = "yyyy-MM-dd";
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat);
+
+        endTitle.setText(sdf.format(myCalendarEnd.getTime()));
+        update();
+    }
+
+    private void initialize() {
+        setContentView(R.layout.activity_sneeze_overview);
+        graph = (GraphView) findViewById(R.id.graph);
+        graph.setTitle("Overview Sneezes last days!");
+        graph.setTitleTextSize(30);
+        graph.setTitleColor(this.getResources().getColor(R.color.darkorange));
+        graph.getViewport().setScrollable(true);
+        graph.getViewport().setScalable(true);
+        graph.getViewport().setXAxisBoundsManual(true);
+        graph.getViewport().setMinX(new Date().getTime() - (10 * 24 * 60 * 60 * 1000));
+        graph.getViewport().setMaxX(new Date().getTime());
+        graph.getViewport().setXAxisBoundsStatus(Viewport.AxisBoundsStatus.AUTO_ADJUSTED);
+        //graph.getGridLabelRenderer().setGridStyle(GridLabelRenderer.GridStyle.BOTH);
+        //graph.getGridLabelRenderer().setNumHorizontalLabels(data.length);
+
+        series = new LineGraphSeries<>();
+        series.setColor(this.getResources().getColor(R.color.orange));
+
+        username = getIntent().getStringExtra(Connections.NAAM_VAR_USER);
+
+        myCalendarEnd  =Calendar.getInstance();
+        myCalendarStart = Calendar.getInstance();
+        myCalendarStart.setTimeInMillis(myCalendarEnd.getTimeInMillis() - (4 * 24 * 60 * 60 * 1000));
+
+        startTitle = (TextView) findViewById(R.id.title_startCalendar);
+        startTitle.setClickable(true);
+        endTitle = (TextView) findViewById(R.id.title_endCalendar);
+        endTitle.setClickable(true);
+
+        String myFormat = "yyyy-MM-dd";
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat);
+        startTitle.setText(sdf.format(myCalendarStart.getTime()));
+        endTitle.setText(sdf.format(myCalendarEnd.getTime()));
 
         sneezeList = new ArrayList<>();
+        sneezeMapDef = new TreeMap<>((Map<Integer, Sneeze>) getIntent().getSerializableExtra(Connections.TAG_SNEEZES));
 
-        sneezeMapDef= new TreeMap<>((Map<Integer, Sneeze>)  getIntent().getSerializableExtra(Connections.TAG_SNEEZES));
-
-        for(Integer i : sneezeMapDef.keySet()) {
+        for (Integer i : sneezeMapDef.keySet()) {
             sneezeList.add(sneezeMapDef.get(i));
         }
+        update();
     }
 
-    private DataPoint[] generateData(int width)  {
-        DataPoint values[] = new DataPoint[width];
-
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        Date current = new Date();
-        int datum = current.getDate();
-
-        for(int i=0;i<width;i++){
-            double x = i+datum-4;
-            double y = countPerDate(x);
-            DataPoint v = new DataPoint(x,y);
-            values[i]=v;
-        }
-
-        return values;
-    }
-
-    private double countPerDate(double datum)  {
-        double i=0;
-
-        for(int k=0;k<sneezeList.size();k++){
-            DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            String s = sneezeList.get(k).getTime().substring(0,10);
-            String name = sneezeList.get(k).getUser().getUsername();
-            try {
-                if((double) format.parse(s).getDate() == datum && name.compareToIgnoreCase(username)==0){
-                    i++;
-                }
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-        return i;
-    }
 }
