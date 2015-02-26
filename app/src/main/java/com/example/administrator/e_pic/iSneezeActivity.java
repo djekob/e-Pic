@@ -87,6 +87,8 @@ public class iSneezeActivity extends CustomActionBarActivity {
             new Connections(this, username, Connections.DELETE_REGID_CODE);
         } else if (id == R.id.my_friends_action_bar) {
             new Connections(getContext(), username, Connections.GET_ALL_FRIENDS_CODE);
+        } else if(id == R.id.edit_profile_data_menu_item) {
+            new Connections(getContext(), username, Connections.GET_PROFILE_DATA_CODE);
         }
 
         return super.onOptionsItemSelected(item);

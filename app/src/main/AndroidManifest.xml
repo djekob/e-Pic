@@ -26,6 +26,7 @@
         <activity
             android:name=".FirstActivity"
             android:label="@string/title_activity_main" >
+
         </activity>
         <activity
             android:name=".iSneezeActivity"
@@ -75,19 +76,22 @@
         </activity>
 
         <receiver
-            android:name=".GcmBroadcastReceiver"
+            android:name="com.example.administrator.e_pic.GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-
                 <category android:name="com.example.administrator.e_pic" />
             </intent-filter>
         </receiver>
 
-        <service android:name=".GcmIntentService" >
+        <service
+            android:name="com.example.administrator.e_pic.GcmIntentService">
         </service>
 
-
+        <activity
+            android:name=".EditProfileActivity"
+            android:label="@string/title_activity_edit_profile" >
+        </activity>
     </application>
 
 </manifest>

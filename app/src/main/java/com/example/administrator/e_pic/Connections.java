@@ -90,6 +90,7 @@ public class Connections {
     public static final int GET_ALL_FRIEND_SNEEZES_CODE = 11;
     public static final int REGISTER_CODE = 12;
     public static final int DELETE_REGID_CODE = 13;
+    public static final int GET_PROFILE_DATA_CODE = 14;
 
 
     private Context context;
@@ -124,6 +125,8 @@ public class Connections {
             new getFriends().execute();
         } else if(code == Connections.DELETE_REGID_CODE) {
             new DeleteRegId().execute();
+        } else if(code == Connections.GET_PROFILE_DATA_CODE) {
+            new GetOneUser().execute();
         }
 
     }
@@ -405,7 +408,10 @@ public class Connections {
                 int success = json.getInt(TAG_SUCCESS);
 
                 if (success == 1) {
+                    JSONObject jsonObject = json.getJSONObject(TAG_USER);
                     SaveSharedPreference.setUserName(context, username);
+                    SaveSharedPreference.setFirstName(context,jsonObject.getString(TAG_VOORNAAM));
+                    SaveSharedPreference.setName(context, jsonObject.getString(TAG_ACHTERNAAM));
                     Intent i = new Intent(context, iSneezeActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     i.putExtra(NAAM_VAR_USER, username);
@@ -475,6 +481,8 @@ public class Connections {
                 if (success == 1) {
 
                     SaveSharedPreference.setUserName(context, username);
+                    SaveSharedPreference.setName(context, name);
+                    SaveSharedPreference.setFirstName(context, prename);
                     Intent i = new Intent(context, iSneezeActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     i.putExtra(NAAM_VAR_USER, username);
@@ -707,7 +715,7 @@ public class Connections {
 
     }
 
-    private class GetOneUser extends AsyncTask<String, String, User> {
+    private class GetOneUser extends AsyncTask<String, String, Boolean> {
 
 
         ProgressDialog progress;
@@ -722,7 +730,7 @@ public class Connections {
             progress.show();
         }
 
-        protected User doInBackground(String... args) {
+        protected Boolean doInBackground(String... args) {
 
 
             List<NameValuePair> params = new ArrayList<>();
@@ -752,24 +760,26 @@ public class Connections {
                         gebruiker = new User(username, firstname, secondname, id);
 
                     }
-
-                    return gebruiker;
+                    Intent i = new Intent(context, EditProfileActivity.class);
+                    i.putExtra(TAG_USER, gebruiker);
+                    context.startActivity(i);
+                    return true;
                 } else {
 
 
-                    return gebruiker;
+                    return true;
 
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
-            return gebruiker;
+            return false;
 
         }
 
-        protected void onPostExecute(User user) {
-            super.onPostExecute(user);
+        protected void onPostExecute(Boolean b) {
+            super.onPostExecute(b);
             progress.dismiss();
 
         }

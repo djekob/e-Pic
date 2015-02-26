@@ -23,6 +23,9 @@
         android:id="@+id/go_to_all_sneezes_graph_action_bar"
         android:title="@string/all_sneezes_graph"/>
     <item
+        android:id="@+id/edit_profile_data_menu_item"
+        android:title="@string/edit_profile_data"/>
+    <item
         android:id="@+id/logout_user"
         android:title="@string/logout"/>
 

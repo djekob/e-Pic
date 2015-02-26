@@ -41,6 +41,13 @@
     <string name="my_friends">My Friends</string>
     <string name="go_to_friends_profile">See profile</string>
     <string name="vul_alle_velden_in">Vul alle velden in!</string>
+    <string name="title_activity_edit_profile">EditProfileActivity</string>
+    <string name="my_data">My data</string>
+    <string name="firstname">Firstname</string>
+    <string name="cancel">Cancel</string>
+    <string name="edit_profile_data">Edit profile</string>
+    <string name="old_password">Old password</string>
+    <string name="new_password">New password</string>
     <string name="title_activity_custom">CustomActivity</string>
     <string name="title_activity_custom_action_bar">CustomActionBarActivity</string>
 
