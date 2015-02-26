@@ -26,7 +26,6 @@ public class FriendsRequestsAdapter extends ArrayAdapter {
 
     private Context context;
     private TreeMap<String, Integer> originalPendingFriends;
-    private String username;
     private ArrayList<String> friendsList;
     private int resource;
 
@@ -34,7 +33,7 @@ public class FriendsRequestsAdapter extends ArrayAdapter {
         super(context, resource);
     }
 
-    public FriendsRequestsAdapter(Context context, int resource, ArrayList<String> friendsRequestList, String username) {
+    public FriendsRequestsAdapter(Context context, int resource, ArrayList<String> friendsRequestList) {
         super(context, resource, friendsRequestList);
         this.context = context;
         this.resource = resource;
@@ -44,7 +43,6 @@ public class FriendsRequestsAdapter extends ArrayAdapter {
         for(String s : friendsList){
             originalPendingFriends.put(s,0);
         }
-        this.username = username;
     }
 
     public int getCount() {
@@ -97,7 +95,7 @@ public class FriendsRequestsAdapter extends ArrayAdapter {
 
         @Override
         public void onClick(View v) {
-            new Connections(context, username, friend , Connections.ACCEPT_FRIEND_CODE);
+            new Connections(context, friend , Connections.ACCEPT_FRIEND_CODE);
         }
     }
 

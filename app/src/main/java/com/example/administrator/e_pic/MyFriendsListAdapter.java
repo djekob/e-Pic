@@ -22,12 +22,11 @@ public class MyFriendsListAdapter extends ArrayAdapter implements Filterable {
     private String username;
     private int nrsneezes;
 
-    public MyFriendsListAdapter(Context context, int resource, ArrayList<User> myFriends, String username) {
+    public MyFriendsListAdapter(Context context, int resource, ArrayList<User> myFriends) {
         super(context, resource, myFriends);
         this.context = context;
         this.resource = resource;
         this.myFriends = myFriends;
-        this.username = username;
     }
 
     public int getCount() {
@@ -81,7 +80,7 @@ public class MyFriendsListAdapter extends ArrayAdapter implements Filterable {
 
         @Override
         public void onClick(View v) {
-            new Connections(context, username, friendname, position, myFriends ,Connections.GO_TO_FRIENDS_PROFILE_CODE, myFriends.get(position).getNumberOfSneezes());
+            new Connections(context, friendname, position, myFriends ,Connections.GO_TO_FRIENDS_PROFILE_CODE, myFriends.get(position).getNumberOfSneezes());
 
         }
 

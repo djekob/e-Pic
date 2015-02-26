@@ -106,9 +106,9 @@ public class Connections {
     private int nrOfSneezesFriend;
 
 
-    public Connections(Context context, String username, int code){
+    public Connections(Context context, int code){
         this.context = context;
-        this.username = username;
+        this.username = SaveSharedPreference.getUserName(context);
 
 
         if(code==CREATE_SNEEZE_CODE) {
@@ -133,9 +133,9 @@ public class Connections {
 
     }
 
-    public Connections(Context context, String username, String friendname, int position, TreeMap<String, Integer> originalUsers, int code) {
+    public Connections(Context context, String friendname, int position, TreeMap<String, Integer> originalUsers, int code) {
         this.context = context;
-        this.username = username;
+        this.username = SaveSharedPreference.getUserName(context);
         this.friendname = friendname;
         this.position = position;
         this.originalUsers = originalUsers;
@@ -144,10 +144,10 @@ public class Connections {
         }
     }
 
-    public Connections(Context context, String username, String friendame, int code) {
+    public Connections(Context context, String friendname, int code) {
         this.context = context;
-        this.username = username;
-        this.friendname= friendame;
+        this.username = SaveSharedPreference.getUserName(context);
+        this.friendname = friendname;
         if (code== ACCEPT_FRIEND_CODE) {
             new AcceptFriendRequest().execute();
         }
@@ -170,18 +170,17 @@ public class Connections {
             this.age = age;
 
             this.context = context;
-            Log.e("raar", "raaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaar");
             new CreateNewUser().execute();
         } else if(code == 234435) {
 
         }
     }
 
-    public Connections(Context context, String username, String friendname, int position, ArrayList<User> myFriends , int code, int nrOfSneezesFriend) {
+    public Connections(Context context, String friendname, int position, ArrayList<User> myFriends , int code, int nrOfSneezesFriend) {
         myFriends = new ArrayList<User>();
         if (code== GO_TO_FRIENDS_PROFILE_CODE) {
             this.context = context;
-            this.username = username;
+            this.username = SaveSharedPreference.getUserName(context);
             this.friendname = friendname;
             this.position = position;
             this.myFriends = myFriends;

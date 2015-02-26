@@ -34,9 +34,8 @@ public class FriendsListAdapter extends ArrayAdapter implements Filterable {
     private ItemFilter mFilter = new ItemFilter();
     private TextView userTextView;
     private Button addFriendButton;
-    private String username;
 
-    public FriendsListAdapter(Context context, int resource, ArrayList<String> arrayList, String username) {
+    public FriendsListAdapter(Context context, int resource, ArrayList<String> arrayList) {
         super(context, resource, arrayList);
         this.context = context;
         this.resource = resource;
@@ -48,7 +47,6 @@ public class FriendsListAdapter extends ArrayAdapter implements Filterable {
         for(String s : originalUsers.keySet()){
             filteredUsers.add(s);
         }
-        this.username = username;
     }
 
     public int getCount() {
@@ -148,7 +146,7 @@ public class FriendsListAdapter extends ArrayAdapter implements Filterable {
 
         @Override
         public void onClick(View v) {
-            new Connections(context, username, friendname, position, originalUsers ,Connections.ADD_FRIEND_CODE);
+            new Connections(context, friendname, position, originalUsers ,Connections.ADD_FRIEND_CODE);
             //v.setBackgroundColor(Color.RED);
 
             //handler.post(updateResults);

@@ -17,9 +17,6 @@ public class EditProfileActivity extends CustomActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
-        Bundle bundletje = getIntent().getExtras();
-        User user = (User) bundletje.getSerializable(Connections.TAG_USER);
-
         initialization();
 
         usernameEditText.setText(user.getUsername());

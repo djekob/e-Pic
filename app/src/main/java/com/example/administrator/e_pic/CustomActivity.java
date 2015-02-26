@@ -2,10 +2,18 @@ package com.example.administrator.e_pic;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.widget.Toast;
 
 
 public abstract class CustomActivity extends Activity {
+    User user;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        user = SaveSharedPreference.getUser(this);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();

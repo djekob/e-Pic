@@ -29,12 +29,12 @@ public class ProfileActivity extends CustomActionBarActivity {
 
         initialization();
 
-        username = getIntent().getStringExtra(Connections.TAG_FRIENDNAME);
+        username = user.getUsername();
         friendsList = (ArrayList) getIntent().getSerializableExtra(Connections.TAG_FRIENDS);
         nrOfSneezesFriend = getIntent().getIntExtra(Connections.TAG_NR_OF_SNEEZES_FRIEND, -500);
         myNameTextView.setText(username);
         mySneezesTextView.setText(nrOfSneezesFriend+"");
-        MyFriendsListAdapter adapter = new MyFriendsListAdapter(this, R.layout.friend_list_item, friendsList, username);
+        MyFriendsListAdapter adapter = new MyFriendsListAdapter(this, R.layout.friend_list_item, friendsList);
         myFriendsListView.setAdapter(adapter);
 
     }

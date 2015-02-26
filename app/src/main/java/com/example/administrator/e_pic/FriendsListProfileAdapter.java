@@ -16,17 +16,15 @@ import java.util.TreeMap;
  * Created by Administrator on 25/02/2015.
  */
 public class FriendsListProfileAdapter extends ArrayAdapter {
-    private String username;
     private Context context;
     private int resource;
     private ArrayList<User> friendsList;
 
-    public FriendsListProfileAdapter(Context context, int resource, ArrayList<User> arrayList, String username) {
+    public FriendsListProfileAdapter(Context context, int resource, ArrayList<User> arrayList) {
         super(context, resource, arrayList);
         this.context = context;
         this.resource = resource;
         this.friendsList = arrayList;
-        this.username = username;
     }
 
     public int getCount() {

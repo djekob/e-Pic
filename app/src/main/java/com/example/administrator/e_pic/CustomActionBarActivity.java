@@ -9,6 +9,12 @@ import android.widget.Toast;
 
 
 public abstract class CustomActionBarActivity extends ActionBarActivity {
+    User user;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        user = SaveSharedPreference.getUser(this);
+    }
 
     @Override
     protected void onResume() {

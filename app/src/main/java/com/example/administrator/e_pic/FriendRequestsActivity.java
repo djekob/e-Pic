@@ -31,7 +31,8 @@ public class FriendRequestsActivity extends CustomActionBarActivity {
         if(pendingFriends.size()==0) {
             noFriendsTextView.setText(this.getResources().getString(R.string.no_friend_requests));
         }
-        username = getIntent().getStringExtra(Connections.TAG_LOGINNAME);
+        username = user.getUsername();
+        new Connections(this, Connections.GET_PENDING_FRIENDS);
 
         adapter = new FriendsRequestsAdapter(this, R.layout.friend_request_list_item, pendingFriends, username);
 

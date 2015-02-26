@@ -31,10 +31,9 @@ public class SearchFriendActivity extends CustomActionBarActivity {
 
         initialisation();
 
-        username = getIntent().getStringExtra(iSneezeActivity.ADD_FRIEND_CODE);
-        users = new ArrayList<>();
-        users = getIntent().getExtras().getStringArrayList(Connections.NAAM_VAR_USERS_NOT_FRIEND);
-        adapter = new FriendsListAdapter(this, R.layout.search_friends_list_item, users, username);
+        username = user.getUsername();
+        users = (ArrayList<String>) getIntent().getExtras().getStringArrayList(Connections.NAAM_VAR_USERS_NOT_FRIEND);
+        adapter = new FriendsListAdapter(this, R.layout.search_friends_list_item, users);
 
         listView.setAdapter(adapter);
     }

@@ -23,11 +23,11 @@ public class MyFriendsActivity extends CustomActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_friends_list);
 
-        username = getIntent().getStringExtra(Connections.NAAM_VAR_USER);
+        username = user.getUsername();
         friends = new ArrayList<>();
         friends = (ArrayList) getIntent().getSerializableExtra(Connections.TAG_FRIENDS);
         listView = (ListView) findViewById(R.id.my_friends_list_view_my_friends_activity);
-        myFriendsListAdapter = new MyFriendsListAdapter(this, R.layout.friend_list_item, friends, username);
+        myFriendsListAdapter = new MyFriendsListAdapter(this, R.layout.friend_list_item, friends);
         listView.setAdapter(myFriendsListAdapter);
     }
 
