@@ -77,8 +77,10 @@ public class iSneezeActivity extends CustomActionBarActivity {
         } else if (id == R.id.add_friend_action_bar) {
             new Connections(this, Connections.GET_ALL_USERS_NO_FRIENDS);
         } else if (id == R.id.pending_friends_action_bar) {
-            //new Connections(this, username, Connections.GET_PENDING_FRIENDS);
-
+            Intent i = new Intent(context, FriendRequestsActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            context.startActivity(i);
         } else if (id == R.id.go_to_all_sneezes_graph_action_bar) {
             new Connections(this, Connections.GET_ALL_SNEEZES_GRAPH_CODE);
         } else if (id == R.id.logout_user) {

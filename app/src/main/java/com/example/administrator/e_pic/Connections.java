@@ -8,6 +8,9 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
@@ -32,6 +35,8 @@ import java.util.TreeMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+
+import javax.net.ssl.HandshakeCompletedEvent;
 
 //TODO connectie maken
 public class Connections {
@@ -820,6 +825,8 @@ public class Connections {
 
         ArrayList<String> pendingFriends;
         ProgressDialog progress;
+        private final Handler handler = new Handler(Looper.getMainLooper());
+
 
         @Override
         protected void onPreExecute() {
@@ -847,7 +854,7 @@ public class Connections {
             JSONObject json = jsonParser.makeHttpRequest(URL_GET_PENDING_FRIENDS,"POST", params);
 
             try {
-                pendingFriends = new ArrayList<>();
+                pendingFriends = new ArrayList<String>();
                 int success = json.getInt(TAG_SUCCESS);
                 if (success == 1) {
                     JSONArray userkes = json.getJSONArray(TAG_PENDING_FRIENDS);
@@ -857,18 +864,16 @@ public class Connections {
                         pendingFriends.add(k);
                         Log.e("VRIEND", k);
                     }
-                    Intent i = new Intent(context, FriendRequestsActivity.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    i.putExtra(NAAM_VAR_PENDING_FRIENDS, pendingFriends);
-                    i.putExtra(TAG_LOGINNAME, username);
-                    context.startActivity(i);
+                    ((FriendRequestsActivity)context).pendingFriends = pendingFriends;
+                    handler.post((FriendRequestsActivity)context);
+
                     return false;
 
                 } else if (success ==2) {
                     Intent i = new Intent(context, FriendRequestsActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     i.putExtra(NAAM_VAR_PENDING_FRIENDS, pendingFriends);
-                    i.putExtra(TAG_LOGINNAME, username);
                     context.startActivity(i);
                     return false;
                 } else {

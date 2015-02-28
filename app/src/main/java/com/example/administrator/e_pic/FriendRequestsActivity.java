@@ -1,5 +1,6 @@
 package com.example.administrator.e_pic;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -11,10 +12,10 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 
-public class FriendRequestsActivity extends CustomActionBarActivity {
+public class FriendRequestsActivity extends CustomActionBarActivity implements Runnable{
 
     private ListView pendingFriendsListView;
-    private ArrayList<String> pendingFriends;
+    public ArrayList<String> pendingFriends;
     private String username;
     private TextView noFriendsTextView;
     public FriendsRequestsAdapter adapter;
@@ -23,25 +24,25 @@ public class FriendRequestsActivity extends CustomActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_requests);
-
         pendingFriendsListView = (ListView) findViewById(R.id.pending_friends_friends_request_activity);
         noFriendsTextView = (TextView) findViewById(R.id.zero_friends_text_view);
-        pendingFriends = new ArrayList<>();
-        pendingFriends = getIntent().getStringArrayListExtra(Connections.NAAM_VAR_PENDING_FRIENDS);
-        if(pendingFriends.size()==0) {
-            noFriendsTextView.setText(this.getResources().getString(R.string.no_friend_requests));
-        }
-        username = user.getUsername();
+
         new Connections(this, Connections.GET_PENDING_FRIENDS);
-
-        adapter = new FriendsRequestsAdapter(this, R.layout.friend_request_list_item, pendingFriends, username);
-
-        pendingFriendsListView.setAdapter(adapter);
-
-
 
     }
 
+    @Override
+    public void run() {
+        if (pendingFriends != null) {
+            if (pendingFriends.size() == 0) {
+                noFriendsTextView.setText(this.getResources().getString(R.string.no_friend_requests));
+            }
+
+            adapter = new FriendsRequestsAdapter(this, R.layout.friend_request_list_item, pendingFriends);
+
+            pendingFriendsListView.setAdapter(adapter);
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -64,4 +65,5 @@ public class FriendRequestsActivity extends CustomActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }
