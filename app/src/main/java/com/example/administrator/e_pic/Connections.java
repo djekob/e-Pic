@@ -1030,10 +1030,10 @@ public class Connections {
             JSONParser jsonParser = new JSONParser();
             JSONObject json = jsonParser.makeHttpRequest(URL_ALL_FRIEND_SNEEZES,"POST", params);
 
-
             try {
                 sneezeHashMapDef = new TreeMap<>();
                 int success = json.getInt(TAG_SUCCESS);
+
                 if (success == 1) {
 
                     JSONArray sneezes = json.getJSONArray(TAG_SNEEZES);

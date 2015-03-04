@@ -108,6 +108,7 @@ public class SneezeOverviewActivity extends CustomActionBarActivity {
             int jaar = time.get(Calendar.YEAR);
 
             String t = jaar+"-";
+
             if(maand>10){
                 t=t+maand;
             }
@@ -121,8 +122,17 @@ public class SneezeOverviewActivity extends CustomActionBarActivity {
             else{
                 t=t+0+dag;
             }
-            dagen[i]=t;
 
+            t=t+"-";
+
+            if(dag>10){
+                t=t+dag;
+            }
+            else{
+                t=t+0+dag;
+            }
+
+            dagen[i]=t;
             //xlabels[i]=dag+"/"+maand;
             DataPoint v = new DataPoint(myCalendarStart.getTimeInMillis() + (i * 24 * 60 * 60 * 1000),0); //x is time in milllis
             data[i]=v;
@@ -131,8 +141,8 @@ public class SneezeOverviewActivity extends CustomActionBarActivity {
         for(int k=0;k<sneezeList.size();k++) {
             String s = sneezeList.get(k).getTime().substring(0, 10);
             for(int i=0;i<days;i++){
-                System.out.println(dagen[i]);
-                System.out.println(s);
+                //System.out.println(dagen[i]);
+               // System.out.println(s);
                     if(s.equals(dagen[i])){
                         data[i]=new DataPoint(data[i].getX(),data[i].getY()+1);
                     }
