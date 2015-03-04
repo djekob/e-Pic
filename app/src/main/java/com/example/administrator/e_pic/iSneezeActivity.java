@@ -17,6 +17,14 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.Calendar;
 
 
@@ -39,10 +47,16 @@ public class iSneezeActivity extends CustomActionBarActivity {
         context = this;
 
         username = user.getUsername();
-        myNameTextView = (TextView) findViewById(R.id.my_name_textview);
         isneeze_image_button = (ImageButton) findViewById(R.id.isneeze_image_button);
+        myNameTextView = (TextView) findViewById(R.id.my_name_textview);
 
-        //myname definieren
+
+        try {
+            MapsInitializer.initialize(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         myNameTextView.setText(username);
 
         isneeze_image_button.setOnClickListener(new SneezeClickListener());
@@ -55,7 +69,6 @@ public class iSneezeActivity extends CustomActionBarActivity {
         @Override
         public void onClick(View v) {
 
-            //TODO zorgen dat kleur neus verandert als op geduwd wordt isneeze_image_button.setColorFilter(Color.RED);
             new Connections(getContext(), Connections.CREATE_SNEEZE_CODE);
 
         }

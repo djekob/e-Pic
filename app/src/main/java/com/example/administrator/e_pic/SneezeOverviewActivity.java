@@ -114,8 +114,15 @@ public class SneezeOverviewActivity extends CustomActionBarActivity {
             else{
                 t=t+0+maand;
             }
-            t=t+"-"+dag;
+            t=t+"-";
+            if(dag>10){
+                t=t+dag;
+            }
+            else{
+                t=t+0+dag;
+            }
             dagen[i]=t;
+
             //xlabels[i]=dag+"/"+maand;
             DataPoint v = new DataPoint(myCalendarStart.getTimeInMillis() + (i * 24 * 60 * 60 * 1000),0); //x is time in milllis
             data[i]=v;

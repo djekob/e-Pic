@@ -11,6 +11,18 @@
     </FrameLayout>
 
     <Button
+        android:id="@+id/switch_camera_sides"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_alignParentRight="true"
+        android:text="@string/switch_1"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:background="@drawable/my_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
         android:id="@+id/take_picture_button_camera_activity"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"

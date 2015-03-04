@@ -28,16 +28,18 @@ public class RandomShit {
 
         return progress;
     }
-    public static Camera getCameraInstance(){
+    public static Camera getCameraInstance(int i){
         Camera c = null;
         try {
-            c = Camera.open(); // attempt to get a Camera instance
+            c = Camera.open(i); // attempt to get a Camera instance
         }
         catch (Exception e){
             // Camera is not available (in use or does not exist)
         }
         return c; // returns null if camera is unavailable
     }
+
+
 
     private static Uri getOutputMediaFileUri(int type){
         return Uri.fromFile(getOutputMediaFile(type));

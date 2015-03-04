@@ -307,7 +307,7 @@ public class Connections {
         protected Boolean doInBackground(String... args) {
 
             List<NameValuePair> params = new ArrayList<>();
-            params.add(new BasicNameValuePair(TAG_LOGINNAME, SaveSharedPreference.getName(context)));
+            params.add(new BasicNameValuePair(TAG_LOGINNAME, SaveSharedPreference.getUserName(context)));
 
             JSONParser jsonParser = new JSONParser();
             JSONObject json = jsonParser.makeHttpRequest(URL_GET_ALL_OWN_SNEEZES,"POST", params);
@@ -866,7 +866,7 @@ public class Connections {
                         Log.e("VRIEND", k);
                     }
                     ((FriendRequestsActivity)context).pendingFriends = pendingFriends;
-                    handler.post((FriendRequestsActivity)context);
+                    handler.post((FriendRequestsActivity) context);
 
                     return false;
 
@@ -1030,10 +1030,10 @@ public class Connections {
             JSONParser jsonParser = new JSONParser();
             JSONObject json = jsonParser.makeHttpRequest(URL_ALL_FRIEND_SNEEZES,"POST", params);
 
+
             try {
                 sneezeHashMapDef = new TreeMap<>();
                 int success = json.getInt(TAG_SUCCESS);
-
                 if (success == 1) {
 
                     JSONArray sneezes = json.getJSONArray(TAG_SNEEZES);
