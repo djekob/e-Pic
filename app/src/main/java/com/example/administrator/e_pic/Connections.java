@@ -1042,22 +1042,15 @@ public class Connections {
                         JSONObject c = sneezes.getJSONObject(i);
 
 
-                        int id = c.getInt(TAG_USER_ID);
                         String time = c.getString(TAG_TIME);
                         String name = c.getString(TAG_LOGINNAME);
-                        int sneeze_id = c.getInt(TAG_ID);
-                        String firstname = c.getString(TAG_VOORNAAM);
-                        String secondname = c.getString(TAG_ACHTERNAAM);
-                        String leeftijd2 = c.getString(TAG_LEEFTIJD);
-                        int leeftijd = Integer.parseInt(leeftijd2);
-
 
                         int totalSneezes = 0;
 
-                        User user = new User(name, firstname, secondname, leeftijd, id, totalSneezes);
-                        Sneeze sneeze = new Sneeze(time, user, sneeze_id);
+                        User user = new User(name, /*firstname, secondname, leeftijd, id, */totalSneezes);
+                        Sneeze sneeze = new Sneeze(time, user/*, sneeze_id*/);
 
-                        sneezeHashMapDef.put(sneeze_id, sneeze);
+                        sneezeHashMapDef.put(i, sneeze);
                     }
 
                     Intent ik = new Intent(context, SneezeListActivity.class);
