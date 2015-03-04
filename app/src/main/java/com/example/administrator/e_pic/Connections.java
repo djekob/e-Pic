@@ -307,7 +307,8 @@ public class Connections {
         protected Boolean doInBackground(String... args) {
 
             List<NameValuePair> params = new ArrayList<>();
-            params.add(new BasicNameValuePair(TAG_LOGINNAME, SaveSharedPreference.getName(context)));
+            System.out.println(SaveSharedPreference.getUserName(context));
+            params.add(new BasicNameValuePair(TAG_LOGINNAME, SaveSharedPreference.getUserName(context)));
 
             JSONParser jsonParser = new JSONParser();
             JSONObject json = jsonParser.makeHttpRequest(URL_GET_ALL_OWN_SNEEZES,"POST", params);
@@ -870,13 +871,6 @@ public class Connections {
 
                     return false;
 
-                } else if (success ==2) {
-                    Intent i = new Intent(context, FriendRequestsActivity.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                    i.putExtra(NAAM_VAR_PENDING_FRIENDS, pendingFriends);
-                    context.startActivity(i);
-                    return false;
                 } else {
                     return true;
                 }
