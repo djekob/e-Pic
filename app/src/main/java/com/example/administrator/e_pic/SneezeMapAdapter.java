@@ -77,7 +77,7 @@ public class SneezeMapAdapter extends BaseAdapter {
             java.sql.Timestamp timestamp = java.sql.Timestamp.valueOf(allSneezes.get(pos).getTime());
 
             Sneeze thisSneeze = allSneezes.get(pos);
-            String name = pos + ". " + thisSneeze.getUser().getUsername() + " (" + thisSneeze.getUser().getFirstname()+ " " + thisSneeze.getUser().getName() + ") ID: "+thisSneeze.getId();
+            String name = pos + ". " + thisSneeze.getUser().getUsername();
             userTextView.setText(name);
 
 
