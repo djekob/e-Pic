@@ -878,6 +878,8 @@ public class Connections {
                     context.startActivity(i);
                     return false;
                 } else {
+                    ((FriendRequestsActivity)context).pendingFriends = pendingFriends;
+                    handler.post((FriendRequestsActivity)context);
                     return true;
                 }
             } catch (JSONException e) {
