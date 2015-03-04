@@ -58,6 +58,8 @@ public class GcmIntentService extends IntentService {
     private static final int CODE_ADD_SNEEZE = 0;
     private static final int CODE_FRIEND_REQUEST = 1;
     private static final int CODE_OTHER_LOGIN = 2;
+    private static final int CODE_ACCEPT_FRIENDS = 3;
+
     @Override
     protected void onHandleIntent(Intent intent) {
         Bundle extras = intent.getExtras();
@@ -128,6 +130,17 @@ public class GcmIntentService extends IntentService {
 
                 //contentIntent = PendingIntent.getActivity(this, 0,
                   //      new Intent(this.getApplicationContext(), iSneezeActivity.class), 0);
+
+                break;
+            case CODE_ACCEPT_FRIENDS:
+                mBuilder.setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(from + " heeft je vriendschapsverzoek aanvaard."))
+                        .setContentText(from + " heeft je vriendschapsverzoek aanvaard.")
+                        .setTicker(from + " heeft je vriendschapsverzoek aanvaard.");
+                notificationIntent = new Intent(getApplicationContext(), MyFriendsActivity.class);
+
+                //contentIntent = PendingIntent.getActivity(this, 0,
+                //      new Intent(this.getApplicationContext(), iSneezeActivity.class), 0);
 
                 break;
             case CODE_FRIEND_REQUEST:
