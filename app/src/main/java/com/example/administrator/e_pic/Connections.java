@@ -748,6 +748,7 @@ public class Connections {
                     }
                     Intent i = new Intent(context, EditProfileActivity.class);
                     i.putExtra(TAG_USER, gebruiker);
+                    i.putExtra(CameraActivity.TAG_URI, "");
                     context.startActivity(i);
                     return true;
                 } else {

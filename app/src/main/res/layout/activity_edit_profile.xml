@@ -16,13 +16,18 @@
         android:textStyle="bold"
         android:textColor="@color/titles_activities"
         android:textSize="20sp"/>
-
+    <ImageButton
+        android:id="@+id/profile_picture_image_button_edit_profile_activity"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:layout_gravity="center_horizontal"/>
     <LinearLayout
         android:layout_marginTop="10dp"
         android:orientation="vertical"
         android:background="@drawable/omkadering"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <EditText
             android:id="@+id/my_first_name_edit_text_edit_profile_activity"
             android:layout_width="match_parent"

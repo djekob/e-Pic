@@ -9,6 +9,9 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" />
+
 
     <permission
         android:name="com.example.administrator.e_pic.permission.C2D_MESSAGE"
@@ -26,7 +29,6 @@
         <activity
             android:name=".FirstActivity"
             android:label="@string/title_activity_main" >
-
         </activity>
         <activity
             android:name=".iSneezeActivity"
@@ -76,21 +78,26 @@
         </activity>
 
         <receiver
-            android:name="com.example.administrator.e_pic.GcmBroadcastReceiver"
+            android:name=".GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
                 <category android:name="com.example.administrator.e_pic" />
             </intent-filter>
         </receiver>
 
-        <service
-            android:name="com.example.administrator.e_pic.GcmIntentService">
+        <service android:name=".GcmIntentService" >
         </service>
 
         <activity
             android:name=".EditProfileActivity"
             android:label="@string/title_activity_edit_profile" >
+        </activity>
+        <activity
+            android:name=".CameraActivity"
+            android:label="@string/title_activity_camera"
+            android:screenOrientation="portrait">
         </activity>
     </application>
 

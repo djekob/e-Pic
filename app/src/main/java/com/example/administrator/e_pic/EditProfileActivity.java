@@ -1,21 +1,51 @@
 package com.example.administrator.e_pic;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.Toast;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URI;
 
 
 public class EditProfileActivity extends CustomActionBarActivity {
 
     private EditText usernameEditText, firstnameEditText, nameEditText, oldPasswordEditText, newPasswordEditText;
     private Button mOkButton, mCancelButton;
+    private ImageButton imageButton;
+    private Bitmap bitmap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
+
+        bitmap = null;
+        if(!getIntent().getStringExtra(CameraActivity.TAG_URI).equals("")) {
+            Uri uri = Uri.parse(getIntent().getStringExtra(CameraActivity.TAG_URI));
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+            } catch (FileNotFoundException f) {
+                Toast.makeText(getContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
+            } catch (IOException i) {
+                Toast.makeText(getContext(), "Something is wrong hahaha", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        User user = (User) getIntent().getSerializableExtra(Connections.TAG_USER);
 
         initialization();
 
@@ -34,8 +64,19 @@ public class EditProfileActivity extends CustomActionBarActivity {
         newPasswordEditText = (EditText) findViewById(R.id.my_new_password_edit_text_edit_profile_activity);
         mOkButton = (Button) findViewById(R.id.ok_edit_profile_data_button);
         mCancelButton = (Button) findViewById(R.id.cancel_edit_profile_data_button);
+        imageButton = (ImageButton) findViewById(R.id.profile_picture_image_button_edit_profile_activity);
+        imageButton.setImageBitmap(bitmap);
+        imageButton.setOnClickListener(new onProfilePictureClickListener());
     }
 
+    private class onProfilePictureClickListener  implements View.OnClickListener
+    {
+        @Override
+        public void onClick(View v) {
+            Intent i = new Intent(getContext(), CameraActivity.class);
+            getContext().startActivity(i);
+        }
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -56,5 +97,9 @@ public class EditProfileActivity extends CustomActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private Context getContext() {
+        return this;
     }
 }
