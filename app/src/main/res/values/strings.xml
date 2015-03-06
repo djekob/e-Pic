@@ -52,5 +52,8 @@
     <string name="title_activity_custom_action_bar">CustomActionBarActivity</string>
     <string name="title_activity_camera">CameraActivity</string>
     <string name="take_picture">Take picture</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_test">test</string>
+
     <string name="switch_1">Switch</string>
 </resources>

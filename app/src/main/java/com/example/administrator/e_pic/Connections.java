@@ -80,6 +80,7 @@ public class Connections {
     public static final String TAG_NOTIFICATIONS ="notifications";
     public static final String TAG_AANTAL = "Aantal";
     public static final String TAG_NR_OF_SNEEZES_FRIEND = "Nr of sneezes friend";
+    public static final String TAG_ADD_FRIEND = "add_friend";
 
 
 
@@ -98,6 +99,7 @@ public class Connections {
     public static final int REGISTER_CODE = 12;
     public static final int DELETE_REGID_CODE = 13;
     public static final int GET_PROFILE_DATA_CODE = 14;
+    public static final int GET_ALL_SNEEZES_GRAPH_CODE_AND_FRIENDS = 15;
 
 
     private Context context;
@@ -134,6 +136,8 @@ public class Connections {
             new DeleteRegId().execute();
         } else if(code == Connections.GET_PROFILE_DATA_CODE) {
             new GetOneUser().execute();
+        } else if(code == Connections.GET_ALL_SNEEZES_GRAPH_CODE_AND_FRIENDS){
+            new OpenSneezesGraphAndGetFriends().execute();
         }
 
     }
@@ -294,6 +298,125 @@ public class Connections {
 
     }
 
+    private class OpenSneezesGraphAndGetFriends extends AsyncTask<String, String ,Boolean>{
+
+        ProgressDialog progress;
+        private ArrayList<User> friends;
+        private JSONArray friendsData;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progress= RandomShit.getProgressDialog(context);
+            progress.show();
+        }
+
+        protected Boolean doInBackground(String... args) {
+
+            List<NameValuePair> params = new ArrayList<>();
+            params.add(new BasicNameValuePair(TAG_LOGINNAME, SaveSharedPreference.getUserName(context)));
+
+            JSONParser jsonParser = new JSONParser();
+            JSONObject json = jsonParser.makeHttpRequest(URL_GET_ALL_OWN_SNEEZES,"POST", params);
+
+            try {
+                ArrayList<Sneeze> sneezes = new ArrayList<>();
+                int success = json.getInt(TAG_SUCCESS);
+
+                if (success == 1) {
+                    // products found
+                    // Getting Array of Products
+                    JSONArray tijden = json.getJSONArray(TAG_SNEEZES);
+
+                    // looping through All Products
+                    for (int i = 0; i < tijden.length(); i++) {
+                        // Storing each json item in variable
+                        String time = tijden.getString(i);
+
+                        Sneeze sneeze = new Sneeze(time, SaveSharedPreference.getUser(context));
+
+                        sneezes.add(sneeze);
+                    }
+
+                    List<NameValuePair> pars = new ArrayList<>();
+
+                    pars.add(new BasicNameValuePair(TAG_LOGINNAME, username));
+
+
+                    JSONParser jsonParser2 = new JSONParser();
+                    JSONObject json2 = jsonParser.makeHttpRequest(URL_GET_FRIENDS, "POST", pars);
+
+                    try {
+                        friends = new ArrayList<>();
+
+                        int success2 = json2.getInt(TAG_SUCCESS);
+
+                        if (success2 == 1) {
+
+                            friendsData = json2.getJSONArray(TAG_FRIENDS);
+
+
+                            for (int i = 0; i < friendsData.length(); i++) {
+
+                                String name = friendsData.getJSONObject(i).getString(TAG_LOGINNAME);
+                                int aantalSneezes = friendsData.getJSONObject(i).getInt(TAG_AANTAL);
+
+                                User friend = new User(name, aantalSneezes);
+                                friends.add(friend);
+                            }
+
+                            iSneezeActivity activity = (iSneezeActivity)context;
+                            activity.sneezeList = sneezes;
+                            System.out.println(sneezes);
+                            activity.friendsList = friends;
+                            System.out.println(activity.friendsList);
+                            Handler handler = new Handler(Looper.getMainLooper());
+                            handler.post(activity);
+
+
+                        } else {
+
+
+                            return true;
+
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+
+                    // successfully created product
+
+                    // closing this screen
+
+
+                    /*Intent ik = new Intent(context, SneezeOverviewActivity.class);
+                    ik.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    ik.putExtra(TAG_SNEEZES, sneezes);
+
+                    context.startActivity(ik);*/
+
+                } else {
+
+
+                    return true;
+                    // failed to create product
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return false;
+        }
+
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            progress.dismiss();
+        }
+    }
+
     private class OpenSneezesGraph extends AsyncTask<String, String ,Boolean>{
 
         ProgressDialog progress;
@@ -330,6 +453,11 @@ public class Connections {
 
                         sneezes.add(sneeze);
                     }
+
+                    /*test activity = (test)context;
+                    activity.sneezeList = sneezes;
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(activity);*/
                     // successfully created product
 
                     // closing this screen
@@ -523,7 +651,7 @@ public class Connections {
 
                 if (success == 1) {
 
-                    iSneezeActivity main = (iSneezeActivity) context;
+                    test main = (test) context;
                     main.runOnUiThread(new Runnable() {
                         public void run() {
                             Toast.makeText(context, "Sneeze added ;)", Toast.LENGTH_SHORT).show();
@@ -692,7 +820,6 @@ public class Connections {
                 Intent ik = new Intent(context, SearchFriendActivity.class);
                 ik.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 ik.putExtra(NAAM_VAR_USERS_NOT_FRIEND, users);
-                ik.putExtra(iSneezeActivity.ADD_FRIEND_CODE, username);
                 context.startActivity(ik);
                 progress.dismiss();
             }
@@ -870,13 +997,6 @@ public class Connections {
 
                     return false;
 
-                } else if (success ==2) {
-                    Intent i = new Intent(context, FriendRequestsActivity.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                    i.putExtra(NAAM_VAR_PENDING_FRIENDS, pendingFriends);
-                    context.startActivity(i);
-                    return false;
                 } else {
                     ((FriendRequestsActivity)context).pendingFriends = pendingFriends;
                     handler.post((FriendRequestsActivity)context);

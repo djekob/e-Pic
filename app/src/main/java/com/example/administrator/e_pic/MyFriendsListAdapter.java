@@ -13,14 +13,21 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
-public class MyFriendsListAdapter extends ArrayAdapter implements Filterable {
+public class MyFriendsListAdapter extends ArrayAdapter {
 
 
     private ArrayList<User> myFriends;
     private int resource;
+
+    @Override
+    public void notifyDataSetChanged() {
+        //myFriends.clear();
+        //myFriends.addAll(myFriends);
+        super.notifyDataSetChanged();
+    }
+
     private Context context;
     private String username;
-    private int nrsneezes;
 
     public MyFriendsListAdapter(Context context, int resource, ArrayList<User> myFriends) {
         super(context, resource, myFriends);
@@ -60,7 +67,7 @@ public class MyFriendsListAdapter extends ArrayAdapter implements Filterable {
 
         String friend = myFriends.get(position).getUsername();
         friendsNameTextView.setText(friend);
-        nrsneezes= myFriends.get(position).getNumberOfSneezes();
+        int nrsneezes= myFriends.get(position).getNumberOfSneezes();
         friendsSneezesTextView.setText(""+nrsneezes);
 
         v.setOnClickListener(new OnFriendClickListener(friend, position));

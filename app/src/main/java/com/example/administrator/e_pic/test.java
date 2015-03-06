@@ -1,57 +1,33 @@
 package com.example.administrator.e_pic;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.DialogInterface;
+
+
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
-import android.graphics.Color;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 
-public class iSneezeActivity extends CustomActionBarActivity implements Runnable {
-    public ArrayList<Sneeze> sneezeList = new ArrayList<>();
+public class test extends CustomActionBarActivity /*implements Runnable*/ {
+/*    public ArrayList<Sneeze> sneezeList = new ArrayList<>();
     public ArrayList<User> friendsList = new ArrayList<>();
 
-
-    /**
-     * The number of pages (wizard steps) to show in this demo.
-     */
     private static final int NUM_PAGES = 3;
-    /**
-     * The pager widget, which handles animation and allows swiping horizontally to access previous
-     * and next wizard steps.
-     */
+
     private ViewPager mPager;
 
-    /**
-     * The pager adapter, which provides the pages to the view pager widget.
-     */
     public PagerAdapter mPagerAdapter;
 
     @Override
@@ -143,10 +119,7 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
         handler.post(m);
     }
 
-    /**
-     * A simple pager adapter that represents 5 ScreenSlidePageFragment objects, in
-     * sequence.
-     */
+
     public class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
         public iSneezeFragment frag1;
         public SneezeOverviewFragment frag0;
@@ -173,95 +146,6 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
         public int getCount() {
             return NUM_PAGES;
         }
-    }
-
-
-/*
-    private TextView myNameTextView;
-    private Connections c;
-    private ImageButton isneeze_image_button;
-    private String username;
-    private Context context;
-
-
-    public static final String ADD_FRIEND_CODE = "add_friend";
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_i_sneeze);
-
-        context = this;
-
-        username = user.getUsername();
-        isneeze_image_button = (ImageButton) findViewById(R.id.isneeze_image_button);
-        myNameTextView = (TextView) findViewById(R.id.my_name_textview);
-
-
-        myNameTextView.setText(username);
-
-        isneeze_image_button.setOnClickListener(new SneezeClickListenertest());
-
-
-    }
-
-    public class SneezeClickListenertest implements View.OnClickListener {
-
-        @Override
-        public void onClick(View v) {
-            Intent i = new Intent(context, test.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            context.startActivity(i);
-
-        }
-    }
-
-    public class SneezeClickListener implements View.OnClickListener {
-
-        @Override
-        public void onClick(View v) {
-
-            new Connections(getContext(), Connections.CREATE_SNEEZE_CODE);
-
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        getMenuInflater().inflate(R.menu.menu_i_sneeze, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.go_to_all_sneezes_list_action_bar) {
-            new Connections(this, Connections.GET_ALL_FRIEND_SNEEZES_CODE);
-        } else if (id == R.id.add_friend_action_bar) {
-            new Connections(this, Connections.GET_ALL_USERS_NO_FRIENDS);
-        } else if (id == R.id.pending_friends_action_bar) {
-            Intent i = new Intent(context, FriendRequestsActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            context.startActivity(i);
-        } else if (id == R.id.go_to_all_sneezes_graph_action_bar) {
-            new Connections(this, Connections.GET_ALL_SNEEZES_GRAPH_CODE);
-        } else if (id == R.id.logout_user) {
-            new Connections(this, Connections.DELETE_REGID_CODE);
-        } else if (id == R.id.my_friends_action_bar) {
-            new Connections(this, Connections.GET_ALL_FRIENDS_CODE);
-        } else if(id == R.id.edit_profile_data_menu_item) {
-            new Connections(this, Connections.GET_PROFILE_DATA_CODE);
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    private Context getContext(){
-        return this;
     }
 */
 }
