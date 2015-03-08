@@ -2,11 +2,14 @@ package com.example.administrator.e_pic;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 
 
@@ -27,12 +30,11 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
         ViewGroup rootView = (ViewGroup) inflater.inflate(
                 R.layout.fragment_i_sneeze, container, false);
 
-        context = getActivity();
-
 
         username = ((CustomActionBarActivity)getActivity()).user.getUsername();
         isneeze_image_button = (ImageButton) rootView.findViewById(R.id.isneeze_image_button);
         myNameTextView = (TextView) rootView.findViewById(R.id.my_name_textview);
+        context = getActivity();
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.i_sneeze_swiper);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

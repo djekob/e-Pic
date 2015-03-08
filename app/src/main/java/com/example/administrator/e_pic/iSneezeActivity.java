@@ -13,6 +13,7 @@ import android.os.Looper;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -21,8 +22,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,7 +41,6 @@ import com.google.android.gms.maps.model.LatLng;
 import java.security.Provider;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 
 
 public class iSneezeActivity extends CustomActionBarActivity implements Runnable {
@@ -49,13 +52,24 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
     private static final int NUM_PAGES = 3;
     private ViewPager mPager;
     public PagerAdapter mPagerAdapter;
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+    private ArrayList<String> drawerList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.slide_screens);
 
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        drawerList = new ArrayList<>();
+        vulActivityItems();
 
+        mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, drawerList));
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+        mDrawerList.bringToFront();
+        mDrawerLayout.requestLayout();
         mPager = (ViewPager) findViewById(R.id.pager);
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
@@ -75,6 +89,16 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
 
         getMenuInflater().inflate(R.menu.menu_i_sneeze, menu);
         return true;
+    }
+
+    private void vulActivityItems(){
+        drawerList.add(getResources().getString(R.string.all_sneezes));
+        drawerList.add(getResources().getString(R.string.my_friends));
+        drawerList.add(getResources().getString(R.string.add_friend));
+        drawerList.add(getResources().getString(R.string.pending_friends));
+        drawerList.add(getResources().getString(R.string.all_sneezes_graph));
+        drawerList.add(getResources().getString(R.string.edit_profile_data));
+        drawerList.add(getResources().getString(R.string.logout));
     }
 
     @Override
@@ -170,7 +194,36 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
             return NUM_PAGES;
         }
     }
-    private Context getContext() {
+
+    public class DrawerItemClickListener implements AdapterView.OnItemClickListener{
+
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            System.out.println(position);
+            switch (position){
+                case 0: new Connections(getContext(), Connections.GET_ALL_FRIEND_SNEEZES_CODE);
+                    break;
+                case 1: new Connections(getContext(), Connections.GET_ALL_FRIENDS_CODE);
+                    break;
+                case 2: new Connections(getContext(), Connections.GET_ALL_USERS_NO_FRIENDS);
+                    break;
+                case 3: Intent i = new Intent(getContext(), FriendRequestsActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    getContext().startActivity(i);
+                    break;
+                case 4: new Connections(getContext(), Connections.GET_ALL_SNEEZES_GRAPH_CODE);
+                    break;
+                case 5: new Connections(getContext(), Connections.GET_PROFILE_DATA_CODE);
+                    break;
+                case 6: new Connections(getContext(), Connections.DELETE_REGID_CODE);
+                    break;
+                default: break;
+            }
+        }
+    }
+    public Context getContext(){
         return this;
     }
 }
