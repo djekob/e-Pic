@@ -1,10 +1,14 @@
 package com.example.administrator.e_pic;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.LoginFilter;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -21,6 +25,7 @@ public class ProfileActivity extends CustomActionBarActivity {
     private ArrayList<User> friendsList;
     private int nrOfSneezesFriend;
     private int position;
+    private Button addFriendButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +49,21 @@ public class ProfileActivity extends CustomActionBarActivity {
         myFriendsListView= (ListView) findViewById(R.id.friends_list_profile_activity);
         mySneezesTextView = (TextView) findViewById(R.id.number_of_sneezes_text_view_profile_activity);
         myProfilePictureImageView = (ImageView) findViewById(R.id.my_profile_picture_profile_activity);
+        addFriendButton =(Button) findViewById(R.id.add_friend_button_profile_activity);
+        addFriendButton.setOnClickListener(new AddFriendClickListener());
     }
 
+    private Boolean checkIfFriend(String friendname) {
+        return false;
+    }
+    private class AddFriendClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+                new Connections(getContext(), SaveSharedPreference.getUserName(getContext()), username, Connections.ADD_FRIEND_CODE);
+                addFriendButton.setEnabled(false);
+            }
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -66,5 +84,9 @@ public class ProfileActivity extends CustomActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private Context getContext() {
+        return this;
     }
 }

@@ -154,6 +154,15 @@ public class Connections {
         }
     }
 
+    public Connections(Context context, String myName, String friendname, int code) {
+        this.context= context;
+        this.username = myName;
+        this.friendname = friendname;
+        if(code == Connections.ADD_FRIEND_CODE) {
+            new AddFriend().execute();
+        }
+    }
+
     public Connections(Context context, String friendname, int code) {
         this.context = context;
         this.username = SaveSharedPreference.getUserName(context);

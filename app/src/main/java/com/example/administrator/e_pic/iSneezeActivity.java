@@ -37,6 +37,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.security.Provider;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 
 
 public class iSneezeActivity extends CustomActionBarActivity implements Runnable {
@@ -168,6 +169,9 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
         public int getCount() {
             return NUM_PAGES;
         }
+    }
+    private Context getContext() {
+        return this;
     }
 }
 

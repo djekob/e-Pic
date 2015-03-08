@@ -1,5 +1,6 @@
 package com.example.administrator.e_pic;
 
+import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -52,5 +53,8 @@ public class MyFriendsActivity extends CustomActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    private Context getContext() {
+        return this;
     }
 }
