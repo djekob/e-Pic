@@ -2,9 +2,6 @@ package com.example.administrator.e_pic;
 
 
 import android.app.DatePickerDialog;
-import android.app.Fragment;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +11,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.MapsInitializer;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.helper.StaticLabelsFormatter;
@@ -147,7 +143,7 @@ public class ScreenSlidePageFragment extends android.support.v4.app.Fragment imp
             break;
             case 1:
                 rootView = (ViewGroup) inflater
-                        .inflate(R.layout.activity_i_sneeze, container, false);
+                        .inflate(R.layout.fragment_i_sneeze, container, false);
                 isneeze_image_button = (ImageButton) rootView.findViewById(R.id.isneeze_image_button);
                 myNameTextView = (TextView) rootView.findViewById(R.id.my_name_textview);
 
@@ -178,6 +174,7 @@ public class ScreenSlidePageFragment extends android.support.v4.app.Fragment imp
     }
 
 
+    /*
     public class SneezeClickListenertest implements View.OnClickListener {
 
         @Override
@@ -189,6 +186,7 @@ public class ScreenSlidePageFragment extends android.support.v4.app.Fragment imp
 
         }
     }
+    */
 
     public class SneezeClickListener implements View.OnClickListener {
 

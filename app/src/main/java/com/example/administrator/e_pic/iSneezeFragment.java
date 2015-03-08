@@ -1,11 +1,7 @@
 package com.example.administrator.e_pic;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,8 +23,10 @@ public class iSneezeFragment extends android.support.v4.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(
-                R.layout.activity_i_sneeze, container, false);
+                R.layout.fragment_i_sneeze, container, false);
+
         context = getActivity();
+
 
         username = ((CustomActionBarActivity)getActivity()).user.getUsername();
         isneeze_image_button = (ImageButton) rootView.findViewById(R.id.isneeze_image_button);
@@ -41,8 +39,9 @@ public class iSneezeFragment extends android.support.v4.app.Fragment {
 
 
         return rootView;
-        // Inflate the layout for this fragment
     }
+
+
 
     public class SneezeClickListener implements View.OnClickListener {
 

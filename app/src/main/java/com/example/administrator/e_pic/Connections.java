@@ -100,6 +100,7 @@ public class Connections {
     public static final int DELETE_REGID_CODE = 13;
     public static final int GET_PROFILE_DATA_CODE = 14;
     public static final int GET_ALL_SNEEZES_GRAPH_CODE_AND_FRIENDS = 15;
+    public static final int RELOAD_ALL_SNEEZES_CODE = 16;
 
 
     private Context context;
@@ -159,6 +160,8 @@ public class Connections {
         this.friendname = friendname;
         if (code== ACCEPT_FRIEND_CODE) {
             new AcceptFriendRequest().execute();
+        } else if(code == RELOAD_ALL_SNEEZES_CODE) {
+            new ReloadFriendsSneezesList().execute();
         }
 
     }
@@ -199,6 +202,10 @@ public class Connections {
         }
     }
 
+    public Connections(Context context, String username) {
+        this.context= context;
+        this.username= username;
+    }
 
     private class DeleteRegId extends AsyncTask<String, String, Boolean> {
 
@@ -295,6 +302,82 @@ public class Connections {
             }
             return null;
         }
+
+    }
+    private class ReloadFriendsSneezesList extends AsyncTask<String, String, Boolean> {
+
+        private ProgressDialog progress;
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            /*progress = RandomShit.getProgressDialog(context);
+            progress.sho6w();*/
+
+        }
+
+        protected Boolean doInBackground(String... args) {
+
+            List<NameValuePair> params = new ArrayList<>();
+            params.add(new BasicNameValuePair(TAG_LOGINNAME, username));
+
+            TreeMap<Integer, Sneeze> sneezeHashMapDef;
+
+            JSONParser jsonParser = new JSONParser();
+            JSONObject json = jsonParser.makeHttpRequest(URL_ALL_FRIEND_SNEEZES,"POST", params);
+
+            try {
+                sneezeHashMapDef = new TreeMap<>();
+                int success = json.getInt(TAG_SUCCESS);
+
+                if (success == 1) {
+
+                    JSONArray sneezes = json.getJSONArray(TAG_SNEEZES);
+
+                    for (int i = 0; i < sneezes.length(); i++) {
+                        JSONObject c = sneezes.getJSONObject(i);
+
+
+                        String time = c.getString(TAG_TIME);
+                        String name = c.getString(TAG_LOGINNAME);
+
+                        int totalSneezes = 0;
+
+                        User user = new User(name, /*firstname, secondname, leeftijd, id, */totalSneezes);
+                        Sneeze sneeze = new Sneeze(time, user/*, sneeze_id*/);
+
+                        sneezeHashMapDef.put(i, sneeze);
+                    }
+
+                    SneezeListActivity sneezeListActivity = (SneezeListActivity) context;
+                    sneezeListActivity.setSneezeMap(sneezeHashMapDef);
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(sneezeListActivity);
+
+                } else {
+
+
+                    return true;
+
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean b) {
+            super.onPostExecute(b);
+            //progress.dismiss();
+            //pDialog.dismiss();
+            if (b) Toast.makeText(context, "Laden sneezes mislukt.", Toast.LENGTH_LONG).show();
+
+
+        }
+
 
     }
 
@@ -646,26 +729,18 @@ public class Connections {
 
             try {
                 int success = json.getInt(TAG_SUCCESS);
-
-
-
                 if (success == 1) {
-
-                    test main = (test) context;
+                    iSneezeActivity main = (iSneezeActivity) context;
                     main.runOnUiThread(new Runnable() {
                         public void run() {
                             Toast.makeText(context, "Sneeze added ;)", Toast.LENGTH_SHORT).show();
                         }
                     });
-
-
-
                 } else {
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
             return null;
         }
 
@@ -674,7 +749,6 @@ public class Connections {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             progress.dismiss();
-
         }
     }
 
@@ -693,8 +767,6 @@ public class Connections {
         protected Boolean doInBackground(String... args) {
 
             List<NameValuePair> params = new ArrayList<>();
-
-
             TreeMap<Integer, Sneeze> sneezeHashMapDef;
 
             JSONParser jsonParser = new JSONParser();
@@ -1130,6 +1202,53 @@ public class Connections {
             progress.dismiss();
         }
     }
+
+    public TreeMap<Integer, Sneeze> loadAllFriendSneezes() {
+        List<NameValuePair> params = new ArrayList<>();
+        params.add(new BasicNameValuePair(TAG_LOGINNAME, username));
+
+        TreeMap<Integer, Sneeze> sneezeHashMapDef = new TreeMap<>();
+
+        JSONParser jsonParser = new JSONParser();
+        JSONObject json = jsonParser.makeHttpRequest(URL_ALL_FRIEND_SNEEZES,"POST", params);
+
+        try {
+            sneezeHashMapDef = new TreeMap<>();
+            int success = json.getInt(TAG_SUCCESS);
+
+            if (success == 1) {
+
+                JSONArray sneezes = json.getJSONArray(TAG_SNEEZES);
+
+                for (int i = 0; i < sneezes.length(); i++) {
+                    JSONObject c = sneezes.getJSONObject(i);
+
+
+                    String time = c.getString(TAG_TIME);
+                    String name = c.getString(TAG_LOGINNAME);
+
+                    int totalSneezes = 0;
+
+                    User user = new User(name, /*firstname, secondname, leeftijd, id, */totalSneezes);
+                    Sneeze sneeze = new Sneeze(time, user/*, sneeze_id*/);
+
+                    sneezeHashMapDef.put(i, sneeze);
+                }
+
+
+            } else {
+
+
+                return sneezeHashMapDef;
+
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return sneezeHashMapDef;
+    }
+
     private class GetAllFriendSneezes extends AsyncTask<String, String, Boolean> {
         private ProgressDialog progress;
 

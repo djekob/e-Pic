@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -30,6 +33,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.security.Provider;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -38,42 +42,25 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
     public ArrayList<Sneeze> sneezeList = new ArrayList<>();
     public ArrayList<User> friendsList = new ArrayList<>();
 
+    private TextView myNameTextView, locationTextView;
 
-    /**
-     * The number of pages (wizard steps) to show in this demo.
-     */
     private static final int NUM_PAGES = 3;
-    /**
-     * The pager widget, which handles animation and allows swiping horizontally to access previous
-     * and next wizard steps.
-     */
     private ViewPager mPager;
-
-    /**
-     * The pager adapter, which provides the pages to the view pager widget.
-     */
     public PagerAdapter mPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test);
+        setContentView(R.layout.slide_screens);
 
-        // Instantiate a ViewPager and a PagerAdapter.
         mPager = (ViewPager) findViewById(R.id.pager);
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
         mPager.setOffscreenPageLimit(2);
-        //mPager.setCurrentItem(0);
         mPager.setCurrentItem(1);
-        //mPager.setCurrentItem(2);
         mPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                // When changing pages, reset the action bar actions since they are dependent
-                // on which page is currently active. An alternative approach is to have each
-                // fragment expose actions itself (rather than the activity exposing actions),
-                // but for simplicity, the activity provides the actions in this sample.
                 invalidateOptionsMenu();
             }
         });
@@ -106,7 +93,7 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
             new Connections(this, Connections.DELETE_REGID_CODE);
         } else if (id == R.id.my_friends_action_bar) {
             new Connections(this, Connections.GET_ALL_FRIENDS_CODE);
-        } else if(id == R.id.edit_profile_data_menu_item) {
+        } else if (id == R.id.edit_profile_data_menu_item) {
             new Connections(this, Connections.GET_PROFILE_DATA_CODE);
         }
 
@@ -128,13 +115,13 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
 
     @Override
     public void run() {
-        SneezeOverviewFragment f = ((ScreenSlidePagerAdapter)mPagerAdapter).frag0;
+        SneezeOverviewFragment f = ((ScreenSlidePagerAdapter) mPagerAdapter).frag0;
         f.sneezeList.clear();
         f.sneezeList.addAll(sneezeList);
         System.out.println(sneezeList);
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(f);
-        MyFriendsFragment m = ((ScreenSlidePagerAdapter)mPagerAdapter).frag2;
+        MyFriendsFragment m = ((ScreenSlidePagerAdapter) mPagerAdapter).frag2;
         System.out.println(m);
         System.out.println(friendsList);
         m.friends.clear();
@@ -158,14 +145,18 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
 
         @Override
         public android.support.v4.app.Fragment getItem(int position) {
-            switch (position){
-                case 0: frag0 =  new SneezeOverviewFragment();
+            switch (position) {
+                case 0:
+                    frag0 = new SneezeOverviewFragment();
                     return frag0;
-                case 1: frag1 = new iSneezeFragment();
+                case 1:
+                    frag1 = new iSneezeFragment();
                     return frag1;
-                case 2: frag2 = new MyFriendsFragment();
+                case 2:
+                    frag2 = new MyFriendsFragment();
                     return frag2;
-                default: return new iSneezeFragment();
+                default:
+                    return new iSneezeFragment();
             }
         }
 
@@ -174,6 +165,7 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
             return NUM_PAGES;
         }
     }
+}
 
 
 /*
@@ -182,6 +174,9 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
     private ImageButton isneeze_image_button;
     private String username;
     private Context context;
+    private LocationManager locationManager;
+    private String provider;
+    private Location location;
 
 
     public static final String ADD_FRIEND_CODE = "add_friend";
@@ -189,14 +184,23 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_i_sneeze);
+        setContentView(R.layout.fragment_i_sneeze);
 
         context = this;
 
         username = user.getUsername();
         isneeze_image_button = (ImageButton) findViewById(R.id.isneeze_image_button);
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationTextView = (TextView) findViewById(R.id.location_text_view);
+
         myNameTextView = (TextView) findViewById(R.id.my_name_textview);
 
+
+        try {
+            MapsInitializer.initialize(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         myNameTextView.setText(username);
 
@@ -263,5 +267,4 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
     private Context getContext(){
         return this;
     }
-*/
-}
+}*/

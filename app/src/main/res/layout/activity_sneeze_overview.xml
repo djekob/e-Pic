@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/background_color">
 
 
     <RelativeLayout
@@ -12,9 +13,10 @@
         android:orientation="horizontal">
 
          <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/title_startCalendar"
+             android:id="@+id/title_startCalendar"
+             android:textColor="@color/titles_activities"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
             android:textSize="25sp"
             android:layout_gravity="left"
             android:layout_alignParentLeft="true"
@@ -23,6 +25,7 @@
 
         <TextView
             android:id="@+id/tot_text"
+            android:textColor="@color/titles_activities"
             android:text=" tot "
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -32,9 +35,10 @@
             android:layout_centerHorizontal="true" />
 
         <TextView
+            android:id="@+id/title_endCalendar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/title_endCalendar"
+            android:textColor="@color/titles_activities"
             android:textSize="25sp"
             android:layout_gravity="right"
             android:layout_alignParentRight="true"
