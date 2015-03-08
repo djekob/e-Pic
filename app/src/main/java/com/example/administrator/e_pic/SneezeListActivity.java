@@ -115,6 +115,6 @@ public class SneezeListActivity extends CustomActionBarActivity implements Runna
 
     public void setSneezeMap(TreeMap<Integer, Sneeze> sneezeMap) {
         this.sneezeMapDef.clear();
-        this.sneezeMapDef.put(9999999, new Sneeze("kaka", new User("RARE KWIET")));
+        this.sneezeMapDef.putAll(sneezeMap);
     }
 }

@@ -23,13 +23,12 @@ public class SneezeMapAdapter extends BaseAdapter {
 
     private Context context;
     private int resource;
-    private TreeMap<Integer, Sneeze> sneezeMap = new TreeMap<>();
+    private TreeMap<Integer, Sneeze> sneezeMap;
     private ArrayList<Sneeze> allSneezes;
 
     private String[] mKeys;
 
-
-        public SneezeMapAdapter(Context context, int resource, TreeMap<Integer, Sneeze> sneezeMap){
+    public SneezeMapAdapter(Context context, int resource, TreeMap<Integer, Sneeze> sneezeMap){
             this.context = context;
             this.resource = resource;
             this.sneezeMap  = sneezeMap;
@@ -74,7 +73,7 @@ public class SneezeMapAdapter extends BaseAdapter {
 
 
             dateTextView.setText(allSneezes.get(pos).getTime());
-            java.sql.Timestamp timestamp = java.sql.Timestamp.valueOf(allSneezes.get(pos).getTime());
+            //java.sql.Timestamp timestamp = java.sql.Timestamp.valueOf(allSneezes.get(pos).getTime());
 
             Sneeze thisSneeze = allSneezes.get(pos);
             String name = pos + ". " + thisSneeze.getUser().getUsername();
@@ -84,5 +83,14 @@ public class SneezeMapAdapter extends BaseAdapter {
             return v;
         }
 
+
+    @Override
+    public void notifyDataSetChanged() {
+        allSneezes.clear();
+        for (Integer integer : sneezeMap.keySet()) {
+            allSneezes.add(sneezeMap.get(integer));
+        }
+        super.notifyDataSetChanged();
+    }
 }
 

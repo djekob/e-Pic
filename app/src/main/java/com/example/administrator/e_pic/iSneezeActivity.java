@@ -13,6 +13,7 @@ import android.os.Looper;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -52,6 +53,7 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.slide_screens);
+
 
         mPager = (ViewPager) findViewById(R.id.pager);
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
@@ -128,6 +130,8 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
         m.friends.addAll(friendsList);
         System.out.println(m.friends);
         handler.post(m);
+        iSneezeFragment i = ((ScreenSlidePagerAdapter) mPagerAdapter).frag1;
+        handler.post(i);
     }
 
     /**

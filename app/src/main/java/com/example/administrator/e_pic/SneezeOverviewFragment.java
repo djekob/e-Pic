@@ -169,7 +169,7 @@ public class SneezeOverviewFragment extends android.support.v4.app.Fragment impl
             graph.refreshDrawableState();
         }
         else{
-            Toast.makeText(getActivity(), "Je hebt de laatste dagen niet geniest!", Toast.LENGTH_SHORT).show();
+            System.out.println("Je hebt de laatste dagen niet geniest!");
         }
     }
 
