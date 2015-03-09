@@ -26,7 +26,13 @@ public class SaveSharedPreference
         editor.commit();
     }
 
-    public static void setTagNrOfSneezes(Context ctx, int nr)
+
+    public static void addSneeze(Context ctx)
+    {
+        setNrOfSneezes(ctx, getNrOfSneezes(ctx));
+    }
+
+    public static void setNrOfSneezes(Context ctx, int nr)
     {
         SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
         editor.putInt(TAG_NR_OF_SNEEZES, nr);

@@ -60,12 +60,9 @@ public class User implements Serializable {
     public String toString() {
         return "User{" +
                 "username='" + username + '\'' +
-                ", firstname='" + firstname + '\'' +
-                ", name='" + name + '\'' +
-                ", age=" + age +
+                ", numberOfSneezes=" + numberOfSneezes +
                 '}';
     }
-
 
     public String getUsername() {
         return username;

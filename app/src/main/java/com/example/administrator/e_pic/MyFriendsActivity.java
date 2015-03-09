@@ -3,6 +3,7 @@ package com.example.administrator.e_pic;
 import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MyFriendsActivity extends CustomActionBarActivity {
+public class MyFriendsActivity extends CustomActionBarActivity implements Runnable{
 
     private String username;
     private ArrayList<User> friends;
@@ -26,10 +27,14 @@ public class MyFriendsActivity extends CustomActionBarActivity {
 
         username = user.getUsername();
         friends = new ArrayList<>();
-        friends = (ArrayList) getIntent().getSerializableExtra(Connections.TAG_FRIENDS);
+        BigClass bigClass = BigClass.ReadData(this);
+        friends = new ArrayList<>();
+        if(bigClass!=null) friends.addAll(bigClass.getFriendsArrayList());
+        Log.i("friends oncreate", friends.toString());
         listView = (ListView) findViewById(R.id.my_friends_list_view_my_friends_activity);
         myFriendsListAdapter = new MyFriendsListAdapter(this, R.layout.friend_list_item, friends);
         listView.setAdapter(myFriendsListAdapter);
+        new Connections(getContext(), Connections.GET_ALL_FRIENDS_CODE);
     }
 
 
@@ -56,5 +61,15 @@ public class MyFriendsActivity extends CustomActionBarActivity {
     }
     private Context getContext() {
         return this;
+    }
+
+    @Override
+    public void run() {
+        BigClass bigClass = BigClass.ReadData(this);
+        friends.clear();
+        friends.addAll(bigClass.getFriendsArrayList());
+        System.out.println(friends);
+        ((MyFriendsListAdapter)listView.getAdapter()).notifyDataSetChanged();
+        System.out.println("run");
     }
 }

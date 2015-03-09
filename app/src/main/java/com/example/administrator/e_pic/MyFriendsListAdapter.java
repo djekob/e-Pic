@@ -24,6 +24,7 @@ public class MyFriendsListAdapter extends ArrayAdapter {
         //myFriends.clear();
         //myFriends.addAll(myFriends);
         super.notifyDataSetChanged();
+        System.out.println(myFriends);
     }
 
     private Context context;

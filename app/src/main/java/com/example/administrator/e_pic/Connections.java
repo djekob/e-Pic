@@ -59,6 +59,7 @@ public class Connections {
     public static final String URL_GET_FRIENDS = IP+"get_friends.php";
     public static final String URL_DELETE_REGID= IP+"logout.php";
     public static final String URL_GET_ALL_OWN_SNEEZES = IP + "get_all_own_sneezes.php";
+    private static final String URL_GET_FRIENDS_NO_EXTRA_DATA = IP + "get_friends_no_extra_data.php";
 
     public static final String NAAM_VAR_USER = "Username";
     public static final String NAAM_VAR_USERS_NOT_FRIEND = "Users not friends";
@@ -81,6 +82,10 @@ public class Connections {
     public static final String TAG_AANTAL = "Aantal";
     public static final String TAG_NR_OF_SNEEZES_FRIEND = "Nr of sneezes friend";
     public static final String TAG_ADD_FRIEND = "add_friend";
+    public static final String TAG_ARRAY_FRIENDS = "friends[]";
+    public static final String TAG_ARRAY_SNEEZES = "aantal[]";
+    public static final String TAG_NR_OF_SNEEZES = "Aantal";
+
 
 
 
@@ -299,8 +304,8 @@ public class Connections {
                     i.putExtra(TAG_FRIENDS, friendsOfFriend);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(i);
-                    Activity activity = (Activity) context;
-                    activity.finish();
+                    //Activity activity = (Activity) context;
+                    //activity.finish();
                     return null;
 
                 } else {
@@ -617,10 +622,13 @@ public class Connections {
                 if (success == 1) {
                     JSONObject jsonObject = json.getJSONObject(TAG_USER);
                     SaveSharedPreference.setUserName(context, username);
-                    SaveSharedPreference.setFirstName(context,jsonObject.getString(TAG_VOORNAAM));
+                    SaveSharedPreference.setFirstName(context, jsonObject.getString(TAG_VOORNAAM));
                     SaveSharedPreference.setName(context, jsonObject.getString(TAG_ACHTERNAAM));
+                    SaveSharedPreference.setNrOfSneezes(context, jsonObject.getInt(TAG_NR_OF_SNEEZES));
+                    //System.out.println(SaveSharedPreference.getNrOfSneezes(context));
                     Intent i = new Intent(context, iSneezeActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     i.putExtra(NAAM_VAR_USER, username);
                     context.startActivity(i);
                     LoginActivity loginActivity = (LoginActivity) context;
@@ -685,12 +693,13 @@ public class Connections {
                 int success = json.getInt(TAG_SUCCESS);
 
                 if (success == 1) {
-
+                    SaveSharedPreference.setNrOfSneezes(context, 0);
                     SaveSharedPreference.setUserName(context, username);
                     SaveSharedPreference.setName(context, name);
                     SaveSharedPreference.setFirstName(context, prename);
                     Intent i = new Intent(context, iSneezeActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     i.putExtra(NAAM_VAR_USER, username);
                     context.startActivity(i);
 
@@ -719,8 +728,8 @@ public class Connections {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progress = RandomShit.getProgressDialog(context);
-            progress.show();
+            //progress = RandomShit.getProgressDialog(context);
+            //progress.show();
 
            }
 
@@ -739,6 +748,7 @@ public class Connections {
             try {
                 int success = json.getInt(TAG_SUCCESS);
                 if (success == 1) {
+                    SaveSharedPreference.addSneeze(context);
                     iSneezeActivity main = (iSneezeActivity) context;
                     main.runOnUiThread(new Runnable() {
                         public void run() {
@@ -1153,12 +1163,22 @@ public class Connections {
         @Override
         protected Boolean doInBackground(String... params) {
             List<NameValuePair> pars = new ArrayList<>();
+            BigClass bigClass = BigClass.ReadData(context);
+            if(bigClass==null){
+                bigClass = new BigClass();
+            }
 
             pars.add(new BasicNameValuePair(TAG_LOGINNAME, username));
 
+            for(User u : bigClass.friends.values()){
+                pars.add(new BasicNameValuePair(TAG_ARRAY_FRIENDS, u.getUsername()));
+            }
+            for(User u : bigClass.friends.values()){
+                pars.add(new BasicNameValuePair(TAG_ARRAY_SNEEZES, ""+u.getNumberOfSneezes()));
+            }
 
             JSONParser jsonParser = new JSONParser();
-            JSONObject json = jsonParser.makeHttpRequest(URL_GET_FRIENDS, "POST", pars);
+            JSONObject json = jsonParser.makeHttpRequest(URL_GET_FRIENDS_NO_EXTRA_DATA, "POST", pars);
 
             try {
                 friends = new ArrayList<>();
@@ -1179,12 +1199,17 @@ public class Connections {
                         friends.add(friend);
                     }
 
-                    Intent ik = new Intent(context, MyFriendsActivity.class);
+                    bigClass.compareFriends(friends);
+                    bigClass.WriteData(context);
+
+                    /*Intent ik = new Intent(context, MyFriendsActivity.class);
                     ik.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     ik.putExtra(NAAM_VAR_USER, username);
-                    ik.putExtra(TAG_FRIENDS, friends);
+                    ik.putExtra(TAG_FRIENDS, friends);*
 
-                    context.startActivity(ik);
+                    context.startActivity(ik);*/
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post((MyFriendsActivity)context);
 
                 } else {
 
@@ -1202,7 +1227,7 @@ public class Connections {
         protected void onPreExecute() {
             super.onPreExecute();
             progress = RandomShit.getProgressDialog(context);
-            progress.show();
+//            progress.show();
         }
 
         @Override
@@ -1266,7 +1291,7 @@ public class Connections {
         protected void onPreExecute() {
             super.onPreExecute();
             progress = RandomShit.getProgressDialog(context);
-            progress.show();
+  //          progress.show();
 
         }
 

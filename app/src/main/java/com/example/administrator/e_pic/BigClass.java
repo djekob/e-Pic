@@ -19,12 +19,13 @@ import java.util.HashMap;
  */
 public class BigClass implements Serializable {
 
-    public HashMap<Integer, User> friends;
+    public HashMap<String, User> friends;
     public HashMap<Integer,Sneeze> sneezes;
 
     public BigClass() {
         friends = new HashMap<>();
         sneezes = new HashMap<>();
+        friends.put("Thomas", new User("Thomas", 5));
     }
 
     public boolean WriteData(Context context) {
@@ -61,7 +62,26 @@ public class BigClass implements Serializable {
         return null;
     }
 
+    public ArrayList<User> getFriendsArrayList(){
+        ArrayList<User> vrienden = new ArrayList<>();
+        for(User u : friends.values()){
+            vrienden.add(u);
+        }
+        return vrienden;
+    }
 
-
+    public void compareFriends(ArrayList<User> vrienden){
+        for(User u : vrienden){
+            if(friends.containsKey(u.getUsername())){
+                if(friends.get(u.getUsername()).getNumberOfSneezes() != u.getNumberOfSneezes()){
+                    friends.remove(u.getUsername());
+                    friends.put(u.getUsername(), new User(u.getUsername(), u.getNumberOfSneezes()));
+                }
+            }
+            else{
+                friends.put(u.getUsername(), new User(u.getUsername(), u.getNumberOfSneezes()));
+            }
+        }
+    }
 
 }

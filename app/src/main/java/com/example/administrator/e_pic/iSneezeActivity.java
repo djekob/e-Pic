@@ -254,14 +254,17 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
             switch (position){
                 case 0: new Connections(getContext(), Connections.GET_ALL_FRIEND_SNEEZES_CODE);
                     break;
-                case 1: new Connections(getContext(), Connections.GET_ALL_FRIENDS_CODE);
-                    break;
-                case 2: new Connections(getContext(), Connections.GET_ALL_USERS_NO_FRIENDS);
-                    break;
-                case 3: Intent i = new Intent(getContext(), FriendRequestsActivity.class);
+                case 1: Intent i = new Intent(getContext(), MyFriendsActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     getContext().startActivity(i);
+                    break;
+                case 2: new Connections(getContext(), Connections.GET_ALL_USERS_NO_FRIENDS);
+                    break;
+                case 3: Intent j = new Intent(getContext(), FriendRequestsActivity.class);
+                    j.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    j.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    getContext().startActivity(j);
                     break;
                 case 4: new Connections(getContext(), Connections.GET_ALL_SNEEZES_GRAPH_CODE);
                     break;

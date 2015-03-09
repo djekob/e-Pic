@@ -46,7 +46,6 @@ public class FirstActivity extends Activity {
             Intent i = new Intent(getContext(), LoginActivity.class);
             startActivity(i);
             FirstActivity firstActivity = (FirstActivity) context;
-            firstActivity.finish();
         }
     }
 
@@ -57,7 +56,6 @@ public class FirstActivity extends Activity {
             Intent i = new Intent(getContext(), RegisterActivity.class);
             startActivity(i);
             FirstActivity firstActivity = (FirstActivity) context;
-            firstActivity.finish();
         }
     }
 
