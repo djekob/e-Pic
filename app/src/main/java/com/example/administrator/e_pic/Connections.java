@@ -620,7 +620,15 @@ public class Connections {
                 int success = json.getInt(TAG_SUCCESS);
 
                 if (success == 1) {
+                    JSONArray sneezes = json.getJSONArray(TAG_TIME);
+                    ArrayList<String> time = new ArrayList<>();
+                    for(int i=0;i<sneezes.length();i++){
+                        time.add((String)sneezes.get(i));
+                    }
                     JSONObject jsonObject = json.getJSONObject(TAG_USER);
+                    BigClass bigClass = BigClass.ReadData(context);
+                    if(bigClass==null) bigClass = new BigClass();
+                    bigClass.setOwnSneezes(context, time);
                     SaveSharedPreference.setUserName(context, username);
                     SaveSharedPreference.setFirstName(context, jsonObject.getString(TAG_VOORNAAM));
                     SaveSharedPreference.setName(context, jsonObject.getString(TAG_ACHTERNAAM));

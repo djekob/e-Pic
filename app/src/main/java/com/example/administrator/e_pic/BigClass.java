@@ -20,12 +20,11 @@ import java.util.HashMap;
 public class BigClass implements Serializable {
 
     public HashMap<String, User> friends;
-    public HashMap<Integer,Sneeze> sneezes;
+    public ArrayList<Sneeze> ownSneezes;
 
     public BigClass() {
         friends = new HashMap<>();
-        sneezes = new HashMap<>();
-        friends.put("Thomas", new User("Thomas", 5));
+        ownSneezes = new ArrayList<>();
     }
 
     public boolean WriteData(Context context) {
@@ -84,4 +83,11 @@ public class BigClass implements Serializable {
         }
     }
 
+    public void setOwnSneezes(Context ctx, ArrayList<String> sneezes){
+        ownSneezes.clear();
+        for(String s : sneezes){
+            ownSneezes.add(new Sneeze(s));
+        }
+
+    }
 }

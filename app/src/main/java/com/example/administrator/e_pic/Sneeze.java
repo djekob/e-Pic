@@ -13,6 +13,10 @@ public class Sneeze implements Serializable {
     private User user;
     int id;
 
+    public Sneeze(String time) {
+        this.time = time;
+    }
+
     public Sneeze(String time, User user) {
         this.time = time;
         this.user = user;
