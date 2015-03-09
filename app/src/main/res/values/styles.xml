@@ -10,16 +10,15 @@
     <!-- the theme applied to the application or activity -->
     <style
         name="CustomActionBarTheme"
-        parent="@android:style/Theme.Holo.Light.DarkActionBar"
-        >
+        parent="@android:style/Theme.Holo.Light.DarkActionBar">
         <item name="android:actionBarStyle">@style/MyActionBar</item>
     </style>
 
     <!-- ActionBar styles -->
     <style name="MyActionBar"
         parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@color/color_button_1</item>
-        <item name="android:textColor">@color/the_color_of_the_app</item>
+        <item name="android:background">@color/indigo_licht</item>
+        <item name="android:textColor">@color/white</item>
         <item name="android:action"></item>
 
     </style>
@@ -46,6 +45,8 @@
         <item name="android:topBright">@color/transparent</item>
         <item name="android:topDark">@color/transparent</item>
     </style>
+
+
 
 
 </resources>

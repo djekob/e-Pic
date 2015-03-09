@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
@@ -17,6 +18,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -47,12 +49,14 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
     public ArrayList<Sneeze> sneezeList = new ArrayList<>();
     public ArrayList<User> friendsList = new ArrayList<>();
 
-    private TextView myNameTextView, locationTextView;
+
+    //private TextView myNameTextViewNavigationDrawer, nrOfSneezesNavigationDrawer, myFullNameTextViewNavigationDrawer;
 
     private static final int NUM_PAGES = 3;
     private ViewPager mPager;
     public PagerAdapter mPagerAdapter;
     private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle actionBarDrawerToggle;
     private ListView mDrawerList;
     private ArrayList<String> drawerList;
 
@@ -62,10 +66,17 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
         setContentView(R.layout.slide_screens);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        /*myNameTextViewNavigationDrawer  = (TextView) findViewById(R.id.my_name_text_view_navigation_drawer);
+        myFullNameTextViewNavigationDrawer = (TextView) findViewById(R.id.my_full_name_navigation_drawer);
+        nrOfSneezesNavigationDrawer = (TextView) findViewById(R.id.nr_of_sneezes_navigation_drawer);*/
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         drawerList = new ArrayList<>();
         vulActivityItems();
 
+        /*myNameTextViewNavigationDrawer.setText(SaveSharedPreference.getUserName(getContext()));
+        nrOfSneezesNavigationDrawer.setText(SaveSharedPreference.getNrOfSneezes(getContext()) + "");
+        myFullNameTextViewNavigationDrawer.setText(SaveSharedPreference.getFirstname(getContext()) + " " +SaveSharedPreference.getName(getContext())) ;
+        */
         mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, drawerList));
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
         mDrawerList.bringToFront();
@@ -81,14 +92,49 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
                 invalidateOptionsMenu();
             }
         });
+        actionBarDrawerToggle = new ActionBarDrawerToggle (
+                this,                  /* host Activity */
+                mDrawerLayout,         /* DrawerLayout object */
+                null,  /* nav drawer icon to replace 'Up' caret */
+                R.string.drawer_open,  /* "open drawer" description */
+                R.string.drawer_close  /* "close drawer" description */
+        ) {
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                getActionBar().setTitle("iSneeze");
+            }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                getActionBar().setTitle("iSneeze");
+            }
+        };
+
+        // Set the drawer toggle as the DrawerListener
+        mDrawerLayout.setDrawerListener(actionBarDrawerToggle);
+
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
+
+
         new Connections(this, Connections.GET_ALL_SNEEZES_GRAPH_CODE_AND_FRIENDS);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
 
-        getMenuInflater().inflate(R.menu.menu_i_sneeze, menu);
-        return true;
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        actionBarDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        actionBarDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     private void vulActivityItems(){
@@ -103,7 +149,7 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
+        /*int id = item.getItemId();
 
         if (id == R.id.go_to_all_sneezes_list_action_bar) {
             new Connections(this, Connections.GET_ALL_FRIEND_SNEEZES_CODE);
@@ -122,7 +168,11 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
             new Connections(this, Connections.GET_ALL_FRIENDS_CODE);
         } else if (id == R.id.edit_profile_data_menu_item) {
             new Connections(this, Connections.GET_PROFILE_DATA_CODE);
+        }*/
+        if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
         }
+        // Handle your other action bar items...
 
         return super.onOptionsItemSelected(item);
     }

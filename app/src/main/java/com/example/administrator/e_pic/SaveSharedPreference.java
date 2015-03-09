@@ -13,6 +13,7 @@ public class SaveSharedPreference
     public static final String TAG_FIRSTNAME = "firstname";
     public static final String TAG_NAME= "name";
     public static final String TAG_REG_ID = Connections.GCMRegister.PROPERTY_REG_ID;
+    public static final String TAG_NR_OF_SNEEZES = "nrOfSneezes";
 
     static SharedPreferences getSharedPreferences(Context ctx) {
         return PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -25,6 +26,16 @@ public class SaveSharedPreference
         editor.commit();
     }
 
+    public static void setTagNrOfSneezes(Context ctx, int nr)
+    {
+        SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
+        editor.putInt(TAG_NR_OF_SNEEZES, nr);
+        editor.commit();
+    }
+
+    public static int getNrOfSneezes(Context context) {
+        return getSharedPreferences(context).getInt(TAG_NR_OF_SNEEZES, -1);
+    }
     public static void setRegid(Context context, String regid) {
         SharedPreferences.Editor editor = getSharedPreferences(context).edit();
         editor.putString(TAG_REG_ID, regid);
@@ -62,6 +73,7 @@ public class SaveSharedPreference
         editor.putString(TAG_FIRSTNAME, "");
         editor.putString(TAG_NAME, "");
         editor.putString(TAG_USERNAME, "");
+        editor.putInt(TAG_NR_OF_SNEEZES, -1);
         editor.commit();
     }
 

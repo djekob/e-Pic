@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.widget.AbsListView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -17,6 +18,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.TreeMap;
 
 
@@ -48,9 +50,13 @@ public class SneezeListActivity extends CustomActionBarActivity implements Runna
             @Override
             public void onRefresh() {
                 swipeRefreshLayout.setRefreshing(true);
-                Connections connections = new Connections(getContext(), SaveSharedPreference.getUserName(getContext()), Connections.RELOAD_ALL_SNEEZES_CODE);
-                //TreeMap<Integer, Sneeze> sneezeTreeMap = connections.loadAllFriendSneezes();
-                //SneezeMapAdapter sneezeMapAdapter= new SneezeMapAdapter(getContext(), R.layout.sneeze_list_item, sneezeTreeMap);
+                if(RandomShit.haveNetworkConnection(getContext())) {
+
+                    new Connections(getContext(), SaveSharedPreference.getUserName(getContext()), Connections.RELOAD_ALL_SNEEZES_CODE);
+                } else {
+                    Toast.makeText(getContext(), "No internet available", Toast.LENGTH_LONG);
+                    swipeRefreshLayout.setRefreshing(false);
+                }
 
 
             }

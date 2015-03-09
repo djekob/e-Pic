@@ -1,6 +1,8 @@
 package com.example.administrator.e_pic;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -8,7 +10,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 
-public abstract class CustomActionBarActivity extends ActionBarActivity {
+public abstract class CustomActionBarActivity extends FragmentActivity {
     User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

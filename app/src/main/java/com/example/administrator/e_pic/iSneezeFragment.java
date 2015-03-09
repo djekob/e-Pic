@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class iSneezeFragment extends android.support.v4.app.Fragment implements Runnable {
@@ -36,11 +37,21 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
         myNameTextView = (TextView) rootView.findViewById(R.id.my_name_textview);
         context = getActivity();
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.i_sneeze_swiper);
+        swipeRefreshLayout.setColorScheme(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 swipeRefreshLayout.setRefreshing(true);
-                new Connections(getActivity(), Connections.GET_ALL_SNEEZES_GRAPH_CODE_AND_FRIENDS);
+                if(RandomShit.haveNetworkConnection(getActivity())) {
+                    new Connections(getActivity(), Connections.GET_ALL_SNEEZES_GRAPH_CODE_AND_FRIENDS);
+                } else {
+                    Toast.makeText(getActivity(), "No internet available", Toast.LENGTH_LONG);
+                    swipeRefreshLayout.setRefreshing(false);
+                }
             }
         });
 
@@ -64,8 +75,12 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
 
         @Override
         public void onClick(View v) {
+            if(RandomShit.haveNetworkConnection(getActivity())) {
 
-            new Connections(getActivity(), Connections.CREATE_SNEEZE_CODE);
+                new Connections(getActivity(), Connections.CREATE_SNEEZE_CODE);
+            } else {
+                Toast.makeText(getActivity(), "No internet available", Toast.LENGTH_LONG);
+            }
 
         }
     }
