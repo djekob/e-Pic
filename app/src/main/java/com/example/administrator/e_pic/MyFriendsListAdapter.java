@@ -49,6 +49,8 @@ public class MyFriendsListAdapter extends ArrayAdapter {
         return position;
     }
 
+
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -91,7 +93,6 @@ public class MyFriendsListAdapter extends ArrayAdapter {
             new Connections(context, friendname, position, myFriends ,Connections.GO_TO_FRIENDS_PROFILE_CODE, myFriends.get(position).getNumberOfSneezes());
 
         }
-
 
     }
 

@@ -34,6 +34,7 @@ public class MyFriendsFragment extends android.support.v4.app.Fragment implement
         return rootView;
     }
 
+
     @Override
     public void run() {
         //listView.setAdapter(new MyFriendsListAdapter(getActivity(), R.layout.friend_list_item, friends));

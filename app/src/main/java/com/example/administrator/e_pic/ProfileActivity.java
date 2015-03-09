@@ -33,6 +33,8 @@ public class ProfileActivity extends CustomActionBarActivity {
         setContentView(R.layout.activity_profile);
 
         initialization();
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+
 
         username = getIntent().getStringExtra(Connections.TAG_FRIENDNAME);
         friendsList = (ArrayList) getIntent().getSerializableExtra(Connections.TAG_FRIENDS);

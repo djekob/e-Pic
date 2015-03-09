@@ -19,14 +19,19 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.transition.Transition;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -59,13 +64,16 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private ListView mDrawerList;
     private ArrayList<String> drawerList;
+    private FrameLayout frameLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.slide_screens);
 
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        frameLayout = (FrameLayout) findViewById(R.id.content_frame);
         /*myNameTextViewNavigationDrawer  = (TextView) findViewById(R.id.my_name_text_view_navigation_drawer);
         myFullNameTextViewNavigationDrawer = (TextView) findViewById(R.id.my_full_name_navigation_drawer);
         nrOfSneezesNavigationDrawer = (TextView) findViewById(R.id.nr_of_sneezes_navigation_drawer);*/
@@ -135,6 +143,22 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         actionBarDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent e) {
+        if (keyCode == KeyEvent.KEYCODE_MENU) {
+            // your action...
+
+            if (!mDrawerLayout.isDrawerOpen(Gravity.LEFT)) {
+                mDrawerLayout.openDrawer(Gravity.LEFT);
+            } else {
+                mDrawerLayout.closeDrawer(Gravity.LEFT);
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, e);
     }
 
     private void vulActivityItems(){

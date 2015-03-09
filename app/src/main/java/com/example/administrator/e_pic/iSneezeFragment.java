@@ -76,8 +76,9 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
         @Override
         public void onClick(View v) {
             if(RandomShit.haveNetworkConnection(getActivity())) {
-
+                isneeze_image_button.setColorFilter(R.color.orange);
                 new Connections(getActivity(), Connections.CREATE_SNEEZE_CODE);
+                //isneeze_image_button.setColorFilter(R.color.orange);
             } else {
                 Toast.makeText(getActivity(), "No internet available", Toast.LENGTH_LONG);
             }

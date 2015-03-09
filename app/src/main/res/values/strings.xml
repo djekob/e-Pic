@@ -21,7 +21,7 @@
     <string name="title_activity_sneeze_list">Alle Sneezes</string>
     <string name="all_sneezes">All Sneezes</string>
     <string name="title_activity_add_friend">AddFriend</string>
-    <string name="suggestion_text_search_friend">Type the name of a friend!</string>
+    <string name="suggestion_text_search_friend">Search</string>
     <string name="add_friend_button">Add Friend</string>
     <string name="kies_geboortedatum">Kies geboortedatum</string>
     <string name="add_friend">Add Friend</string>

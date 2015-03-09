@@ -1,0 +1,57 @@
+<RelativeLayout
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/background_color">
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/i_sneeze_swiper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent">
+        <ScrollView
+            android:id="@+id/i_sneeze_scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal">
+                <Button
+                    android:id="@+id/i_sneeze_button_i_sneeze_fragment"
+                    android:background="@drawable/add_sneeze_button"
+                    android:text="+"
+                    android:layout_alignParentBottom="true"
+
+                    android:layout_centerHorizontal="true"
+                    android:textSize="20sp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"/>
+
+                <TextView
+                    android:id="@+id/my_name_textview"
+                    android:layout_marginBottom="200dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_centerHorizontal="true"
+                    android:textColor="@color/titles_activities"
+                    android:textStyle="bold"
+                    android:typeface="monospace"
+                    android:textSize="26sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <ImageButton
+                    android:id="@+id/isneeze_image_button"
+                    android:background="@color/transparent"
+                    android:layout_below="@+id/my_name_textview"
+
+                    android:src="@drawable/sneeze_icon_60x60"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    />
+            </RelativeLayout>
+        </ScrollView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+</RelativeLayout>

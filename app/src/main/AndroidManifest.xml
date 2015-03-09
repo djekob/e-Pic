@@ -56,7 +56,8 @@
         </activity>
         <activity
             android:name=".SearchFriendActivity"
-            android:label="@string/title_activity_add_friend" >
+            android:label="@string/title_activity_add_friend"
+            android:windowSoftInputMode="stateHidden">
         </activity>
         <activity
             android:name=".FriendRequestsActivity"

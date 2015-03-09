@@ -767,7 +767,7 @@ public class Connections {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            progress.dismiss();
+            //progress.dismiss();
         }
     }
 
