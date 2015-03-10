@@ -233,10 +233,7 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
         handler.post(i);
     }
 
-    /**
-     * A simple pager adapter that represents 5 ScreenSlidePageFragment objects, in
-     * sequence.
-     */
+
     public class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
         public iSneezeFragment frag1;
         public SneezeOverviewFragment frag0;

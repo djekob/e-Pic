@@ -20,25 +20,30 @@
 
             <TextView
                 android:id="@+id/my_name_textview"
-                android:layout_marginBottom="200dp"
+                android:background="@drawable/my_name_i_sneeze_fragment_background"
+                android:padding="10dp"
+
+                android:text="jaio"
                 android:layout_marginTop="20dp"
                 android:layout_centerHorizontal="true"
                 android:textColor="@color/titles_activities"
                 android:textStyle="bold"
-                android:typeface="monospace"
-                android:textSize="26sp"
+                android:textSize="30sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
-            <ImageButton
-                android:id="@+id/isneeze_image_button"
-                android:background="@color/transparent"
-                android:layout_below="@+id/my_name_textview"
-                android:src="@drawable/sneeze_icon_60x60"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <Button
+                android:id="@+id/i_sneeze_button_i_sneeze_fragment"
                 android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                />
+                android:background="@drawable/add_sneeze_button"
+                android:text="+"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="45sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="20dp"
+                android:layout_alignParentBottom="true"
+                android:layout_width="65dp"
+                android:layout_height="65dp" />
         </RelativeLayout>
     </ScrollView>
 

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -34,7 +35,7 @@ public class ScreenSlidePageFragment extends android.support.v4.app.Fragment imp
     public static final String ARG_PAGE = "page";
 
     private TextView myNameTextView;
-    private ImageButton isneeze_image_button;
+    private Button isneeze_image_button;
     private String username;
     private User user;
 
@@ -144,7 +145,7 @@ public class ScreenSlidePageFragment extends android.support.v4.app.Fragment imp
             case 1:
                 rootView = (ViewGroup) inflater
                         .inflate(R.layout.fragment_i_sneeze, container, false);
-                isneeze_image_button = (ImageButton) rootView.findViewById(R.id.isneeze_image_button);
+                isneeze_image_button = (Button) rootView.findViewById(R.id.i_sneeze_button_i_sneeze_fragment);
                 myNameTextView = (TextView) rootView.findViewById(R.id.my_name_textview);
 
                 myNameTextView.setText(username);

@@ -22,5 +22,6 @@
     <color name="transparent">#00000000</color>
     <color name="indigo">#3F51B5</color>
     <color name="indigo_licht">#5C6BC0</color>
+    <color name="indigo_licht_transparant">#E65C6BC0</color>
 
 </resources>
