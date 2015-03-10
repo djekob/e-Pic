@@ -222,7 +222,8 @@ public class SneezeOverviewFragment extends android.support.v4.app.Fragment impl
         startTitle.setText(sdf.format(myCalendarStart.getTime()));
         endTitle.setText(sdf.format(myCalendarEnd.getTime()));
 
-        sneezeList = new ArrayList<>();//(ArrayList<Sneeze>) getIntent().getSerializableExtra(Connections.TAG_SNEEZES);
+        sneezeList = new ArrayList<>();
+        //(ArrayList<Sneeze>) getIntent().getSerializableExtra(Connections.TAG_SNEEZES);
 
         update();
     }

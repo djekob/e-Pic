@@ -52,7 +52,8 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
 
         // Needs to call MapsInitializer before doing any CameraUpdateFactory calls
         //try {
-            MapsInitializer.initialize(getActivity());
+        MapsInitializer.initialize(getActivity());
+        map.getUiSettings().setAllGesturesEnabled(false);
         /*} catch (GooglePlayServicesNotAvailableException e) {
             e.printStackTrace();
         }*/
