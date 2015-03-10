@@ -2,7 +2,9 @@ package com.example.administrator.e_pic;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.location.Address;
 import android.location.Criteria;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -36,8 +38,12 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
-public class iSneezeFragment extends android.support.v4.app.Fragment implements Runnable {
+
+public class iSneezeFragment extends android.support.v4.app.Fragment implements Runnable, LocationListener {
     public static final String ADD_FRIEND_CODE = "add_friend";
 
     private TextView myNameTextView;
@@ -48,7 +54,7 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
     private SwipeRefreshLayout swipeRefreshLayout;
     private MapView mapView;
     private GoogleMap map;
-    private Location location;
+    private Location usersLocation;
     protected GoogleApiClient mGoogleApiClient;
     private CameraUpdate cameraUpdate;
 
@@ -84,7 +90,6 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
 
         MapsInitializer.initialize(getActivity());
         map.getUiSettings().setAllGesturesEnabled(false);
-        probeerselVoorLocation();
 
 
 
@@ -112,20 +117,48 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
         myNameTextView.setText(username);
 
         isneeze_image_button.setOnClickListener(new SneezeClickListener());
+        usersLocation = getMyLocation();
+        System.out.println(usersLocation);
+        if(usersLocation!=null) {
+            System.out.println("locatie word hier in savehs gezet");
+            SaveSharedPreference.setLatitude(getActivity(), usersLocation.getLatitude());
+            SaveSharedPreference.setLongitude(getActivity(), usersLocation.getLongitude());
+            System.out.println(usersLocation.getLatitude() + "///////////" +usersLocation.getLongitude());
+            updateCameraToNewLocation(usersLocation);
+        }
+        if(usersLocation==null) {
+            System.out.println(SaveSharedPreference.getLatitude(getActivity()) +" ++++" + SaveSharedPreference.getLongitude(getActivity()));
+            if(SaveSharedPreference.getLatitude(getActivity())!=0 && SaveSharedPreference.getLongitude(getActivity())!=0) {
+                System.out.println("WE ZITTEN ER IN");
+                LatLng latLng = new LatLng(SaveSharedPreference.getLatitude(getActivity()), SaveSharedPreference.getLongitude(getActivity()));
+                System.out.println(latLng);
+                updateCameraToNewLocation(latLng);
+            } else {
+
+                updateCameraToNewLocation(new LatLng(51.053912, 3.721863));
+            }
+        }
 
         return rootView;
     }
 
-    private void probeerselVoorLocation() {
+    private void updateCameraToNewLocation(Location location) {
+        cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 17);
+        map.animateCamera(cameraUpdate);
+    }
+
+    private void updateCameraToNewLocation(LatLng location) {
+        cameraUpdate = CameraUpdateFactory.newLatLngZoom(location, 17);
+        map.animateCamera(cameraUpdate);
+    }
+
+    private Location getMyLocation() {
         LocationManager service = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
         String provider = service.getBestProvider(criteria, false);
-        Location location = service.getLastKnownLocation(provider);
-        System.out.println(location);
-        LatLng userLocation = new LatLng(location.getLatitude(),location.getLongitude());
-        System.out.println(userLocation);
-        cameraUpdate = CameraUpdateFactory.newLatLngZoom(userLocation, 17);//location.getLatitude(), location.getLongitude()), 18);
-        map.animateCamera(cameraUpdate);
+
+        return service.getLastKnownLocation(provider);
+
     }
 
 
@@ -144,18 +177,70 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
         if(swipeRefreshLayout.isRefreshing()) swipeRefreshLayout.setRefreshing(false);
     }
 
+    @Override
+    public void onLocationChanged(Location location) {
+        usersLocation = location;
+        SaveSharedPreference.setLatitude(getActivity(), usersLocation.getLatitude());
+        SaveSharedPreference.setLongitude(getActivity(), usersLocation.getLongitude());
+        System.out.println("Locatie werd aangepast in SaveSharedPref naar " + usersLocation.getLatitude() + "/" + usersLocation.getLongitude());
+        updateCameraToNewLocation(location);
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+
 
     public class SneezeClickListener implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
             if(RandomShit.haveNetworkConnection(getActivity())) {
+                getPostalCode(usersLocation);
                 new Connections(getActivity(), Connections.CREATE_SNEEZE_CODE);
             } else {
-                Toast.makeText(getActivity(), "No internet available", Toast.LENGTH_LONG);
+                Toast.makeText(getActivity(), "No internet available", Toast.LENGTH_LONG).show();
             }
 
         }
+    }
+
+    private int getPostalCode(Location location) {
+        Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
+        List<Address> addresses = null;
+        try {
+            addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+        Address address=null;
+        int postcode=0;
+
+        if (addresses != null && addresses.size() > 0) {
+
+            for (int i = 0; i < addresses.size(); i++) {
+                address = addresses.get(i);
+                if (address.getPostalCode() != null) {
+                    postcode = Integer.parseInt(address.getPostalCode());
+                    //stad = address.getLocality();
+                    //land = address.getAdminArea(); --> werkt niet
+                    break;
+                }
+
+            }
+        }
+        return postcode;
     }
 
     @Override
@@ -175,6 +260,15 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
         super.onLowMemory();
         mapView.onLowMemory();
     }
+
+    /*Handler handler = new Handler(Looper.getMainLooper());
+    Runnable r = new Runnable() {
+        @Override
+        public void run() {
+
+        }
+    }*/
+
 
 
 

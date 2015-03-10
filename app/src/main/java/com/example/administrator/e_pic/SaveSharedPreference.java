@@ -14,6 +14,8 @@ public class SaveSharedPreference
     public static final String TAG_NAME= "name";
     public static final String TAG_REG_ID = Connections.GCMRegister.PROPERTY_REG_ID;
     public static final String TAG_NR_OF_SNEEZES = "nrOfSneezes";
+    public static final String TAG_LATITUDE = "latitude";
+    public static final String TAG_LONGITUDE = "longitude";
 
     static SharedPreferences getSharedPreferences(Context ctx) {
         return PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -26,6 +28,25 @@ public class SaveSharedPreference
         editor.commit();
     }
 
+    public static void setLatitude(Context ctx, double latitude) {
+        SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
+        editor.putString(TAG_LATITUDE, latitude +"");
+        editor.commit();
+    }
+
+    public static double getLatitude(Context ctx) {
+        return Double.valueOf(getSharedPreferences(ctx).getString(TAG_LATITUDE, "-1"));
+    }
+
+    public static void setLongitude(Context ctx, double longitude) {
+        SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
+        editor.putString(TAG_LONGITUDE, longitude +"");
+        editor.commit();
+    }
+
+    public static double getLongitude(Context ctx) {
+        return Double.valueOf(getSharedPreferences(ctx).getString(TAG_LONGITUDE, "-1"));
+    }
 
     public static void addSneeze(Context ctx)
     {
@@ -80,6 +101,8 @@ public class SaveSharedPreference
         editor.putString(TAG_NAME, "");
         editor.putString(TAG_USERNAME, "");
         editor.putInt(TAG_NR_OF_SNEEZES, -1);
+        editor.putString(TAG_LATITUDE, "");
+        editor.putString(TAG_LONGITUDE, "");
         editor.commit();
     }
 
