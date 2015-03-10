@@ -629,15 +629,15 @@ public class Connections {
                     BigClass bigClass = BigClass.ReadData(context);
                     if(bigClass==null) bigClass = new BigClass();
                     bigClass.setOwnSneezes(context, time);
+                    bigClass.WriteData(context);
                     SaveSharedPreference.setUserName(context, username);
                     SaveSharedPreference.setFirstName(context, jsonObject.getString(TAG_VOORNAAM));
                     SaveSharedPreference.setName(context, jsonObject.getString(TAG_ACHTERNAAM));
-                    SaveSharedPreference.setNrOfSneezes(context, jsonObject.getInt(TAG_NR_OF_SNEEZES));
+                    //SaveSharedPreference.setNrOfSneezes(context, jsonObject.getInt(TAG_NR_OF_SNEEZES));
                     //System.out.println(SaveSharedPreference.getNrOfSneezes(context));
                     Intent i = new Intent(context, iSneezeActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    i.putExtra(NAAM_VAR_USER, username);
                     context.startActivity(i);
                     LoginActivity loginActivity = (LoginActivity) context;
                     loginActivity.finish();

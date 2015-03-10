@@ -1,21 +1,22 @@
-<RelativeLayout
-    android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/background_color">
 <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/i_sneeze_swiper"
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/transparent">
     <ScrollView
         android:id="@+id/i_sneeze_scroll_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
         <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
             android:layout_gravity="center_horizontal">
+
+            <com.google.android.gms.maps.MapView android:id="@+id/mapview"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" />
 
             <TextView
                 android:id="@+id/my_name_textview"
@@ -32,7 +33,6 @@
                 android:id="@+id/isneeze_image_button"
                 android:background="@color/transparent"
                 android:layout_below="@+id/my_name_textview"
-
                 android:src="@drawable/sneeze_icon_60x60"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -42,6 +42,6 @@
         </RelativeLayout>
     </ScrollView>
 
-</android.support.v4.widget.SwipeRefreshLayout>
 
-</RelativeLayout>
+
+</android.support.v4.widget.SwipeRefreshLayout>

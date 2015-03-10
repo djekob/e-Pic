@@ -13,6 +13,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.model.LatLng;
+
 
 public class iSneezeFragment extends android.support.v4.app.Fragment implements Runnable {
 
@@ -24,17 +32,34 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
     private String username;
     private Context context;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private MapView mapView;
+    private GoogleMap map;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate(
-                R.layout.fragment_i_sneeze, container, false);
-
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_i_sneeze, container, false);
 
         username = ((CustomActionBarActivity)getActivity()).user.getUsername();
+
         isneeze_image_button = (ImageButton) rootView.findViewById(R.id.isneeze_image_button);
         myNameTextView = (TextView) rootView.findViewById(R.id.my_name_textview);
+        mapView = (MapView) rootView.findViewById(R.id.mapview);
+        mapView.onCreate(savedInstanceState);
+        map = mapView.getMap();
+        map.getUiSettings().setMyLocationButtonEnabled(false);
+        map.setMyLocationEnabled(true);
+
+        // Needs to call MapsInitializer before doing any CameraUpdateFactory calls
+        //try {
+            MapsInitializer.initialize(getActivity());
+        /*} catch (GooglePlayServicesNotAvailableException e) {
+            e.printStackTrace();
+        }*/
+        // Updates the location and zoom of the MapView
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(43.1, -87.9), 10);
+        map.animateCamera(cameraUpdate);
+
         context = getActivity();
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.i_sneeze_swiper);
         swipeRefreshLayout.setColorScheme(android.R.color.holo_blue_bright,
@@ -86,4 +111,21 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
         }
     }
 
+    @Override
+    public void onResume() {
+        mapView.onResume();
+        super.onResume();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
+    }
 }
