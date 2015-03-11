@@ -19,12 +19,14 @@ import java.util.HashMap;
  */
 public class BigClass implements Serializable {
 
-    public HashMap<String, User> friends;
-    public ArrayList<Sneeze> ownSneezes;
+    private HashMap<String, User> friends;
+    private ArrayList<Sneeze> ownSneezes;
+    private ArrayList<Sneeze> notSendSneezes;
 
     public BigClass() {
         friends = new HashMap<>();
         ownSneezes = new ArrayList<>();
+        notSendSneezes = new ArrayList<>();
     }
 
     public boolean writeData(Context context) {
@@ -99,5 +101,21 @@ public class BigClass implements Serializable {
 
     public void addOwnSneeze(String time){
         ownSneezes.add(new Sneeze(time));
+    }
+
+    public ArrayList<Sneeze> getNotSendSneezes() {
+        return notSendSneezes;
+    }
+
+    public void addNotSendSneezes(Sneeze s) {
+        notSendSneezes.add(s);
+    }
+
+    public HashMap<String, User> getFriends() {
+        return friends;
+    }
+
+    public void deleteFirst(){
+        notSendSneezes.remove(0);
     }
 }

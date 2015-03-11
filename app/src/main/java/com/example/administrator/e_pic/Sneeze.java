@@ -1,5 +1,7 @@
 package com.example.administrator.e_pic;
 
+import android.location.Location;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 
@@ -11,10 +13,36 @@ public class Sneeze implements Serializable {
     private String time;
 
     private User user;
-    int id;
+    private int id;
+    private Location location;
+    private int postal;
 
     public Sneeze(String time) {
         this.time = time;
+    }
+
+    public int getPostal() {
+        return postal;
+    }
+
+    public double getLatitude(){
+        return location.getLatitude();
+    }
+
+    public double getLongitude(){
+        return location.getLongitude();
+    }
+
+    public Sneeze(String time, Location location, int postal) {
+        this.location = location;
+        this.time = time;
+        this.postal = postal;
+    }
+
+    public Sneeze(String time, Location location) {
+        this.location = location;
+        this.time = time;
+        this.postal = 0;
     }
 
     public Sneeze(String time, User user) {
@@ -51,6 +79,14 @@ public class Sneeze implements Serializable {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setPostal(int postal) {
+        this.postal = postal;
     }
 
     @Override

@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.TreeMap;
 
@@ -90,7 +92,12 @@ public class MyFriendsListAdapter extends ArrayAdapter {
 
         @Override
         public void onClick(View v) {
-            new Connections(context, friendname, position, myFriends ,Connections.GO_TO_FRIENDS_PROFILE_CODE, myFriends.get(position).getNumberOfSneezes());
+            if(RandomShit.haveNetworkConnection(context)){
+                new Connections(context, friendname, position, myFriends ,Connections.GO_TO_FRIENDS_PROFILE_CODE, myFriends.get(position).getNumberOfSneezes());
+            }
+            else{
+                Toast.makeText(context, "No internet available", Toast.LENGTH_LONG).show();
+            }
 
         }
 

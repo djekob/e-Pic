@@ -12,6 +12,7 @@ import android.util.Log;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -22,6 +23,7 @@ public class RandomShit {
 
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
+    public static final String timeFormat = "yyyy-MM-dd kk:mm:ss";
 
     public static ProgressDialog getProgressDialog(Context context) {
         progress = new ProgressDialog(context, R.style.MyTheme);
@@ -94,5 +96,12 @@ public class RandomShit {
                     haveConnectedMobile = true;
         }
         return haveConnectedWifi || haveConnectedMobile;
+    }
+
+    public static String getTimestamp(){
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat(timeFormat);
+        System.out.println(sdf.format(c.getTime()));
+        return sdf.format(c.getTime());
     }
 }

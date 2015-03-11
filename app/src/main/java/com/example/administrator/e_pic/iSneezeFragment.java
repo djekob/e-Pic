@@ -119,7 +119,7 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
             @Override
             public void onRefresh() {
                 swipeRefreshLayout.setRefreshing(true);
-                if(RandomShit.haveNetworkConnection(getActivity())) {
+                if (RandomShit.haveNetworkConnection(getActivity())) {
                     new Connections(getActivity(), Connections.GET_ALL_SNEEZES_GRAPH_CODE_AND_FRIENDS);
                 } else {
                     Toast.makeText(getActivity(), "No internet available", Toast.LENGTH_LONG).show();
@@ -218,11 +218,17 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
         public void onClick(View v) {
             if(RandomShit.haveNetworkConnection(getActivity())) {
                 postcode = getPostalCode(usersLocation);
+                String time = RandomShit.getTimestamp();
                 System.out.println("dit zou de postcode moeten zijn" + postcode);
-                new Connections(getActivity(), username, postcode, usersLocation.getLatitude(), usersLocation.getLongitude(), Connections.CREATE_SNEEZE_CODE);
+                Sneeze s = new Sneeze(time, usersLocation, postcode);
+                new Connections(getActivity(), s, Connections.CREATE_SNEEZE_CODE);
                 updateMarkersToMap();
             } else {
-                Toast.makeText(getActivity(), "No internet available", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "No internet available, Sneeze zal verstuurd worden wanneer internet available is", Toast.LENGTH_LONG).show();
+                BigClass bigClass = BigClass.ReadData(getActivity());
+                postcode = getPostalCode(usersLocation);
+                bigClass.addNotSendSneezes(new Sneeze(RandomShit.getTimestamp(), usersLocation));
+                bigClass.writeData(getActivity());
             }
 
         }

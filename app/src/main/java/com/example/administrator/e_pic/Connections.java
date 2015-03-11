@@ -28,6 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -109,6 +110,7 @@ public class Connections {
     public static final int GET_PROFILE_DATA_CODE = 14;
     public static final int GET_ALL_SNEEZES_GRAPH_CODE_AND_FRIENDS = 15;
     public static final int RELOAD_ALL_SNEEZES_CODE = 16;
+    public static final int CREATE_SNEEZE_CODE_FROM_RECEIVER = 17;
 
 
     private Context context;
@@ -120,19 +122,23 @@ public class Connections {
     private TreeMap<String, Integer> originalUsers;
     private ArrayList<User> myFriends;
     private int nrOfSneezesFriend;
-    private int postcode;
-    private double latitude;
-    private double longitude;
+    private Sneeze sneeze;
 
+    public Connections(Context context, Sneeze s, int code){
+        this.context = context;
+        this.sneeze = s;
+        if(code==CREATE_SNEEZE_CODE) {
+            new CreateSneeze().execute();
+        } else if(code == CREATE_SNEEZE_CODE_FROM_RECEIVER){
+            new CreateSneezeFromReceiver().execute();
+        }
+    }
 
     public Connections(Context context, int code){
         this.context = context;
         this.username = SaveSharedPreference.getUserName(context);
 
-
-        if(code==CREATE_SNEEZE_CODE) {
-            new CreateSneeze().execute();
-        } else if (code == GET_ALL_FRIEND_SNEEZES_CODE) {
+        if (code == GET_ALL_FRIEND_SNEEZES_CODE) {
             new GetAllFriendSneezes().execute();
         } else if (code == GET_ALL_USERS_NO_FRIENDS) {
             new GetAllUsers().execute();
@@ -150,19 +156,10 @@ public class Connections {
             new GetOneUser().execute();
         } else if(code == Connections.GET_ALL_SNEEZES_GRAPH_CODE_AND_FRIENDS){
             new OpenSneezesGraphAndGetFriends().execute();
+        } else if(code==CREATE_SNEEZE_CODE_FROM_RECEIVER){
+            new CreateSneezeFromReceiver().execute();
         }
 
-    }
-
-    public Connections(Context context, String username, int postcode, double latitude, double longitude, int code) {
-        this.postcode = postcode;
-        this.latitude = latitude;
-        this.longitude=longitude;
-        this.username=username;
-        this.context= context;
-        if(code == Connections.CREATE_SNEEZE_CODE) {
-            new CreateSneeze().execute();
-        }
     }
 
     public Connections(Context context, String friendname, int position, TreeMap<String, Integer> originalUsers, int code) {
@@ -214,8 +211,6 @@ public class Connections {
 
             this.context = context;
             new CreateNewUser().execute();
-        } else if(code == 234435) {
-
         }
     }
 
@@ -460,15 +455,15 @@ public class Connections {
 
 
                     pars.add(new BasicNameValuePair(TAG_LOGINNAME, username));
-                    if(bigClass.friends.size()<1){
+                    if(bigClass.getFriendsArrayList().size()<1){
                         pars.add(new BasicNameValuePair(TAG_ARRAY_FRIENDS, " "));
                         pars.add(new BasicNameValuePair(TAG_ARRAY_SNEEZES, " "));
                     }
                     else {
-                        for (User u : bigClass.friends.values()) {
+                        for (User u : bigClass.getFriends().values()) {
                             pars.add(new BasicNameValuePair(TAG_ARRAY_FRIENDS, u.getUsername()));
                         }
-                        for (User u : bigClass.friends.values()) {
+                        for (User u : bigClass.getFriends().values()) {
                             pars.add(new BasicNameValuePair(TAG_ARRAY_SNEEZES, "" + u.getNumberOfSneezes()));
                         }
                     }
@@ -812,10 +807,13 @@ public class Connections {
 
 
             List<NameValuePair> params = new ArrayList<>();
+            String username = SaveSharedPreference.getUserName(context);
             params.add(new BasicNameValuePair(TAG_LOGINNAME, username));
-            params.add(new BasicNameValuePair(TAG_POSTCODE, String.valueOf(postcode)));
-            params.add(new BasicNameValuePair(TAG_LATITUDE, String.valueOf(latitude)));
-            params.add(new BasicNameValuePair(TAG_LONGITUDE, String.valueOf(longitude)));
+            params.add(new BasicNameValuePair(TAG_TIME, sneeze.getTime()));
+            System.out.println(sneeze.getTime());
+            params.add(new BasicNameValuePair(TAG_POSTCODE, String.valueOf((sneeze.getPostal()==0)?"":sneeze.getPostal())));
+            params.add(new BasicNameValuePair(TAG_LATITUDE, String.valueOf(sneeze.getLatitude())));
+            params.add(new BasicNameValuePair(TAG_LONGITUDE, String.valueOf(sneeze.getLongitude())));
             JSONParser jsonParser = new JSONParser();
 
             System.out.println("tot hier ok");
@@ -834,6 +832,7 @@ public class Connections {
                     bigClass.addOwnSneeze(time);
                     System.out.println("ook ook ook ok");
                     Log.i("aantalsneezes erna", bigClass.getOwnSneezes().size()+"");
+                    bigClass.writeData(context);
                     iSneezeActivity main = (iSneezeActivity) context;
                     main.runOnUiThread(new Runnable() {
                         public void run() {
@@ -842,6 +841,68 @@ public class Connections {
                     });
                     Handler handler = new Handler(Looper.getMainLooper());
                     handler.post(main);
+                } else {
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            //progress.dismiss();
+        }
+    }
+
+    private class CreateSneezeFromReceiver extends AsyncTask<String, String, String>{
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... args) {
+
+
+            List<NameValuePair> params = new ArrayList<>();
+            String username = SaveSharedPreference.getUserName(context);
+            params.add(new BasicNameValuePair(TAG_LOGINNAME, username));
+            params.add(new BasicNameValuePair(TAG_TIME, sneeze.getTime()));
+            System.out.println(sneeze.getTime());
+            params.add(new BasicNameValuePair(TAG_POSTCODE, String.valueOf((sneeze.getPostal()==0)?"":sneeze.getPostal())));
+            params.add(new BasicNameValuePair(TAG_LATITUDE, String.valueOf(sneeze.getLatitude())));
+            params.add(new BasicNameValuePair(TAG_LONGITUDE, String.valueOf(sneeze.getLongitude())));
+            JSONParser jsonParser = new JSONParser();
+
+            System.out.println("tot hier ok");
+            JSONObject json = jsonParser.makeHttpRequest(URL_ADD_SNEEZE,
+                    "POST", params);
+
+
+            try {
+                int success = json.getInt(TAG_SUCCESS);
+                System.out.println("succes =" +success);
+                if (success == 1) {
+                    String time = json.getString(TAG_TIME);
+                    BigClass bigClass = BigClass.ReadData(context);
+                    System.out.println("hier nog steeds ok");
+                    Log.i("aantalsneezes", bigClass.getOwnSneezes().size()+"");
+                    bigClass.addOwnSneeze(time);
+                    System.out.println("ook ook ook ok");
+                    Log.i("aantalsneezes erna", bigClass.getOwnSneezes().size()+"");
+                    bigClass.writeData(context);
+                    //iSneezeActivity main = (iSneezeActivity) context;
+                    /*main.runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(context, "Sneeze added ;)", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(main);*/
                 } else {
                 }
             } catch (JSONException e) {
@@ -1257,10 +1318,10 @@ public class Connections {
 
             pars.add(new BasicNameValuePair(TAG_LOGINNAME, username));
 
-            for(User u : bigClass.friends.values()){
+            for(User u : bigClass.getFriends().values()){
                 pars.add(new BasicNameValuePair(TAG_ARRAY_FRIENDS, u.getUsername()));
             }
-            for(User u : bigClass.friends.values()){
+            for(User u : bigClass.getFriends().values()){
                 pars.add(new BasicNameValuePair(TAG_ARRAY_SNEEZES, ""+u.getNumberOfSneezes()));
             }
 
