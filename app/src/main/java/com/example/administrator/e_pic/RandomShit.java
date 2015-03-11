@@ -105,7 +105,9 @@ public class RandomShit {
         Calendar c = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat(timeFormat);
         System.out.println(sdf.format(c.getTime()));
-        return sdf.format(c.getTime());
+        String s =  sdf.format(c.getTime());
+        if(s.contains(" 24:")) s = s.replace(" 24:", " 00:");
+        return s;
     }
 
     public static boolean halfHourPassed(String tijd){
@@ -113,7 +115,7 @@ public class RandomShit {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(timestamp.getTime());
         Calendar calendar1 = Calendar.getInstance();
-        if(calendar.getTimeInMillis()-calendar1.getTimeInMillis()>30*60*1000){
+        if(calendar1.getTimeInMillis()-calendar.getTimeInMillis()>30*60*1000){
             return true;
         }
         return false;

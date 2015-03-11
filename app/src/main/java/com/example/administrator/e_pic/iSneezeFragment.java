@@ -73,17 +73,13 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
     private MyLocationListener locationListener;
     private Marker marker;
     private ArrayList<Sneeze> sneezeLocationsInBuurt;
-    private DataReceiver dataReceiver;
+    //private DataReceiver dataReceiver;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sneezeLocationsInBuurt = new ArrayList<>();
-        dataReceiver = new DataReceiver();
 
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Connections.ACTION_SNEEZE_IN_BUURT);
-        getActivity().registerReceiver(dataReceiver, intentFilter);
     }
 
 
@@ -335,15 +331,6 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
     }*/
 
 
-    public class DataReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            sneezeLocationsInBuurt = (ArrayList<Sneeze>) intent.getSerializableExtra(Connections.TAG_SNEEZES_IN_BUURT);
-
-            Log.i("datareceiver", "werkt");
-        }
-    }
 
 
 

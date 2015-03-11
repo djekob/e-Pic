@@ -279,6 +279,7 @@ public class Connections {
             String format ="yyyy-MM-dd kk:mm:ss";
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
             time = simpleDateFormat.format(c.getTime());
+            if(time.contains(" 24:")) time = time.replace(" 24:", " 00:");
             params.add(new BasicNameValuePair(TAG_LATITUDE, latitude+""));
             params.add(new BasicNameValuePair(TAG_LONGITUDE, longitude+""));
             params.add(new BasicNameValuePair(TAG_TIME, time+""));

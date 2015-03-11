@@ -2,9 +2,11 @@ package com.example.administrator.e_pic;
 
 import android.app.Activity;
 import android.app.IntentService;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.location.Criteria;
@@ -66,6 +68,9 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
     private ArrayList<String> drawerList;
     private FrameLayout frameLayout;
     public TerugStuurKlasse terugstuurklasse;
+    private DataReceiver dataReceiver;
+    private ArrayList<Sneeze> sneezeLocationsInBuurt;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +106,7 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
                 invalidateOptionsMenu();
             }
         });
-        actionBarDrawerToggle = new ActionBarDrawerToggle (
+        actionBarDrawerToggle = new ActionBarDrawerToggle(
                 this,                  /* host Activity */
                 mDrawerLayout,         /* DrawerLayout object */
                 null,  /* nav drawer icon to replace 'Up' caret */
@@ -129,16 +134,36 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
         getActionBar().setHomeButtonEnabled(true);
 
 
-        if(RandomShit.haveNetworkConnection(this)){
+        if (RandomShit.haveNetworkConnection(this)) {
             new Connections(this, Connections.GET_ALL_SNEEZES_GRAPH_CODE_AND_FRIENDS);
-        }
-        else{
+        } else {
             //Toast.makeText(this, "No internet available", Toast.LENGTH_LONG).show();
             Log.i("internet", "not available");
         }
 
+        sneezeLocationsInBuurt = new ArrayList<>();
+        dataReceiver = new DataReceiver();
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Connections.ACTION_SNEEZE_IN_BUURT);
+        registerReceiver(dataReceiver, intentFilter);
+
+
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(dataReceiver);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Connections.ACTION_SNEEZE_IN_BUURT);
+        registerReceiver(dataReceiver, intentFilter);
+    }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -169,7 +194,7 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
         return super.onKeyDown(keyCode, e);
     }
 
-    private void vulActivityItems(){
+    private void vulActivityItems() {
         //drawerList.add(getResources().getString(R.string.all_sneezes));
         //drawerList.add(getResources().getString(R.string.my_friends));
         drawerList.add(getResources().getString(R.string.add_friend));
@@ -269,13 +294,13 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
         }
     }
 
-    public class DrawerItemClickListener implements AdapterView.OnItemClickListener{
+    public class DrawerItemClickListener implements AdapterView.OnItemClickListener {
 
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             System.out.println(position);
-            switch (position){
+            switch (position) {
                 /*case 0: new Connections(getContext(), Connections.GET_ALL_FRIEND_SNEEZES_CODE);
                     break;*/
                 /*case 1: Intent i = new Intent(getContext(), MyFriendsActivity.class);
@@ -283,49 +308,51 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
                     i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     getContext().startActivity(i);
                     break;*/
-                case 0: if(RandomShit.haveNetworkConnection(getContext())){
-                            new Connections(getContext(), Connections.GET_ALL_USERS_NO_FRIENDS);
-                        }
-                        else {
-                            Toast.makeText(getContext(), "No internet available", Toast.LENGTH_LONG).show();
-                        }
+                case 0:
+                    if (RandomShit.haveNetworkConnection(getContext())) {
+                        new Connections(getContext(), Connections.GET_ALL_USERS_NO_FRIENDS);
+                    } else {
+                        Toast.makeText(getContext(), "No internet available", Toast.LENGTH_LONG).show();
+                    }
                     break;
-                case 1: if(RandomShit.haveNetworkConnection(getContext())){
-                            Intent j = new Intent(getContext(), FriendRequestsActivity.class);
-                            j.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            j.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                            getContext().startActivity(j);
-                        }
-                        else{
-                            Toast.makeText(getContext(), "No internet available", Toast.LENGTH_LONG).show();
-                        }
+                case 1:
+                    if (RandomShit.haveNetworkConnection(getContext())) {
+                        Intent j = new Intent(getContext(), FriendRequestsActivity.class);
+                        j.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        j.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        getContext().startActivity(j);
+                    } else {
+                        Toast.makeText(getContext(), "No internet available", Toast.LENGTH_LONG).show();
+                    }
 
                     break;
                 /*case 4: new Connections(getContext(), Connections.GET_ALL_SNEEZES_GRAPH_CODE);
                     break;*/
-                case 2: if(RandomShit.haveNetworkConnection(getContext())){
-                            new Connections(getContext(), Connections.GET_PROFILE_DATA_CODE);
-                        }
-                        else{
-                            Toast.makeText(getContext(), "No internet available", Toast.LENGTH_LONG).show();
-                        }
+                case 2:
+                    if (RandomShit.haveNetworkConnection(getContext())) {
+                        new Connections(getContext(), Connections.GET_PROFILE_DATA_CODE);
+                    } else {
+                        Toast.makeText(getContext(), "No internet available", Toast.LENGTH_LONG).show();
+                    }
                     break;
-                case 3: if(RandomShit.haveNetworkConnection(getContext())){
-                            new Connections(getContext(), Connections.DELETE_REGID_CODE);
-                        }
-                        else{
-                            Toast.makeText(getContext(), "You can't logout when there is no internet connection available.", Toast.LENGTH_LONG).show();
-                        }
+                case 3:
+                    if (RandomShit.haveNetworkConnection(getContext())) {
+                        new Connections(getContext(), Connections.DELETE_REGID_CODE);
+                    } else {
+                        Toast.makeText(getContext(), "You can't logout when there is no internet connection available.", Toast.LENGTH_LONG).show();
+                    }
                     break;
-                default: break;
+                default:
+                    break;
             }
         }
     }
-    public Context getContext(){
+
+    public Context getContext() {
         return this;
     }
 
-    public TerugStuurKlasse terugstuurklasse(ArrayList<Sneeze> sneezes){
+    public TerugStuurKlasse terugstuurklasse(ArrayList<Sneeze> sneezes) {
         terugstuurklasse = new TerugStuurKlasse(sneezes);
         return terugstuurklasse;
     }
@@ -334,16 +361,30 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
         ArrayList<Sneeze> sneezes = null;
 
         public TerugStuurKlasse(ArrayList<Sneeze> sneezes) {
-            if(this.sneezes != null) this.sneezes.clear();
-            else{
+            if (this.sneezes != null) this.sneezes.clear();
+            else {
                 this.sneezes = new ArrayList<>();
             }
             this.sneezes.addAll(sneezes);
         }
 
+
         @Override
         public void run() {
             System.out.println(sneezes);
+
+        }
+
+
+    }
+
+    public class DataReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            sneezeLocationsInBuurt = (ArrayList<Sneeze>) intent.getSerializableExtra(Connections.TAG_SNEEZES_IN_BUURT);
+
+            Log.i("datareceiver", "werkt");
         }
     }
 }

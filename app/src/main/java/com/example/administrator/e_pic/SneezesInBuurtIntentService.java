@@ -3,6 +3,7 @@ package com.example.administrator.e_pic;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.Context;
+import android.os.SystemClock;
 import android.util.Log;
 
 import java.sql.Timestamp;
@@ -23,10 +24,12 @@ public class SneezesInBuurtIntentService extends IntentService {
 
     public SneezesInBuurtIntentService() {
         super("SneezesInBuurtIntentService");
+        System.out.println("construct");
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        System.out.println("start");
         if (intent != null) {
             while(true) {
                 if (time == null || RandomShit.halfHourPassed(time)) {
@@ -38,18 +41,10 @@ public class SneezesInBuurtIntentService extends IntentService {
                         Log.i("intentservice", "werkt");
                     }
                     else{
-                        try {
-                            wait(60000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+                        SystemClock.sleep(60000);
                     }
                 } else {
-                    try {
-                        wait(60000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    SystemClock.sleep(60000);
                 }
             }
         }
