@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -55,7 +56,12 @@ public class RegisterActivity extends Activity {
             setValues();
             if(!voornaam.trim().isEmpty() && !achternaam.trim().isEmpty() && !password.trim().isEmpty() && !username.trim().isEmpty()) {
                 Log.e("foutje", "dikke fout");
-                new Connections(voornaam, achternaam, username, password, 0 ,Connections.REGISTER_CODE, getContext());
+                if(RandomShit.haveNetworkConnection(getContext())){
+                    new Connections(voornaam, achternaam, username, password, 0 ,Connections.REGISTER_CODE, getContext());
+                }
+                else{
+                    Toast.makeText(getContext(), "No internet available", Toast.LENGTH_LONG).show();
+                }
             } else {
                 Log.e("ajaj", "ajaja");
                 warningTextView.setVisibility(View.VISIBLE);

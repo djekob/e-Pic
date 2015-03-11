@@ -27,10 +27,11 @@ public class BigClass implements Serializable {
         ownSneezes = new ArrayList<>();
     }
 
-    public boolean WriteData(Context context) {
-        File f = new File(context.getFilesDir() +"/" + SaveSharedPreference.getUserName(context));
+    public boolean writeData(Context context) {
+        //File f = new File(context.getFilesDir() +"/" + SaveSharedPreference.getUserName(context));
         try{
-            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(f));
+            FileOutputStream fos = context.openFileOutput(SaveSharedPreference.getUserName(context), Context.MODE_PRIVATE);
+            ObjectOutputStream out = new ObjectOutputStream(fos);
             out.writeObject(this);
             out.close();
 
@@ -46,10 +47,11 @@ public class BigClass implements Serializable {
     }
 
     public static BigClass ReadData(Context context ) {
-        File f = new File(context.getFilesDir() + "/" + SaveSharedPreference.getUserName(context));
-        if(f.exists()) {
+        //File f = new File(context.getFilesDir() + "/" + SaveSharedPreference.getUserName(context));
+        //if(f.exists()) {
             try {
-                ObjectInputStream in = new ObjectInputStream(new FileInputStream(f));
+                FileInputStream fis = context.openFileInput(SaveSharedPreference.getUserName(context));
+                ObjectInputStream in = new ObjectInputStream(fis);
                 BigClass b = (BigClass) in.readObject();
                 in.close();
                 return b;
@@ -57,8 +59,8 @@ public class BigClass implements Serializable {
                 e.printStackTrace();
                 return null;
             }
-        }
-        return null;
+        //}
+        //return null;
     }
 
     public ArrayList<User> getFriendsArrayList(){
@@ -83,11 +85,19 @@ public class BigClass implements Serializable {
         }
     }
 
-    public void setOwnSneezes(Context ctx, ArrayList<String> sneezes){
+    public void setOwnSneezes(ArrayList<String> sneezes){
         ownSneezes.clear();
         for(String s : sneezes){
             ownSneezes.add(new Sneeze(s));
         }
 
+    }
+
+    public ArrayList<Sneeze> getOwnSneezes() {
+        return ownSneezes;
+    }
+
+    public void addOwnSneeze(String time){
+        ownSneezes.add(new Sneeze(time));
     }
 }

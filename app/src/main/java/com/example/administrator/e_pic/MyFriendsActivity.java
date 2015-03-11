@@ -28,7 +28,6 @@ public class MyFriendsActivity extends CustomActionBarActivity implements Runnab
         username = user.getUsername();
         friends = new ArrayList<>();
         BigClass bigClass = BigClass.ReadData(this);
-        friends = new ArrayList<>();
         if(bigClass!=null) friends.addAll(bigClass.getFriendsArrayList());
         Log.i("friends oncreate", friends.toString());
         listView = (ListView) findViewById(R.id.my_friends_list_view_my_friends_activity);

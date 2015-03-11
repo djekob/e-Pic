@@ -51,7 +51,12 @@ public class LoginActivity extends Activity {
             username=mUsernameEditText.getText().toString().trim();
             password = mPasswordEditText.toString().trim();
             if(!username.isEmpty() && !password.isEmpty()) {
-                new Connections(getContext(), mUsernameEditText.getText().toString(), mPasswordEditText.getText().toString());
+                if(RandomShit.haveNetworkConnection(getContext())){
+                    new Connections(getContext(), mUsernameEditText.getText().toString(), mPasswordEditText.getText().toString());
+                }
+                else{
+                    Toast.makeText(getContext(), "No internet available", Toast.LENGTH_LONG).show();
+                }
             } else {
                 warningTextView.setVisibility(View.VISIBLE);
             }

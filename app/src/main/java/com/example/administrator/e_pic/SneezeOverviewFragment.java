@@ -208,7 +208,7 @@ public class SneezeOverviewFragment extends android.support.v4.app.Fragment impl
         series = new LineGraphSeries<>();
         series.setColor(this.getResources().getColor(R.color.orange));
 
-        myCalendarEnd  =Calendar.getInstance();
+        myCalendarEnd  = Calendar.getInstance();
         myCalendarStart = Calendar.getInstance();
         myCalendarStart.setTimeInMillis(myCalendarEnd.getTimeInMillis() - (4 * 24 * 60 * 60 * 1000));
 
@@ -223,6 +223,12 @@ public class SneezeOverviewFragment extends android.support.v4.app.Fragment impl
         endTitle.setText(sdf.format(myCalendarEnd.getTime()));
 
         sneezeList = new ArrayList<>();
+        BigClass bigClass = BigClass.ReadData(getActivity());
+        if(bigClass!=null) {
+            sneezeList.addAll(bigClass.getOwnSneezes());
+            System.out.println(bigClass.getOwnSneezes());
+            System.out.println("bigClass != null");
+        }
         //(ArrayList<Sneeze>) getIntent().getSerializableExtra(Connections.TAG_SNEEZES);
 
         update();
@@ -230,6 +236,13 @@ public class SneezeOverviewFragment extends android.support.v4.app.Fragment impl
 
     @Override
     public void run() {
+        BigClass bigClass = BigClass.ReadData(getActivity());
+        if(bigClass!=null) {
+            sneezeList.clear();
+            sneezeList.addAll(bigClass.getOwnSneezes());
+            System.out.println(bigClass.getOwnSneezes());
+            System.out.println("bigClass != null");
+        }
         update();
         //System.out.println(sneezeList);
         //Toast.makeText(getActivity(), "update", Toast.LENGTH_SHORT).show();

@@ -52,7 +52,6 @@ import java.util.Calendar;
 
 public class iSneezeActivity extends CustomActionBarActivity implements Runnable {
     public ArrayList<Sneeze> sneezeList = new ArrayList<>();
-    public ArrayList<User> friendsList = new ArrayList<>();
 
 
     //private TextView myNameTextViewNavigationDrawer, nrOfSneezesNavigationDrawer, myFullNameTextViewNavigationDrawer;
@@ -128,7 +127,13 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
         getActionBar().setHomeButtonEnabled(true);
 
 
-        new Connections(this, Connections.GET_ALL_SNEEZES_GRAPH_CODE_AND_FRIENDS);
+        if(RandomShit.haveNetworkConnection(this)){
+            new Connections(this, Connections.GET_ALL_SNEEZES_GRAPH_CODE_AND_FRIENDS);
+        }
+        else{
+            //Toast.makeText(this, "No internet available", Toast.LENGTH_LONG).show();
+            Log.i("internet", "not available");
+        }
     }
 
 
@@ -162,11 +167,11 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
     }
 
     private void vulActivityItems(){
-        drawerList.add(getResources().getString(R.string.all_sneezes));
-        drawerList.add(getResources().getString(R.string.my_friends));
+        //drawerList.add(getResources().getString(R.string.all_sneezes));
+        //drawerList.add(getResources().getString(R.string.my_friends));
         drawerList.add(getResources().getString(R.string.add_friend));
         drawerList.add(getResources().getString(R.string.pending_friends));
-        drawerList.add(getResources().getString(R.string.all_sneezes_graph));
+        //drawerList.add(getResources().getString(R.string.all_sneezes_graph));
         drawerList.add(getResources().getString(R.string.edit_profile_data));
         drawerList.add(getResources().getString(R.string.logout));
     }
@@ -217,17 +222,12 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
     @Override
     public void run() {
         SneezeOverviewFragment f = ((ScreenSlidePagerAdapter) mPagerAdapter).frag0;
-        f.sneezeList.clear();
-        f.sneezeList.addAll(sneezeList);
-        System.out.println(sneezeList);
+        //f.sneezeList.clear();
+        //f.sneezeList.addAll(sneezeList);
+        //System.out.println(sneezeList);
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(f);
         MyFriendsFragment m = ((ScreenSlidePagerAdapter) mPagerAdapter).frag2;
-        System.out.println(m);
-        System.out.println(friendsList);
-        m.friends.clear();
-        m.friends.addAll(friendsList);
-        System.out.println(m.friends);
         handler.post(m);
         iSneezeFragment i = ((ScreenSlidePagerAdapter) mPagerAdapter).frag1;
         handler.post(i);
@@ -273,25 +273,46 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             System.out.println(position);
             switch (position){
-                case 0: new Connections(getContext(), Connections.GET_ALL_FRIEND_SNEEZES_CODE);
-                    break;
-                case 1: Intent i = new Intent(getContext(), MyFriendsActivity.class);
+                /*case 0: new Connections(getContext(), Connections.GET_ALL_FRIEND_SNEEZES_CODE);
+                    break;*/
+                /*case 1: Intent i = new Intent(getContext(), MyFriendsActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     getContext().startActivity(i);
+                    break;*/
+                case 0: if(RandomShit.haveNetworkConnection(getContext())){
+                            new Connections(getContext(), Connections.GET_ALL_USERS_NO_FRIENDS);
+                        }
+                        else {
+                            Toast.makeText(getContext(), "No internet available", Toast.LENGTH_LONG).show();
+                        }
                     break;
-                case 2: new Connections(getContext(), Connections.GET_ALL_USERS_NO_FRIENDS);
+                case 1: if(RandomShit.haveNetworkConnection(getContext())){
+                            Intent j = new Intent(getContext(), FriendRequestsActivity.class);
+                            j.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            j.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            getContext().startActivity(j);
+                        }
+                        else{
+                            Toast.makeText(getContext(), "No internet available", Toast.LENGTH_LONG).show();
+                        }
+
                     break;
-                case 3: Intent j = new Intent(getContext(), FriendRequestsActivity.class);
-                    j.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    j.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                    getContext().startActivity(j);
+                /*case 4: new Connections(getContext(), Connections.GET_ALL_SNEEZES_GRAPH_CODE);
+                    break;*/
+                case 2: if(RandomShit.haveNetworkConnection(getContext())){
+                            new Connections(getContext(), Connections.GET_PROFILE_DATA_CODE);
+                        }
+                        else{
+                            Toast.makeText(getContext(), "No internet available", Toast.LENGTH_LONG).show();
+                        }
                     break;
-                case 4: new Connections(getContext(), Connections.GET_ALL_SNEEZES_GRAPH_CODE);
-                    break;
-                case 5: new Connections(getContext(), Connections.GET_PROFILE_DATA_CODE);
-                    break;
-                case 6: new Connections(getContext(), Connections.DELETE_REGID_CODE);
+                case 3: if(RandomShit.haveNetworkConnection(getContext())){
+                            new Connections(getContext(), Connections.DELETE_REGID_CODE);
+                        }
+                        else{
+                            Toast.makeText(getContext(), "You can't logout when there is no internet connection available.", Toast.LENGTH_LONG).show();
+                        }
                     break;
                 default: break;
             }

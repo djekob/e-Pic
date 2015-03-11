@@ -26,6 +26,9 @@ public class MyFriendsFragment extends android.support.v4.app.Fragment implement
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.activity_my_friends_list, container, false);
         username = ((CustomActionBarActivity)getActivity()).user.getUsername();
         friends = new ArrayList<>();
+        BigClass bigClass = BigClass.ReadData(getActivity());
+        if(bigClass!=null) friends.addAll(bigClass.getFriendsArrayList());
+
         //friends = (ArrayList) getIntent().getSerializableExtra(Connections.TAG_FRIENDS);
         listView = (ListView) rootView.findViewById(R.id.my_friends_list_view_my_friends_activity);
         myFriendsListAdapter = new MyFriendsListAdapter(getActivity(), R.layout.friend_list_item, friends);
@@ -38,6 +41,11 @@ public class MyFriendsFragment extends android.support.v4.app.Fragment implement
     @Override
     public void run() {
         //listView.setAdapter(new MyFriendsListAdapter(getActivity(), R.layout.friend_list_item, friends));
+        BigClass bigClass = BigClass.ReadData(getActivity());
+        if(bigClass!=null) {
+            friends.clear();
+            friends.addAll(bigClass.getFriendsArrayList());
+        }
         ((MyFriendsListAdapter)listView.getAdapter()).notifyDataSetChanged();
         Log.i("myfriendsfragment", friends.toString());
     }

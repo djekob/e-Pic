@@ -60,5 +60,6 @@ public class Sneeze implements Serializable {
                 ", user=" + user +
                 '}';
     }
+
 }
 

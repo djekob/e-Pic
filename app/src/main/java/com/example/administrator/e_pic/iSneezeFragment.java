@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -107,7 +108,8 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
                 if(RandomShit.haveNetworkConnection(getActivity())) {
                     new Connections(getActivity(), Connections.GET_ALL_SNEEZES_GRAPH_CODE_AND_FRIENDS);
                 } else {
-                    Toast.makeText(getActivity(), "No internet available", Toast.LENGTH_LONG);
+                    Toast.makeText(getActivity(), "No internet available", Toast.LENGTH_LONG).show();
+                    Log.i("Internet", "Not available");
                     swipeRefreshLayout.setRefreshing(false);
                 }
             }

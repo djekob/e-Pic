@@ -320,7 +320,7 @@ public class Connections {
     }
     private class ReloadFriendsSneezesList extends AsyncTask<String, String, Boolean> {
 
-        private ProgressDialog progress;
+        //private ProgressDialog progress;
 
 
         @Override
@@ -404,14 +404,18 @@ public class Connections {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progress= RandomShit.getProgressDialog(context);
-            progress.show();
+            /*progress= RandomShit.getProgressDialog(context);
+            progress.show();*/
         }
 
         protected Boolean doInBackground(String... args) {
-
+            BigClass bigClass = BigClass.ReadData(context);
+            if(bigClass==null){
+                bigClass = new BigClass();
+            }
             List<NameValuePair> params = new ArrayList<>();
             params.add(new BasicNameValuePair(TAG_LOGINNAME, SaveSharedPreference.getUserName(context)));
+
 
             JSONParser jsonParser = new JSONParser();
             JSONObject json = jsonParser.makeHttpRequest(URL_GET_ALL_OWN_SNEEZES,"POST", params);
@@ -437,11 +441,52 @@ public class Connections {
 
                     List<NameValuePair> pars = new ArrayList<>();
 
+
+                    pars.add(new BasicNameValuePair(TAG_LOGINNAME, username));
+                    if(bigClass.friends.size()<1){
+                        pars.add(new BasicNameValuePair(TAG_ARRAY_FRIENDS, " "));
+                        pars.add(new BasicNameValuePair(TAG_ARRAY_SNEEZES, " "));
+                    }
+                    else {
+                        for (User u : bigClass.friends.values()) {
+                            pars.add(new BasicNameValuePair(TAG_ARRAY_FRIENDS, u.getUsername()));
+                        }
+                        for (User u : bigClass.friends.values()) {
+                            pars.add(new BasicNameValuePair(TAG_ARRAY_SNEEZES, "" + u.getNumberOfSneezes()));
+                        }
+                    }
+
+                    JSONParser jsonParser2 = new JSONParser();
+                    JSONObject json2 = jsonParser2.makeHttpRequest(URL_GET_FRIENDS_NO_EXTRA_DATA, "POST", pars);
+
+                    try {
+                        friends = new ArrayList<>();
+
+                        int success2 = json2.getInt(TAG_SUCCESS);
+
+                        if (success2 == 1) {
+
+                            friendsData = json2.getJSONArray(TAG_FRIENDS);
+
+                            for (int i = 0; i < friendsData.length(); i++) {
+
+                                String name = friendsData.getJSONObject(i).getString(TAG_LOGINNAME);
+                                int aantalSneezes = friendsData.getJSONObject(i).getInt(TAG_AANTAL);
+
+                                User friend = new User(name, aantalSneezes);
+                                friends.add(friend);
+                            }
+
+                            bigClass.compareFriends(friends);
+                            bigClass.writeData(context);
+
+                    /*List<NameValuePair> pars = new ArrayList<>();
+
                     pars.add(new BasicNameValuePair(TAG_LOGINNAME, username));
 
 
                     JSONParser jsonParser2 = new JSONParser();
-                    JSONObject json2 = jsonParser.makeHttpRequest(URL_GET_FRIENDS, "POST", pars);
+                    JSONObject json2 = jsonParser2.makeHttpRequest(URL_GET_FRIENDS, "POST", pars);
 
                     try {
                         friends = new ArrayList<>();
@@ -460,13 +505,14 @@ public class Connections {
 
                                 User friend = new User(name, aantalSneezes);
                                 friends.add(friend);
-                            }
+                            }*/
+
+                            /*Handler handler = new Handler(Looper.getMainLooper());
+                            handler.post((MyFriendsActivity)context);*/
 
                             iSneezeActivity activity = (iSneezeActivity)context;
-                            activity.sneezeList = sneezes;
-                            System.out.println(sneezes);
-                            activity.friendsList = friends;
-                            System.out.println(activity.friendsList);
+                            //activity.sneezeList = sneezes;
+                            //System.out.println(sneezes);
                             Handler handler = new Handler(Looper.getMainLooper());
                             handler.post(activity);
 
@@ -510,7 +556,7 @@ public class Connections {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
-            progress.dismiss();
+            //progress.dismiss();
         }
     }
 
@@ -520,8 +566,8 @@ public class Connections {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progress= RandomShit.getProgressDialog(context);
-            progress.show();
+            //progress= RandomShit.getProgressDialog(context);
+            //progress.show();
         }
 
         protected Boolean doInBackground(String... args) {
@@ -583,7 +629,7 @@ public class Connections {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
-            progress.dismiss();
+            //progress.dismiss();
         }
     }
 
@@ -626,11 +672,15 @@ public class Connections {
                         time.add((String)sneezes.get(i));
                     }
                     JSONObject jsonObject = json.getJSONObject(TAG_USER);
+
+                    SaveSharedPreference.setUserName(context, username);
+
                     BigClass bigClass = BigClass.ReadData(context);
                     if(bigClass==null) bigClass = new BigClass();
-                    bigClass.setOwnSneezes(context, time);
-                    bigClass.WriteData(context);
-                    SaveSharedPreference.setUserName(context, username);
+                    bigClass.setOwnSneezes(time);
+                    System.out.println(bigClass.getOwnSneezes());
+                    bigClass.writeData(context);
+
                     SaveSharedPreference.setFirstName(context, jsonObject.getString(TAG_VOORNAAM));
                     SaveSharedPreference.setName(context, jsonObject.getString(TAG_ACHTERNAAM));
                     //SaveSharedPreference.setNrOfSneezes(context, jsonObject.getInt(TAG_NR_OF_SNEEZES));
@@ -672,7 +722,7 @@ public class Connections {
             super.onPreExecute();
             Log.e("plooooooooooooooooons", "plons");
             progress = RandomShit.getProgressDialog(context);
-                progress.show();
+            progress.show();
 
         }
 
@@ -701,10 +751,13 @@ public class Connections {
                 int success = json.getInt(TAG_SUCCESS);
 
                 if (success == 1) {
-                    SaveSharedPreference.setNrOfSneezes(context, 0);
                     SaveSharedPreference.setUserName(context, username);
                     SaveSharedPreference.setName(context, name);
                     SaveSharedPreference.setFirstName(context, prename);
+
+                    BigClass bigClass = new BigClass();
+                    bigClass.writeData(context);
+
                     Intent i = new Intent(context, iSneezeActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -756,13 +809,19 @@ public class Connections {
             try {
                 int success = json.getInt(TAG_SUCCESS);
                 if (success == 1) {
-                    SaveSharedPreference.addSneeze(context);
+                    String time = json.getString(TAG_TIME);
+                    BigClass bigClass = BigClass.ReadData(context);
+                    Log.i("aantalsneezes", bigClass.getOwnSneezes().size()+"");
+                    bigClass.addOwnSneeze(time);
+                    Log.i("aantalsneezes erna", bigClass.getOwnSneezes().size()+"");
                     iSneezeActivity main = (iSneezeActivity) context;
                     main.runOnUiThread(new Runnable() {
                         public void run() {
                             Toast.makeText(context, "Sneeze added ;)", Toast.LENGTH_SHORT).show();
                         }
                     });
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(main);
                 } else {
                 }
             } catch (JSONException e) {
@@ -787,8 +846,8 @@ public class Connections {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progress = RandomShit.getProgressDialog(context);
-            progress.show();
+            //progress = RandomShit.getProgressDialog(context);
+            //progress.show();
         }
 
         protected Boolean doInBackground(String... args) {
@@ -857,7 +916,7 @@ public class Connections {
             super.onPostExecute(b);
             //pDialog.dismiss();
             if (b) Toast.makeText(context, "Laden sneezes mislukt.", Toast.LENGTH_LONG).show();
-            progress.dismiss();
+            //progress.dismiss();
 
         }
     }
@@ -873,8 +932,8 @@ public class Connections {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progress = RandomShit.getProgressDialog(context);
-            progress.show();
+            //progress = RandomShit.getProgressDialog(context);
+            //progress.show();
         }
 
         protected Boolean doInBackground(String... args) {
@@ -920,7 +979,7 @@ public class Connections {
                 ik.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 ik.putExtra(NAAM_VAR_USERS_NOT_FRIEND, users);
                 context.startActivity(ik);
-                progress.dismiss();
+                //progress.dismiss();
             }
 
         }
@@ -938,8 +997,8 @@ public class Connections {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progress = RandomShit.getProgressDialog(context);
-            progress.show();
+            //progress = RandomShit.getProgressDialog(context);
+            //progress.show();
         }
 
         protected Boolean doInBackground(String... args) {
@@ -993,7 +1052,7 @@ public class Connections {
 
         protected void onPostExecute(Boolean b) {
             super.onPostExecute(b);
-            progress.dismiss();
+            //progress.dismiss();
 
         }
 
@@ -1005,8 +1064,8 @@ public class Connections {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progress = RandomShit.getProgressDialog(context);
-            progress.show();
+            //progress = RandomShit.getProgressDialog(context);
+            //progress.show();
 
         }
 
@@ -1043,7 +1102,7 @@ public class Connections {
             super.onPostExecute(aBoolean);
             if(aBoolean) {
                 ((SearchFriendActivity) context).adapter.changeOriginalUser(friendname);
-                progress.dismiss();
+                //progress.dismiss();
             }
         }
     }
@@ -1058,14 +1117,14 @@ public class Connections {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progress= RandomShit.getProgressDialog(context);
-            progress.show();
+            //progress= RandomShit.getProgressDialog(context);
+            //progress.show();
         }
 
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
-            progress.dismiss();
+            //progress.dismiss();
         }
 
         @Override
@@ -1147,8 +1206,8 @@ public class Connections {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progress = RandomShit.getProgressDialog(context);
-            progress.show();
+            //progress = RandomShit.getProgressDialog(context);
+            //progress.show();
         }
 
         @Override
@@ -1156,7 +1215,7 @@ public class Connections {
             super.onPostExecute(aBoolean);
             if(aBoolean) {
                 ((FriendRequestsActivity) context).adapter.changePendingFriends(friendname);
-                progress.dismiss();
+                //progress.dismiss();
             }
         }
     }
@@ -1208,7 +1267,7 @@ public class Connections {
                     }
 
                     bigClass.compareFriends(friends);
-                    bigClass.WriteData(context);
+                    bigClass.writeData(context);
 
                     /*Intent ik = new Intent(context, MyFriendsActivity.class);
                     ik.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -1234,14 +1293,14 @@ public class Connections {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progress = RandomShit.getProgressDialog(context);
+            //progress = RandomShit.getProgressDialog(context);
 //            progress.show();
         }
 
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
-            progress.dismiss();
+            //progress.dismiss();
         }
     }
 
@@ -1298,7 +1357,7 @@ public class Connections {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progress = RandomShit.getProgressDialog(context);
+           // progress = RandomShit.getProgressDialog(context);
   //          progress.show();
 
         }
@@ -1359,7 +1418,7 @@ public class Connections {
         @Override
         protected void onPostExecute(Boolean b) {
             super.onPostExecute(b);
-            progress.dismiss();
+            //progress.dismiss();
             //pDialog.dismiss();
             if (b) Toast.makeText(context, "Laden sneezes mislukt.", Toast.LENGTH_LONG).show();
 
