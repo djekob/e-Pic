@@ -147,13 +147,19 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
             updateCameraToNewLocation(usersLocation);
         }
         if(usersLocation==null) {
-            System.out.println(SaveSharedPreference.getLatitude(getActivity()) +" ++++" + SaveSharedPreference.getLongitude(getActivity()));
-            if(SaveSharedPreference.getLatitude(getActivity())!=0 && SaveSharedPreference.getLongitude(getActivity())!=0) {
-                System.out.println("WE ZITTEN ER IN");
-                LatLng latLng = new LatLng(SaveSharedPreference.getLatitude(getActivity()), SaveSharedPreference.getLongitude(getActivity()));
-                System.out.println(latLng);
-                updateCameraToNewLocation(latLng);
-            } else {
+            if((SaveSharedPreference.getSharedPreferences(getActivity()).getString(SaveSharedPreference.TAG_LONGITUDE, "-1")!="")
+                    || (SaveSharedPreference.getSharedPreferences(getActivity()).getString(SaveSharedPreference.TAG_LATITUDE, "-1")!="")){
+                if(SaveSharedPreference.getLatitude(getActivity())!=0 && SaveSharedPreference.getLongitude(getActivity())!=0) {
+                    System.out.println("WE ZITTEN ER IN");
+                    LatLng latLng = new LatLng(SaveSharedPreference.getLatitude(getActivity()), SaveSharedPreference.getLongitude(getActivity()));
+                    System.out.println(latLng);
+                    updateCameraToNewLocation(latLng);
+                } else {
+
+                    updateCameraToNewLocation(new LatLng(51.053912, 3.721863));
+                }
+            }
+            else {
 
                 updateCameraToNewLocation(new LatLng(51.053912, 3.721863));
             }
