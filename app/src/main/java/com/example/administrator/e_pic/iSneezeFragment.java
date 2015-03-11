@@ -190,6 +190,7 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
         BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE);
         marker = map.addMarker(new MarkerOptions().position(new LatLng(usersLocation.getLatitude(), usersLocation.getLongitude())).icon(bitmapDescriptor));
     }
+
     private void initializeMap() {
         if(map == null) {
             map = mapView.getMap();
@@ -212,7 +213,8 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
             if(RandomShit.haveNetworkConnection(getActivity())) {
                 postcode = getPostalCode(usersLocation);
                 System.out.println("dit zou de postcode moeten zijn" + postcode);
-                new Connections(getActivity(), username, postcode, Connections.CREATE_SNEEZE_CODE);
+                new Connections(getActivity(), username, postcode, usersLocation.getLatitude(), usersLocation.getLongitude(), Connections.CREATE_SNEEZE_CODE);
+                updateMarkersToMap();
             } else {
                 Toast.makeText(getActivity(), "No internet available", Toast.LENGTH_LONG).show();
             }
@@ -251,8 +253,8 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
         @Override
         public void onLocationChanged(Location location) {
             usersLocation = location;
+            SaveSharedPreference.setPostcode(getActivity(), getPostalCode(usersLocation));
             updateCameraToNewLocation(usersLocation);
-            updateMarkersToMap();
         }
         @Override
         public void onProviderDisabled(String provider) {

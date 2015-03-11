@@ -16,9 +16,20 @@ public class SaveSharedPreference
     public static final String TAG_NR_OF_SNEEZES = "nrOfSneezes";
     public static final String TAG_LATITUDE = "latitude";
     public static final String TAG_LONGITUDE = "longitude";
+    public static final String TAG_POSTCODE = "postcode";
 
     static SharedPreferences getSharedPreferences(Context ctx) {
         return PreferenceManager.getDefaultSharedPreferences(ctx);
+    }
+
+    public static void setPostcode(Context context, int postcode) {
+        SharedPreferences.Editor editor = getSharedPreferences(context).edit();
+        editor.putInt(TAG_POSTCODE, postcode);
+        editor.commit();
+    }
+
+    public static int getPostcode(Context context) {
+        return getSharedPreferences(context).getInt(TAG_POSTCODE, -1);
     }
 
     public static void setUserName(Context ctx, String userName)
