@@ -14,7 +14,8 @@ public class Sneeze implements Serializable {
 
     private User user;
     private int id;
-    private Location location;
+    private double latitude;
+    private double longitude;
     private int postal;
 
     public Sneeze(String time) {
@@ -26,21 +27,23 @@ public class Sneeze implements Serializable {
     }
 
     public double getLatitude(){
-        return location.getLatitude();
+        return latitude;
     }
 
     public double getLongitude(){
-        return location.getLongitude();
+        return longitude;
     }
 
-    public Sneeze(String time, Location location, int postal) {
-        this.location = location;
+    public Sneeze(String time, double longitude, double latitude, int postal) {
+        this.longitude = longitude;
+        this.latitude = latitude;
         this.time = time;
         this.postal = postal;
     }
 
-    public Sneeze(String time, Location location) {
-        this.location = location;
+    public Sneeze(String time, double longitude, double latitude) {
+        this.longitude = longitude;
+        this.latitude = latitude;
         this.time = time;
         this.postal = 0;
     }
@@ -79,10 +82,6 @@ public class Sneeze implements Serializable {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public Location getLocation() {
-        return location;
     }
 
     public void setPostal(int postal) {

@@ -24,7 +24,7 @@ public class InternetReceiver extends BroadcastReceiver {
                 if(bigClass.getNotSendSneezes().size()>0){
                     while(RandomShit.haveNetworkConnection(context) && bigClass.getNotSendSneezes().size()!=0){
                         Sneeze s = bigClass.getNotSendSneezes().get(0);
-                        s.setPostal(getPostal(context, s.getLocation()));
+                        s.setPostal(getPostal(context, s.getLatitude(), s.getLongitude()));
                         new Connections(context, s, Connections.CREATE_SNEEZE_CODE_FROM_RECEIVER);
                         bigClass.deleteFirst();
                         Log.i("broadcastreceiver", "add");
@@ -35,11 +35,11 @@ public class InternetReceiver extends BroadcastReceiver {
         }
     }
 
-    public int getPostal(Context context, Location location){
+    public int getPostal(Context context, double latitude, double longitude){
         Geocoder geocoder = new Geocoder(context, Locale.getDefault());
         List<Address> addresses = null;
         try {
-            addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+            addresses = geocoder.getFromLocation(latitude, longitude, 1);
         } catch(IOException e) {
             e.printStackTrace();
         }

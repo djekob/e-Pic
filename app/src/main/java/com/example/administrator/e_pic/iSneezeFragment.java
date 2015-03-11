@@ -220,14 +220,14 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
                 postcode = getPostalCode(usersLocation);
                 String time = RandomShit.getTimestamp();
                 System.out.println("dit zou de postcode moeten zijn" + postcode);
-                Sneeze s = new Sneeze(time, usersLocation, postcode);
+                Sneeze s = new Sneeze(time, usersLocation.getLongitude(), usersLocation.getLatitude(), postcode);
                 new Connections(getActivity(), s, Connections.CREATE_SNEEZE_CODE);
                 updateMarkersToMap();
             } else {
                 Toast.makeText(getActivity(), "No internet available, Sneeze zal verstuurd worden wanneer internet available is", Toast.LENGTH_LONG).show();
                 BigClass bigClass = BigClass.ReadData(getActivity());
-                postcode = getPostalCode(usersLocation);
-                bigClass.addNotSendSneezes(new Sneeze(RandomShit.getTimestamp(), usersLocation));
+                //postcode = getPostalCode(usersLocation);
+                bigClass.addNotSendSneezes(new Sneeze(RandomShit.getTimestamp(), usersLocation.getLongitude(), usersLocation.getLatitude()));
                 bigClass.writeData(getActivity());
             }
 
