@@ -1,7 +1,10 @@
 package com.example.administrator.e_pic;
 
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
@@ -44,6 +47,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -68,14 +72,20 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
     private LocationManager service;
     private MyLocationListener locationListener;
     private Marker marker;
-    private ArrayList<LatLng> sneezeLocationsInNeighbourhood;
+    private ArrayList<Sneeze> sneezeLocationsInBuurt;
+    private DataReceiver dataReceiver;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sneezeLocationsInNeighbourhood = new ArrayList<>();
+        sneezeLocationsInBuurt = new ArrayList<>();
+        dataReceiver = new DataReceiver();
 
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Connections.ACTION_SNEEZE_IN_BUURT);
+        getActivity().registerReceiver(dataReceiver, intentFilter);
     }
+
 
     private ArrayList<LatLng> getSneezesLocationsInNeighbourhood() {
         return null;
@@ -191,10 +201,13 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
     }
 
 
-    private void updateMarkersToMap() {
+    private void updateMarkersToMap(ArrayList<Sneeze> sneezes) {
         map.clear();
-        BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE);
-        marker = map.addMarker(new MarkerOptions().position(new LatLng(usersLocation.getLatitude(), usersLocation.getLongitude())).icon(bitmapDescriptor));
+        for(Sneeze s : sneezes) {
+            BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE);
+            marker = map.addMarker(new MarkerOptions().position(new LatLng(s.getLatitude(), s.getLongitude())).icon(bitmapDescriptor));
+
+        }
     }
 
     private void initializeMap() {
@@ -222,7 +235,7 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
                 System.out.println("dit zou de postcode moeten zijn" + postcode);
                 Sneeze s = new Sneeze(time, usersLocation.getLongitude(), usersLocation.getLatitude(), postcode);
                 new Connections(getActivity(), s, Connections.CREATE_SNEEZE_CODE);
-                updateMarkersToMap();
+                updateMarkersToMap(sneezeLocationsInBuurt);
             } else {
                 Toast.makeText(getActivity(), "No internet available, Sneeze zal verstuurd worden wanneer internet available is", Toast.LENGTH_LONG).show();
                 BigClass bigClass = BigClass.ReadData(getActivity());
@@ -267,6 +280,11 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
             usersLocation = location;
             SaveSharedPreference.setPostcode(getActivity(), getPostalCode(usersLocation));
             updateCameraToNewLocation(usersLocation);
+            Intent i = new Intent(getActivity(), SneezesInBuurtIntentService.class);
+            i.putExtra(SneezesInBuurtIntentService.TAG_LATITUDE, location.getLatitude());
+            i.putExtra(SneezesInBuurtIntentService.TAG_LONGITUDE, location.getLongitude());
+            context.startService(i);
+            if(sneezeLocationsInBuurt!=null) updateMarkersToMap(sneezeLocationsInBuurt);
         }
         @Override
         public void onProviderDisabled(String provider) {
@@ -315,6 +333,17 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
 
         }
     }*/
+
+
+    public class DataReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            sneezeLocationsInBuurt = (ArrayList<Sneeze>) intent.getSerializableExtra(Connections.TAG_SNEEZES_IN_BUURT);
+
+            Log.i("datareceiver", "werkt");
+        }
+    }
 
 
 

@@ -155,7 +155,7 @@ public class GcmIntentService extends IntentService {
                 break;
             case CODE_OTHER_LOGIN:
                 SaveSharedPreference.clear(this);
-                if(isAppOnForeground(this)) {
+                if(RandomShit.isAppOnForeground(this)) {
                     Intent i = new Intent(getApplicationContext(), RealMainActivity.class);
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(i);
@@ -178,18 +178,5 @@ public class GcmIntentService extends IntentService {
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
     }
 
-    private boolean isAppOnForeground(Context context) {
-        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
-        if (appProcesses == null) {
-            return false;
-        }
-        final String packageName = context.getPackageName();
-        for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
-            if (appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND && appProcess.processName.equals(packageName)) {
-                return true;
-            }
-        }
-        return false;
-    }
+
 }

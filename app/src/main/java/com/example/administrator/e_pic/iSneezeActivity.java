@@ -1,6 +1,7 @@
 package com.example.administrator.e_pic;
 
 import android.app.Activity;
+import android.app.IntentService;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -64,6 +65,7 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
     private ListView mDrawerList;
     private ArrayList<String> drawerList;
     private FrameLayout frameLayout;
+    public TerugStuurKlasse terugstuurklasse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,6 +136,7 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
             //Toast.makeText(this, "No internet available", Toast.LENGTH_LONG).show();
             Log.i("internet", "not available");
         }
+
     }
 
 
@@ -320,6 +323,28 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
     }
     public Context getContext(){
         return this;
+    }
+
+    public TerugStuurKlasse terugstuurklasse(ArrayList<Sneeze> sneezes){
+        terugstuurklasse = new TerugStuurKlasse(sneezes);
+        return terugstuurklasse;
+    }
+
+    public class TerugStuurKlasse implements Runnable {
+        ArrayList<Sneeze> sneezes = null;
+
+        public TerugStuurKlasse(ArrayList<Sneeze> sneezes) {
+            if(this.sneezes != null) this.sneezes.clear();
+            else{
+                this.sneezes = new ArrayList<>();
+            }
+            this.sneezes.addAll(sneezes);
+        }
+
+        @Override
+        public void run() {
+            System.out.println(sneezes);
+        }
     }
 }
 

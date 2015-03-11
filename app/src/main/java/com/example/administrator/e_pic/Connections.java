@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,7 +30,10 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 import java.util.TreeMap;
@@ -61,6 +65,9 @@ public class Connections {
     public static final String URL_DELETE_REGID= IP+"logout.php";
     public static final String URL_GET_ALL_OWN_SNEEZES = IP + "get_all_own_sneezes.php";
     private static final String URL_GET_FRIENDS_NO_EXTRA_DATA = IP + "get_friends_no_extra_data.php";
+    private static final String URL_GET_SNEEZES_IN_DE_BUURT = IP + "get_all_sneezes_in_buurt.php";
+
+    public static final String ACTION_SNEEZE_IN_BUURT= "action sneeze in buurt";
 
     public static final String NAAM_VAR_USER = "Username";
     public static final String NAAM_VAR_USERS_NOT_FRIEND = "Users not friends";
@@ -89,6 +96,7 @@ public class Connections {
     public static final String TAG_POSTCODE = "Postcode";
     public static final String TAG_LATITUDE  = "Latitude";
     public static final String TAG_LONGITUDE= "Longitude";
+    public static final String TAG_SNEEZES_IN_BUURT="Sneezes in buurt";
 
 
 
@@ -111,7 +119,7 @@ public class Connections {
     public static final int GET_ALL_SNEEZES_GRAPH_CODE_AND_FRIENDS = 15;
     public static final int RELOAD_ALL_SNEEZES_CODE = 16;
     public static final int CREATE_SNEEZE_CODE_FROM_RECEIVER = 17;
-
+    public static final int GET_ALL_SNEEZES_IN_BUURT_CODE=17;
 
     private Context context;
     private View buttonView;
@@ -123,6 +131,11 @@ public class Connections {
     private ArrayList<User> myFriends;
     private int nrOfSneezesFriend;
     private Sneeze sneeze;
+    private int postcode;
+    private double latitude;
+    private double longitude;
+    private String time;
+    private ArrayList<Sneeze> sneezesInBuurt;
 
     public Connections(Context context, Sneeze s, int code){
         this.context = context;
@@ -160,6 +173,26 @@ public class Connections {
             new CreateSneezeFromReceiver().execute();
         }
 
+    }
+
+    public Connections(Context context, String username, int postcode, double latitude, double longitude, int code) {
+        this.postcode = postcode;
+        this.latitude = latitude;
+        this.longitude=longitude;
+        this.username=username;
+        this.context= context;
+        if(code == Connections.CREATE_SNEEZE_CODE) {
+            new CreateSneeze().execute();
+        }
+    }
+
+    public Connections(Context context, double latitude, double longitude, int code) {
+        this.context = context;
+        this.latitude = latitude;
+        this.longitude =longitude;
+        if(code == GET_ALL_SNEEZES_IN_BUURT_CODE) {
+            new GetAllSneezesInBuurt().execute();
+        }
     }
 
     public Connections(Context context, String friendname, int position, TreeMap<String, Integer> originalUsers, int code) {
@@ -231,6 +264,68 @@ public class Connections {
     public Connections(Context context, String username) {
         this.context= context;
         this.username= username;
+    }
+
+    private class GetAllSneezesInBuurt extends AsyncTask<String, String, Boolean > {
+
+
+        @Override
+        protected Boolean doInBackground(String... paras) {
+
+            List<NameValuePair> params = new ArrayList<>();
+
+            Calendar c = Calendar.getInstance();
+            c.setTimeInMillis(c.getTimeInMillis()-30*60*1000);
+            String format ="yyyy-MM-dd kk:mm:ss";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+            time = simpleDateFormat.format(c.getTime());
+            params.add(new BasicNameValuePair(TAG_LATITUDE, latitude+""));
+            params.add(new BasicNameValuePair(TAG_LONGITUDE, longitude+""));
+            params.add(new BasicNameValuePair(TAG_TIME, time+""));
+
+            JSONParser jsonParser = new JSONParser();
+
+            JSONObject json = jsonParser.makeHttpRequest(URL_GET_SNEEZES_IN_DE_BUURT,"POST", params);
+
+                try {
+                    sneezesInBuurt = new ArrayList<Sneeze>();
+                    int success = json.getInt(TAG_SUCCESS);
+                    if (success == 1) {
+                        JSONArray sneezes = json.getJSONArray(TAG_SNEEZES);
+
+                        for (int ik = 0; ik < sneezes.length(); ik++) {
+                            JSONObject jsonObject = sneezes.getJSONObject(ik);
+                            double latitude= Double.parseDouble(jsonObject.getString(TAG_LATITUDE));
+                            double longitude =Double.parseDouble(jsonObject.getString(TAG_LONGITUDE));
+                            Sneeze s= new Sneeze(jsonObject.getString(TAG_TIME), longitude, latitude, jsonObject.getInt(TAG_POSTCODE));
+
+                            sneezesInBuurt.add(s);
+                        }
+                        System.out.println(sneezesInBuurt);
+                        //iSneezeActivity.TerugStuurKlasse terug = ((iSneezeActivity) context).terugstuurklasse(sneezesInBuurt);
+                        //handler.post(terug);
+                        Intent intent = new Intent();
+                        intent.setAction(ACTION_SNEEZE_IN_BUURT);
+                        intent.putExtra(TAG_SNEEZES_IN_BUURT, sneezesInBuurt);
+                        context.sendBroadcast(intent);
+                        return false;
+
+                    } else {
+                        //((FriendRequestsActivity)context).pendingFriends = pendingFriends;
+                        //handler.post((FriendRequestsActivity)context);
+                        return true;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                return true;
+
+
+
+            //return null;
+        }
+
     }
 
     private class DeleteRegId extends AsyncTask<String, String, Boolean> {
@@ -890,10 +985,10 @@ public class Connections {
                     String time = json.getString(TAG_TIME);
                     BigClass bigClass = BigClass.ReadData(context);
                     System.out.println("hier nog steeds ok");
-                    Log.i("aantalsneezes", bigClass.getOwnSneezes().size()+"");
+                    Log.i("aantalsneezes", bigClass.getOwnSneezes().size() + "");
                     bigClass.addOwnSneeze(time);
                     System.out.println("ook ook ook ok");
-                    Log.i("aantalsneezes erna", bigClass.getOwnSneezes().size()+"");
+                    Log.i("aantalsneezes erna", bigClass.getOwnSneezes().size() + "");
                     bigClass.writeData(context);
                     //iSneezeActivity main = (iSneezeActivity) context;
                     /*main.runOnUiThread(new Runnable() {
@@ -1001,6 +1096,8 @@ public class Connections {
 
         }
     }
+
+
 
     private class GetAllUsers extends AsyncTask<String, String, Boolean> {
 

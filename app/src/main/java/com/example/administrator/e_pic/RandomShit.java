@@ -1,5 +1,6 @@
 package com.example.administrator.e_pic;
 
+import android.app.ActivityManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.hardware.Camera;
@@ -11,9 +12,11 @@ import android.preference.PreferenceGroup;
 import android.util.Log;
 
 import java.io.File;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Administrator on 21/02/2015.
@@ -103,5 +106,31 @@ public class RandomShit {
         SimpleDateFormat sdf = new SimpleDateFormat(timeFormat);
         System.out.println(sdf.format(c.getTime()));
         return sdf.format(c.getTime());
+    }
+
+    public static boolean halfHourPassed(String tijd){
+        Timestamp timestamp = Timestamp.valueOf(tijd);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(timestamp.getTime());
+        Calendar calendar1 = Calendar.getInstance();
+        if(calendar.getTimeInMillis()-calendar1.getTimeInMillis()>30*60*1000){
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isAppOnForeground(Context context) {
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
+        if (appProcesses == null) {
+            return false;
+        }
+        final String packageName = context.getPackageName();
+        for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
+            if (appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND && appProcess.processName.equals(packageName)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
