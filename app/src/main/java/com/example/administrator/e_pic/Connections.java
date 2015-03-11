@@ -86,6 +86,8 @@ public class Connections {
     public static final String TAG_ARRAY_SNEEZES = "aantal[]";
     public static final String TAG_NR_OF_SNEEZES = "Aantal";
     public static final String TAG_POSTCODE = "Postcode";
+    public static final String TAG_LATITUDE  = "Latitude";
+    public static final String TAG_LONGITUDE= "Longitude";
 
 
 
@@ -119,6 +121,8 @@ public class Connections {
     private ArrayList<User> myFriends;
     private int nrOfSneezesFriend;
     private int postcode;
+    private double latitude;
+    private double longitude;
 
 
     public Connections(Context context, int code){
@@ -150,8 +154,10 @@ public class Connections {
 
     }
 
-    public Connections(Context context, String username, int postcode, int code) {
+    public Connections(Context context, String username, int postcode, double latitude, double longitude, int code) {
         this.postcode = postcode;
+        this.latitude = latitude;
+        this.longitude=longitude;
         this.username=username;
         this.context= context;
         if(code == Connections.CREATE_SNEEZE_CODE) {
@@ -808,6 +814,8 @@ public class Connections {
             List<NameValuePair> params = new ArrayList<>();
             params.add(new BasicNameValuePair(TAG_LOGINNAME, username));
             params.add(new BasicNameValuePair(TAG_POSTCODE, String.valueOf(postcode)));
+            params.add(new BasicNameValuePair(TAG_LATITUDE, String.valueOf(latitude)));
+            params.add(new BasicNameValuePair(TAG_LONGITUDE, String.valueOf(longitude)));
             JSONParser jsonParser = new JSONParser();
 
             System.out.println("tot hier ok");
