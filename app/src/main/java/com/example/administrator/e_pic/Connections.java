@@ -85,6 +85,7 @@ public class Connections {
     public static final String TAG_ARRAY_FRIENDS = "friends[]";
     public static final String TAG_ARRAY_SNEEZES = "aantal[]";
     public static final String TAG_NR_OF_SNEEZES = "Aantal";
+    public static final String TAG_POSTCODE = "Postcode";
 
 
 
@@ -117,6 +118,7 @@ public class Connections {
     private TreeMap<String, Integer> originalUsers;
     private ArrayList<User> myFriends;
     private int nrOfSneezesFriend;
+    private int postcode;
 
 
     public Connections(Context context, int code){
@@ -146,6 +148,15 @@ public class Connections {
             new OpenSneezesGraphAndGetFriends().execute();
         }
 
+    }
+
+    public Connections(Context context, String username, int postcode, int code) {
+        this.postcode = postcode;
+        this.username=username;
+        this.context= context;
+        if(code == Connections.CREATE_SNEEZE_CODE) {
+            new CreateSneeze().execute();
+        }
     }
 
     public Connections(Context context, String friendname, int position, TreeMap<String, Integer> originalUsers, int code) {
@@ -785,13 +796,9 @@ public class Connections {
 
     private class CreateSneeze extends AsyncTask<String, String, String>{
 
-        ProgressDialog progress;
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            //progress = RandomShit.getProgressDialog(context);
-            //progress.show();
-
            }
 
         @Override
@@ -799,20 +806,25 @@ public class Connections {
 
 
             List<NameValuePair> params = new ArrayList<>();
-            params.add(new BasicNameValuePair("Loginnaam", username));
+            params.add(new BasicNameValuePair(TAG_LOGINNAME, username));
+            params.add(new BasicNameValuePair(TAG_POSTCODE, String.valueOf(postcode)));
             JSONParser jsonParser = new JSONParser();
 
-
+            System.out.println("tot hier ok");
             JSONObject json = jsonParser.makeHttpRequest(URL_ADD_SNEEZE,
                     "POST", params);
 
+
             try {
                 int success = json.getInt(TAG_SUCCESS);
+                System.out.println("succes =" +success);
                 if (success == 1) {
                     String time = json.getString(TAG_TIME);
                     BigClass bigClass = BigClass.ReadData(context);
+                    System.out.println("hier nog steeds ok");
                     Log.i("aantalsneezes", bigClass.getOwnSneezes().size()+"");
                     bigClass.addOwnSneeze(time);
+                    System.out.println("ook ook ook ok");
                     Log.i("aantalsneezes erna", bigClass.getOwnSneezes().size()+"");
                     iSneezeActivity main = (iSneezeActivity) context;
                     main.runOnUiThread(new Runnable() {

@@ -37,20 +37,27 @@ import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 
-public class iSneezeFragment extends android.support.v4.app.Fragment implements Runnable, LocationListener {
+
+public class iSneezeFragment extends android.support.v4.app.Fragment implements Runnable {
     public static final String ADD_FRIEND_CODE = "add_friend";
 
     private TextView myNameTextView;
     private Connections c;
     private Button isneeze_image_button;
     private String username;
+    private int postcode;
     private Context context;
     private SwipeRefreshLayout swipeRefreshLayout;
     private MapView mapView;
@@ -58,21 +65,28 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
     private Location usersLocation;
     protected GoogleApiClient mGoogleApiClient;
     private CameraUpdate cameraUpdate;
+    private LocationManager service;
+    private MyLocationListener locationListener;
+    private Marker marker;
+    private ArrayList<LatLng> sneezeLocationsInNeighbourhood;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //buildGoogleApiClient();
+        sneezeLocationsInNeighbourhood = new ArrayList<>();
 
     }
 
+    private ArrayList<LatLng> getSneezesLocationsInNeighbourhood() {
+        return null;
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_i_sneeze, container, false);
 
         username = ((CustomActionBarActivity)getActivity()).user.getUsername();
-
+        locationListener = new MyLocationListener();
 
         isneeze_image_button = (Button) rootView.findViewById(R.id.i_sneeze_button_i_sneeze_fragment);
         myNameTextView = (TextView) rootView.findViewById(R.id.my_name_textview);
@@ -119,6 +133,10 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
         myNameTextView.setText(username);
 
         isneeze_image_button.setOnClickListener(new SneezeClickListener());
+        service = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+
+        service.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 10, locationListener);
+        service.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 10, locationListener);
         usersLocation = getMyLocation();
         System.out.println(usersLocation);
         if(usersLocation!=null) {
@@ -144,6 +162,10 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
         return rootView;
     }
 
+    private void  moveCameraToNewLocation(Location location) {
+        cameraUpdate = CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
+        map.moveCamera(cameraUpdate);
+    }
     private void updateCameraToNewLocation(Location location) {
         cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 17);
         map.animateCamera(cameraUpdate);
@@ -155,7 +177,6 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
     }
 
     private Location getMyLocation() {
-        LocationManager service = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
         String provider = service.getBestProvider(criteria, false);
 
@@ -164,6 +185,11 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
     }
 
 
+    private void updateMarkersToMap() {
+        map.clear();
+        BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE);
+        marker = map.addMarker(new MarkerOptions().position(new LatLng(usersLocation.getLatitude(), usersLocation.getLongitude())).icon(bitmapDescriptor));
+    }
     private void initializeMap() {
         if(map == null) {
             map = mapView.getMap();
@@ -179,38 +205,14 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
         if(swipeRefreshLayout.isRefreshing()) swipeRefreshLayout.setRefreshing(false);
     }
 
-    @Override
-    public void onLocationChanged(Location location) {
-        usersLocation = location;
-        SaveSharedPreference.setLatitude(getActivity(), usersLocation.getLatitude());
-        SaveSharedPreference.setLongitude(getActivity(), usersLocation.getLongitude());
-        System.out.println("Locatie werd aangepast in SaveSharedPref naar " + usersLocation.getLatitude() + "/" + usersLocation.getLongitude());
-        updateCameraToNewLocation(location);
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
-    }
-
-
     public class SneezeClickListener implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
             if(RandomShit.haveNetworkConnection(getActivity())) {
-                getPostalCode(usersLocation);
-                new Connections(getActivity(), Connections.CREATE_SNEEZE_CODE);
+                postcode = getPostalCode(usersLocation);
+                System.out.println("dit zou de postcode moeten zijn" + postcode);
+                new Connections(getActivity(), username, postcode, Connections.CREATE_SNEEZE_CODE);
             } else {
                 Toast.makeText(getActivity(), "No internet available", Toast.LENGTH_LONG).show();
             }
@@ -245,10 +247,39 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
         return postcode;
     }
 
+    private class MyLocationListener implements LocationListener {
+        @Override
+        public void onLocationChanged(Location location) {
+            usersLocation = location;
+            updateCameraToNewLocation(usersLocation);
+            updateMarkersToMap();
+        }
+        @Override
+        public void onProviderDisabled(String provider) {
+            // TODO Auto-generated method stub
+        }
+        @Override
+        public void onProviderEnabled(String provider) {
+            // TODO Auto-generated method stub
+        }
+        @Override
+        public void onStatusChanged(String provider, int status,
+                                    Bundle extras) {
+            // TODO Auto-generated method stub
+        }
+}
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        service.removeUpdates(locationListener);
+    }
+
     @Override
     public void onResume() {
         mapView.onResume();
         super.onResume();
+        service.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 10, locationListener);
     }
 
     @Override
