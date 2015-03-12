@@ -34,7 +34,6 @@ public class ScreenSlidePageFragment extends android.support.v4.app.Fragment imp
      */
     public static final String ARG_PAGE = "page";
 
-    private TextView myNameTextView;
     private Button isneeze_image_button;
     private String username;
     private User user;
@@ -146,9 +145,7 @@ public class ScreenSlidePageFragment extends android.support.v4.app.Fragment imp
                 rootView = (ViewGroup) inflater
                         .inflate(R.layout.fragment_i_sneeze, container, false);
                 isneeze_image_button = (Button) rootView.findViewById(R.id.i_sneeze_button_i_sneeze_fragment);
-                myNameTextView = (TextView) rootView.findViewById(R.id.my_name_textview);
 
-                myNameTextView.setText(username);
 
                 isneeze_image_button.setOnClickListener(new SneezeClickListener());
                 break;

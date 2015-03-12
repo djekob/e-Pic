@@ -18,19 +18,6 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent" />
 
-            <TextView
-                android:id="@+id/my_name_textview"
-                android:background="@drawable/my_name_i_sneeze_fragment_background"
-                android:padding="10dp"
-
-                android:text="jaio"
-                android:layout_marginTop="20dp"
-                android:layout_centerHorizontal="true"
-                android:textColor="@color/titles_activities"
-                android:textStyle="bold"
-                android:textSize="30sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
             <Button
                 android:id="@+id/i_sneeze_button_i_sneeze_fragment"
                 android:layout_centerHorizontal="true"

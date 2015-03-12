@@ -70,6 +70,7 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
     public TerugStuurKlasse terugstuurklasse;
     private DataReceiver dataReceiver;
     private ArrayList<Sneeze> sneezeLocationsInBuurt;
+    private TextView myNameTextView;
 
 
     @Override
@@ -80,6 +81,9 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         frameLayout = (FrameLayout) findViewById(R.id.content_frame);
+        myNameTextView = (TextView) findViewById(R.id.name_text_view_navigation_drawer);
+        myNameTextView.setText(SaveSharedPreference.getUserName(getContext()));
+
         /*myNameTextViewNavigationDrawer  = (TextView) findViewById(R.id.my_name_text_view_navigation_drawer);
         myFullNameTextViewNavigationDrawer = (TextView) findViewById(R.id.my_full_name_navigation_drawer);
         nrOfSneezesNavigationDrawer = (TextView) findViewById(R.id.nr_of_sneezes_navigation_drawer);*/
@@ -123,6 +127,7 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
+                drawerView.bringToFront();
                 getActionBar().setTitle("iSneeze");
             }
         };
