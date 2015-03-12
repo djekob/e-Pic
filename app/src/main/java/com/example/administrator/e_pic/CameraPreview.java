@@ -1,6 +1,7 @@
 package com.example.administrator.e_pic;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.hardware.Camera;
 import android.util.Log;
 import android.view.SurfaceHolder;

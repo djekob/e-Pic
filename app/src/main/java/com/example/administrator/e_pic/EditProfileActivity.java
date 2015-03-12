@@ -34,7 +34,7 @@ public class EditProfileActivity extends CustomActionBarActivity {
         setContentView(R.layout.activity_edit_profile);
 
         bitmap = null;
-        if(!getIntent().getStringExtra(CameraActivity.TAG_URI).equals("")) {
+        /*if(!getIntent().getStringExtra(CameraActivity.TAG_URI).equals("")) {
             Uri uri = Uri.parse(getIntent().getStringExtra(CameraActivity.TAG_URI));
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
@@ -43,9 +43,9 @@ public class EditProfileActivity extends CustomActionBarActivity {
             } catch (IOException i) {
                 Toast.makeText(getContext(), "Something is wrong hahaha", Toast.LENGTH_SHORT).show();
             }
-        }
+        }*/
 
-        User user = (User) getIntent().getSerializableExtra(Connections.TAG_USER);
+
 
         initialization();
 

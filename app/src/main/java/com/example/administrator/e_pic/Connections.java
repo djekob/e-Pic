@@ -22,13 +22,20 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -66,6 +73,7 @@ public class Connections {
     public static final String URL_GET_ALL_OWN_SNEEZES = IP + "get_all_own_sneezes.php";
     private static final String URL_GET_FRIENDS_NO_EXTRA_DATA = IP + "get_friends_no_extra_data.php";
     private static final String URL_GET_SNEEZES_IN_DE_BUURT = IP + "get_all_sneezes_in_buurt.php";
+    private static final String URL_SAVE_IMAGE = IP + "save_image.php";
 
     public static final String ACTION_SNEEZE_IN_BUURT= "action sneeze in buurt";
 
@@ -120,6 +128,7 @@ public class Connections {
     public static final int RELOAD_ALL_SNEEZES_CODE = 16;
     public static final int CREATE_SNEEZE_CODE_FROM_RECEIVER = 17;
     public static final int GET_ALL_SNEEZES_IN_BUURT_CODE=17;
+    public static final int ADD_PICTURE_CODE = 18;
 
     private Context context;
     private View buttonView;
@@ -136,6 +145,7 @@ public class Connections {
     private double longitude;
     private String time;
     private ArrayList<Sneeze> sneezesInBuurt;
+    private String filepath;
 
     public Connections(Context context, Sneeze s, int code){
         this.context = context;
@@ -218,11 +228,16 @@ public class Connections {
     public Connections(Context context, String friendname, int code) {
         this.context = context;
         this.username = SaveSharedPreference.getUserName(context);
-        this.friendname = friendname;
+
         if (code== ACCEPT_FRIEND_CODE) {
+            this.friendname = friendname;
             new AcceptFriendRequest().execute();
         } else if(code == RELOAD_ALL_SNEEZES_CODE) {
+            this.friendname = friendname;
             new ReloadFriendsSneezesList().execute();
+        } else if(code == ADD_PICTURE_CODE) {
+            filepath = friendname;
+            new AddPicture().execute();
         }
 
     }
@@ -327,6 +342,159 @@ public class Connections {
             //return null;
         }
 
+    }
+
+    private class AddPicture extends AsyncTask<String, String, Boolean> {
+        ProgressDialog progress;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progress = RandomShit.getProgressDialog(context);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            progress.dismiss();
+        }
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+            username = SaveSharedPreference.getUserName(context);
+
+            //String fileName = sourceFileUri;
+
+            HttpURLConnection conn = null;
+            DataOutputStream dos = null;
+            String lineEnd = "\r\n";
+            String twoHyphens = "--";
+            String boundary = "*****";
+            int bytesRead, bytesAvailable, bufferSize;
+            byte[] buffer;
+            int maxBufferSize = 1 * 1024 * 1024;
+            File sourceFile = new File(filepath);
+            Handler handler = new Handler(Looper.getMainLooper());
+
+            if (!sourceFile.isFile()) {
+
+                //dialog.dismiss();
+
+                Log.e("uploadFile", "Source File not exist :"
+                        +filepath);
+
+                Runnable r = new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(context, "Source File not exist :" + filepath, Toast.LENGTH_SHORT).show();
+                    }
+                };
+
+                handler.post(r);
+                return false;
+
+            }
+            else
+            {
+                try {
+
+                    // open a URL connection to the Servlet
+                    FileInputStream fileInputStream = new FileInputStream(sourceFile);
+                    URL url = new URL(URL_SAVE_IMAGE);
+
+                    // Open a HTTP  connection to  the URL
+                    conn = (HttpURLConnection) url.openConnection();
+                    conn.setDoInput(true); // Allow Inputs
+                    conn.setDoOutput(true); // Allow Outputs
+                    conn.setUseCaches(false); // Don't use a Cached Copy
+                    conn.setRequestMethod("POST");
+                    conn.setRequestProperty("Connection", "Keep-Alive");
+                    conn.setRequestProperty("ENCTYPE", "multipart/form-data");
+                    conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
+                    conn.setRequestProperty("uploaded_file", username+".jpg");
+
+                    dos = new DataOutputStream(conn.getOutputStream());
+
+                    dos.writeBytes(twoHyphens + boundary + lineEnd);
+                    dos.writeBytes("Content-Disposition: form-data; name=\"uploaded_file\";filename=\""+ username + ".jpg\"" + lineEnd);
+                    dos.writeBytes(lineEnd);
+
+                    // create a buffer of  maximum size
+                    bytesAvailable = fileInputStream.available();
+
+                    bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                    buffer = new byte[bufferSize];
+
+                    // read file and write it into form...
+                    bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+
+                    while (bytesRead > 0) {
+
+                        dos.write(buffer, 0, bufferSize);
+                        bytesAvailable = fileInputStream.available();
+                        bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                        bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+
+                    }
+
+                    // send multipart form data necesssary after file data...
+                    dos.writeBytes(lineEnd);
+                    dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+
+                    // Responses from the server (code and message)
+                    int serverResponseCode = conn.getResponseCode();
+                    String serverResponseMessage = conn.getResponseMessage();
+
+                    Log.i("uploadFile", "HTTP Response is : "
+                            + serverResponseMessage + ": " + serverResponseCode);
+
+                    if(serverResponseCode == 200){
+
+                        handler.post(new Runnable() {
+                            public void run() {
+
+                                String msg = "File Upload Completed.\n\n See uploaded file here : \n\n"
+                                        + " http://http://130.211.57.199/uploads/"
+                                        + username + ".jpg";
+
+                                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "File Upload Complete.",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+
+                    //close the streams //
+                    fileInputStream.close();
+                    dos.flush();
+                    dos.close();
+
+                } catch (MalformedURLException ex) {
+
+                    ex.printStackTrace();
+
+                    handler.post(new Runnable() {
+                        public void run() {
+                            Toast.makeText(context, "MalformedURLException Exception : check script url.", Toast.LENGTH_SHORT);
+                        }
+                    });
+
+                    Log.e("Upload file to server", "error: " + ex.getMessage(), ex);
+                } catch (Exception e) {
+                    e.printStackTrace();
+
+                    handler.post(new Runnable() {
+                        public void run() {
+                            Toast.makeText(context, "Got Exception : see logcat ",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    Log.e("Upload file to server Exception", "Exception : "
+                            + e.getMessage(), e);
+                }
+                return true;
+
+            } // End else block
+        }
     }
 
     private class DeleteRegId extends AsyncTask<String, String, Boolean> {
@@ -1211,8 +1379,8 @@ public class Connections {
 
                     }
                     Intent i = new Intent(context, EditProfileActivity.class);
-                    i.putExtra(TAG_USER, gebruiker);
-                    i.putExtra(CameraActivity.TAG_URI, "");
+                    //i.putExtra(TAG_USER, gebruiker);
+                    //i.putExtra(CameraActivity.TAG_URI, "");
                     context.startActivity(i);
                     return true;
                 } else {

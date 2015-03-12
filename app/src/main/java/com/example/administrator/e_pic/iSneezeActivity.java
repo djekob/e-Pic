@@ -258,7 +258,9 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
         MyFriendsFragment m = ((ScreenSlidePagerAdapter) mPagerAdapter).frag2;
         handler.post(m);
         iSneezeFragment i = ((ScreenSlidePagerAdapter) mPagerAdapter).frag1;
-        if(sneezeLocationsInBuurt!=null) i.setSneezeLocationsInBuurt(sneezeLocationsInBuurt);
+        if(sneezeLocationsInBuurt.size()!=0) {
+            i.setSneezeLocationsInBuurt(sneezeLocationsInBuurt);
+        }
         handler.post(i);
     }
 
