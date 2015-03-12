@@ -57,7 +57,6 @@ import java.util.Locale;
 public class iSneezeFragment extends android.support.v4.app.Fragment implements Runnable {
     public static final String ADD_FRIEND_CODE = "add_friend";
 
-    private TextView myNameTextView;
     private Connections c;
     private Button isneeze_image_button;
     private String username;
@@ -95,7 +94,6 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
         locationListener = new MyLocationListener();
 
         isneeze_image_button = (Button) rootView.findViewById(R.id.i_sneeze_button_i_sneeze_fragment);
-        myNameTextView = (TextView) rootView.findViewById(R.id.my_name_textview);
         mapView = (MapView) rootView.findViewById(R.id.mapview);
         mapView.onCreate(savedInstanceState);
 
@@ -136,7 +134,6 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
         });
 
 
-        myNameTextView.setText(username);
 
         isneeze_image_button.setOnClickListener(new SneezeClickListener());
         service = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
