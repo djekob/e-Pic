@@ -164,12 +164,14 @@ public class SneezeOverviewFragment extends android.support.v4.app.Fragment impl
             series.resetData(data);
             StaticLabelsFormatter labelsFormatter = new StaticLabelsFormatter(graph);
             labelsFormatter.setHorizontalLabels(xlabels);
+            System.out.println(graph.getLegendRenderer().getSpacing()+" de plaats tussen legende");
             graph.getGridLabelRenderer().setLabelFormatter(labelsFormatter);
             graph.addSeries(series);
             graph.refreshDrawableState();
+            graph.setTitle("Overview Sneezes last days!");
         }
         else{
-            System.out.println("Je hebt de laatste dagen niet geniest!");
+            graph.setTitle("Niet geniest in deze periode!");
         }
     }
 
@@ -177,7 +179,6 @@ public class SneezeOverviewFragment extends android.support.v4.app.Fragment impl
 
         String myFormat = "yyyy-MM-dd";
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat);
-
         startTitle.setText(sdf.format(myCalendarStart.getTime()));
         update();
     }
@@ -186,7 +187,6 @@ public class SneezeOverviewFragment extends android.support.v4.app.Fragment impl
 
         String myFormat = "yyyy-MM-dd";
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat);
-
         endTitle.setText(sdf.format(myCalendarEnd.getTime()));
         update();
     }
@@ -195,18 +195,18 @@ public class SneezeOverviewFragment extends android.support.v4.app.Fragment impl
         graph = (GraphView) rootview.findViewById(R.id.graph);
         graph.setTitle("Overview Sneezes last days!");
         graph.setTitleTextSize(30);
-        graph.setTitleColor(this.getResources().getColor(R.color.darkorange));
+        graph.setTitleColor(this.getResources().getColor(R.color.indigo_licht));
         graph.getViewport().setScrollable(true);
         //graph.getViewport().setScalable(true);
         graph.getViewport().setXAxisBoundsManual(true);
         graph.getViewport().setMinX(new Date().getTime() - (10 * 24 * 60 * 60 * 1000));
         graph.getViewport().setMaxX(new Date().getTime());
         graph.getViewport().setXAxisBoundsStatus(Viewport.AxisBoundsStatus.AUTO_ADJUSTED);
-        graph.getGridLabelRenderer().setGridStyle(GridLabelRenderer.GridStyle.HORIZONTAL);
+        graph.getGridLabelRenderer().setGridStyle(GridLabelRenderer.GridStyle.NONE);
         //graph.getGridLabelRenderer().setNumHorizontalLabels(data.length);
 
         series = new LineGraphSeries<>();
-        series.setColor(this.getResources().getColor(R.color.orange));
+        series.setColor(this.getResources().getColor(R.color.indigo_licht));
 
         myCalendarEnd  = Calendar.getInstance();
         myCalendarStart = Calendar.getInstance();
@@ -217,7 +217,7 @@ public class SneezeOverviewFragment extends android.support.v4.app.Fragment impl
         endTitle = (TextView) rootview.findViewById(R.id.title_endCalendar);
         endTitle.setClickable(true);
 
-        String myFormat = "yyyy-MM-dd";
+        String myFormat = "yyyy-MM-dd ";
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat);
         startTitle.setText(sdf.format(myCalendarStart.getTime()));
         endTitle.setText(sdf.format(myCalendarEnd.getTime()));
@@ -240,6 +240,7 @@ public class SneezeOverviewFragment extends android.support.v4.app.Fragment impl
         if(bigClass!=null) {
             sneezeList.clear();
             sneezeList.addAll(bigClass.getOwnSneezes());
+            sneezeList.addAll(bigClass.getNotSendSneezes());
             System.out.println(bigClass.getOwnSneezes());
             System.out.println("bigClass != null");
         }

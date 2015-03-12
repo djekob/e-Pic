@@ -200,7 +200,7 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
     private void updateMarkersToMap(ArrayList<Sneeze> sneezes) {
         map.clear();
         for(Sneeze s : sneezes) {
-            BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE);
+            BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED);
             marker = map.addMarker(new MarkerOptions().position(new LatLng(s.getLatitude(), s.getLongitude())).icon(bitmapDescriptor));
 
         }
@@ -216,9 +216,18 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
         }
     }
 
+    public void setSneezeLocationsInBuurt(ArrayList<Sneeze> list){
+        sneezeLocationsInBuurt.clear();
+        sneezeLocationsInBuurt.addAll(list);
+        System.out.println(sneezeLocationsInBuurt);
+    }
+
     @Override
     public void run() {
         if(swipeRefreshLayout.isRefreshing()) swipeRefreshLayout.setRefreshing(false);
+        if(sneezeLocationsInBuurt!=null) {
+            updateMarkersToMap(sneezeLocationsInBuurt);
+        }
     }
 
     public class SneezeClickListener implements View.OnClickListener {
@@ -238,6 +247,8 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
                 //postcode = getPostalCode(usersLocation);
                 bigClass.addNotSendSneezes(new Sneeze(RandomShit.getTimestamp(), usersLocation.getLongitude(), usersLocation.getLatitude()));
                 bigClass.writeData(getActivity());
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post((iSneezeActivity)getActivity());
             }
 
         }
@@ -274,6 +285,7 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
         @Override
         public void onLocationChanged(Location location) {
             usersLocation = location;
+            System.out.println("UMOEDERE");
             SaveSharedPreference.setPostcode(getActivity(), getPostalCode(usersLocation));
             updateCameraToNewLocation(usersLocation);
             Intent i = new Intent(getActivity(), SneezesInBuurtIntentService.class);

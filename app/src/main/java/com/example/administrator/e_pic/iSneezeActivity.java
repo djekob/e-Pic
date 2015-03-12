@@ -258,6 +258,7 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
         MyFriendsFragment m = ((ScreenSlidePagerAdapter) mPagerAdapter).frag2;
         handler.post(m);
         iSneezeFragment i = ((ScreenSlidePagerAdapter) mPagerAdapter).frag1;
+        if(sneezeLocationsInBuurt!=null) i.setSneezeLocationsInBuurt(sneezeLocationsInBuurt);
         handler.post(i);
     }
 
@@ -383,8 +384,9 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
         @Override
         public void onReceive(Context context, Intent intent) {
             sneezeLocationsInBuurt = (ArrayList<Sneeze>) intent.getSerializableExtra(Connections.TAG_SNEEZES_IN_BUURT);
-
             Log.i("datareceiver", "werkt");
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post((iSneezeActivity)getContext());
         }
     }
 }
