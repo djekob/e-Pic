@@ -3,6 +3,7 @@ package com.example.administrator.e_pic;
 import android.app.ActivityManager;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.hardware.Camera;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -14,6 +15,7 @@ import android.util.Log;
 import java.io.File;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -92,4 +94,29 @@ public class RandomShit {
         }
         return false;
     }
+
+    public static ArrayList<Float> generateShadeColors(int amount, int start,int end){
+        if(amount!=0 && end>start) {
+            float step = (end-start)/amount;
+            ArrayList<Float> list = new ArrayList<>();
+            for (int i = 0; i < amount; i++) {
+                float c = end-i*step;
+                list.add(c);
+            }
+            return list;
+        }
+        return null;
+    }
+
+    /*public static String RGBtoHex(int R,int G,int B) {
+        return "#" + toHex(R)+toHex(G)+toHex(B);
+    }
+
+    public static String toHex(int N) {
+        if (N==0) return "00";
+        N=Math.max(0,N);
+        N=Math.min(N,255);
+        N=Math.round(N);
+        return "0123456789ABCDEF".charAt((N-N%16)/16) +  "0123456789ABCDEF".charAt(N%16) + "";
+    }*/
 }

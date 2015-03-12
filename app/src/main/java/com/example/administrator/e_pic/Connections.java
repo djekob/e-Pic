@@ -290,7 +290,7 @@ public class Connections {
             List<NameValuePair> params = new ArrayList<>();
 
             Calendar c = Calendar.getInstance();
-            c.setTimeInMillis(c.getTimeInMillis()-30*60*1000);
+            c.setTimeInMillis(c.getTimeInMillis()-3*60*60*1000);
             String format ="yyyy-MM-dd kk:mm:ss";
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
             time = simpleDateFormat.format(c.getTime());

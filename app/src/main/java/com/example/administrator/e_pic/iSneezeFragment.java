@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
@@ -196,9 +197,10 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
 
     private void updateMarkersToMap(ArrayList<Sneeze> sneezes) {
         map.clear();
-        for(Sneeze s : sneezes) {
-            BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED);
-            marker = map.addMarker(new MarkerOptions().position(new LatLng(s.getLatitude(), s.getLongitude())).icon(bitmapDescriptor));
+        ArrayList<Float> colors = RandomShit.generateShadeColors(sneezes.size(),250,359);
+        for(int k=0;k<sneezes.size();k++) {
+            BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.defaultMarker(colors.get(k));
+            marker = map.addMarker(new MarkerOptions().position(new LatLng(sneezes.get(k).getLatitude(), sneezes.get(k).getLongitude())).icon(bitmapDescriptor).alpha(0.8f));
 
         }
     }
@@ -222,7 +224,7 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
     @Override
     public void run() {
         if(swipeRefreshLayout.isRefreshing()) swipeRefreshLayout.setRefreshing(false);
-        if(sneezeLocationsInBuurt!=null) {
+        if(sneezeLocationsInBuurt.size()!=0) {
             updateMarkersToMap(sneezeLocationsInBuurt);
         }
     }
