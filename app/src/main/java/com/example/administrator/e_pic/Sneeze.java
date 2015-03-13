@@ -15,8 +15,9 @@ public class Sneeze implements Serializable {
     private double longitude;
     private int postal;
 
-    public Sneeze() {
-    }
+
+
+
 
     public Sneeze(String time) {
         this.time = time;

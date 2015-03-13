@@ -33,6 +33,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -57,6 +59,7 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
     private ArrayList<Sneeze> sneezeLocationsInBuurt;
     private float hoogte;
     private Marker marker;
+    private HashMap<String, Float> usernameKleur;
 
     //private DataReceiver dataReceiver;
 
@@ -64,6 +67,7 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sneezeLocationsInBuurt = new ArrayList<>();
+        usernameKleur = new HashMap<>();
 
     }
 
@@ -193,24 +197,31 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
 
     private void updateMarkersToMap(ArrayList<Sneeze> sneezes) {
         map.clear();
-        ArrayList<Float> colors = RandomShit.generateShadeColors(sneezes.size(),250,359);
-        for(int k=0;k<sneezes.size();k++) {
-            BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.defaultMarker(colors.get(k));
-            marker = map.addMarker(new MarkerOptions().position(new LatLng(sneezes.get(k).getLatitude(), sneezes.get(k).getLongitude())).icon(bitmapDescriptor).alpha(0.8f));
-            map.setOnMarkerClickListener(new OurOnMarkerClickListener(sneezes.get(k).getUser().getUsername()));
+        ArrayList<Float> colors = RandomShit.generateShadeColors(usernameKleur.size(),0,359);
+        int inti=0;
+        for(String s : usernameKleur.keySet()) {
+            usernameKleur.put(s,colors.get(inti));
+            inti++;
+        }
+        for(Sneeze s : sneezeLocationsInBuurt) {
+
+            BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.defaultMarker(usernameKleur.get(s.getUser().getUsername()));
+            OurOnMarkerClickListener ourOnMarkerClickListener = new OurOnMarkerClickListener();
+            marker = map.addMarker(new MarkerOptions()
+                    .title(s.getUser().getUsername())
+                    .position(new LatLng(s.getLatitude(), s.getLongitude()))
+                    .icon(bitmapDescriptor)
+                    .alpha(0.8f)
+                    .snippet(s.getUser().getFirstname() + " " + s.getUser().getName()));
+            map.setOnMarkerClickListener(ourOnMarkerClickListener);
         }
     }
 
     private class OurOnMarkerClickListener implements GoogleMap.OnMarkerClickListener{
-        private String userName;
-
-        public OurOnMarkerClickListener(String userName){
-            this.userName=userName;
-        }
 
         @Override
         public boolean onMarkerClick(Marker marker) {
-            marker.setSnippet(userName);
+            marker.showInfoWindow();
             return false;
         }
     }
@@ -235,7 +246,11 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
     public void run() {
         if(swipeRefreshLayout.isRefreshing()) swipeRefreshLayout.setRefreshing(false);
         if(sneezeLocationsInBuurt.size()!=0) {
+            for (Sneeze s: sneezeLocationsInBuurt) {
+                usernameKleur.put(s.getUser().getUsername(), null);
+            }
             updateMarkersToMap(sneezeLocationsInBuurt);
+
         }
     }
 
@@ -243,16 +258,26 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
 
         @Override
         public void onClick(View v) {
+            String time1 = RandomShit.getTimestamp();
+            User user = new User(SaveSharedPreference.getUserName(getActivity()));
+            user.setFirstname(SaveSharedPreference.getFirstname(getActivity()));
+            user.setName(SaveSharedPreference.getName(getActivity()));
+            Sneeze s1 = new Sneeze(time1, usersLocation.getLongitude(), usersLocation.getLatitude(), getPostalCode(usersLocation));
+            s1.setUser(user);
+            usernameKleur.put(SaveSharedPreference.getUserName(getActivity()), null);
+            sneezeLocationsInBuurt.add(s1);
             if(RandomShit.haveNetworkConnection(getActivity())) {
                 postcode = getPostalCode(usersLocation);
                 String time = RandomShit.getTimestamp();
                 System.out.println("dit zou de postcode moeten zijn" + postcode);
                 Sneeze s = new Sneeze(time, usersLocation.getLongitude(), usersLocation.getLatitude(), postcode);
+
                 new Connections(getActivity(), s, Connections.CREATE_SNEEZE_CODE);
                 updateMarkersToMap(sneezeLocationsInBuurt);
             } else {
                 Toast.makeText(getActivity(), "No internet available, Sneeze zal verstuurd worden wanneer internet available is", Toast.LENGTH_LONG).show();
                 BigClass bigClass = BigClass.ReadData(getActivity());
+                updateMarkersToMap(sneezeLocationsInBuurt);
                 //postcode = getPostalCode(usersLocation);
                 bigClass.addNotSendSneezes(new Sneeze(RandomShit.getTimestamp(), usersLocation.getLongitude(), usersLocation.getLatitude()));
                 bigClass.writeData(getActivity());

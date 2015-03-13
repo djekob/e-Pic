@@ -44,7 +44,7 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
     public TerugStuurKlasse terugstuurklasse;
     private DataReceiver dataReceiver;
     private ArrayList<Sneeze> sneezeLocationsInBuurt;
-    private TextView myNameTextView;
+    private TextView myNameTextView, myNumberOfSneezesTextView;
 
 
     @Override
@@ -56,6 +56,9 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         frameLayout = (FrameLayout) findViewById(R.id.content_frame);
         myNameTextView = (TextView) findViewById(R.id.name_text_view_navigation_drawer);
+        myNumberOfSneezesTextView = (TextView) findViewById(R.id.number_of_sneezes_navigation_drawer);
+
+        myNumberOfSneezesTextView.setText("(" + SaveSharedPreference.getNrOfSneezes(getContext()) +")");
         myNameTextView.setText(SaveSharedPreference.getUserName(getContext()));
 
         /*myNameTextViewNavigationDrawer  = (TextView) findViewById(R.id.my_name_text_view_navigation_drawer);

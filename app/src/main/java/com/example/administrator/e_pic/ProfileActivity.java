@@ -1,7 +1,11 @@
 package com.example.administrator.e_pic;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.Color;
+import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.text.LoginFilter;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +27,7 @@ public class ProfileActivity extends CustomActionBarActivity {
     private int nrOfSneezesFriend;
     private int position;
     private Button addFriendButton;
+    private ArrayList<String> myFriends;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +46,13 @@ public class ProfileActivity extends CustomActionBarActivity {
         MyFriendsListAdapter adapter = new MyFriendsListAdapter(this, R.layout.friend_list_item, friendsList);
         myFriendsListView.setAdapter(adapter);
 
+        if(myFriends.contains(username)) {
+            addFriendButton.setEnabled(false);
+            addFriendButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.my_button_accepted_friend));
+            addFriendButton.setText("Friends");
+        }
+
+
     }
 
     private void initialization() {
@@ -50,17 +62,27 @@ public class ProfileActivity extends CustomActionBarActivity {
         myProfilePictureImageView = (ImageView) findViewById(R.id.my_profile_picture_profile_activity);
         addFriendButton =(Button) findViewById(R.id.add_friend_button_profile_activity);
         addFriendButton.setOnClickListener(new AddFriendClickListener());
-    }
 
-    private Boolean checkIfFriend(String friendname) {
-        return false;
+        myFriends = new ArrayList<>();
+        BigClass bigClass = BigClass.ReadData(getContext());
+        if(bigClass!=null) {
+            for(User u: bigClass.getFriendsArrayList()) {
+                myFriends.add(u.getUsername());
+            }
+        }
+
+
     }
     private class AddFriendClickListener implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
-                new Connections(getContext(), SaveSharedPreference.getUserName(getContext()), username, Connections.ADD_FRIEND_CODE);
-                addFriendButton.setEnabled(false);
+
+
+            new Connections(getContext(), SaveSharedPreference.getUserName(getContext()), username, Connections.ADD_FRIEND_CODE2);
+            addFriendButton.setEnabled(false);
+            addFriendButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.my_button_pending_friends));
+            addFriendButton.setText("Added!");
             }
     }
     @Override

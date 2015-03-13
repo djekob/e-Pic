@@ -129,6 +129,7 @@ public class Connections {
     public static final int CREATE_SNEEZE_CODE_FROM_RECEIVER = 17;
     public static final int GET_ALL_SNEEZES_IN_BUURT_CODE=17;
     public static final int ADD_PICTURE_CODE = 18;
+    public static final int ADD_FRIEND_CODE2 = 19;
 
     private Context context;
     private View buttonView;
@@ -222,6 +223,8 @@ public class Connections {
         this.friendname = friendname;
         if(code == Connections.ADD_FRIEND_CODE) {
             new AddFriend().execute();
+        } else if(code == Connections.ADD_FRIEND_CODE2) {
+            new AddFriend2().execute();
         }
     }
 
@@ -290,7 +293,7 @@ public class Connections {
             List<NameValuePair> params = new ArrayList<>();
 
             Calendar c = Calendar.getInstance();
-            c.setTimeInMillis(c.getTimeInMillis()-3*60*60*1000);
+            c.setTimeInMillis(c.getTimeInMillis()-/*48*60**/60*1000);
             String format ="yyyy-MM-dd kk:mm:ss";
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
             time = simpleDateFormat.format(c.getTime());
@@ -314,6 +317,10 @@ public class Connections {
                             double latitude= Double.parseDouble(jsonObject.getString(TAG_LATITUDE));
                             double longitude =Double.parseDouble(jsonObject.getString(TAG_LONGITUDE));
                             Sneeze s= new Sneeze(jsonObject.getString(TAG_TIME), longitude, latitude, jsonObject.getInt(TAG_POSTCODE));
+                            User u = new User(jsonObject.getString(TAG_LOGINNAME), jsonObject.getString(TAG_VOORNAAM), jsonObject.getString(TAG_ACHTERNAAM));
+                            s.setUser(u);
+                            s.setPostal(jsonObject.getInt(TAG_POSTCODE));
+
 
                             sneezesInBuurt.add(s);
                         }
@@ -909,6 +916,54 @@ public class Connections {
         }
     }
 
+    private class AddFriend2 extends AsyncTask<String, String, Boolean> {
+
+        ProgressDialog progress;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            //progress = RandomShit.getProgressDialog(context);
+            //progress.show();
+
+        }
+
+        protected Boolean doInBackground(String... args) {
+            List<NameValuePair> params = new ArrayList<>();
+            params.add(new BasicNameValuePair(TAG_LOGINNAME, username));
+            params.add(new BasicNameValuePair(TAG_FRIENDNAME, friendname));
+
+
+            JSONParser jsonParser = new JSONParser();
+
+
+            JSONObject json = jsonParser.makeHttpRequest(URL_ADD_FRIEND_REQUEST,
+                    "POST", params);
+
+            try {
+                int success = json.getInt(TAG_SUCCESS);
+
+                if (success == 1) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return false;
+
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            if(aBoolean) {
+                //progress.dismiss();
+            }
+        }
+    }
+
 
     private class Login extends AsyncTask<String, String, Boolean> {
         private ProgressDialog progress;
@@ -949,6 +1004,7 @@ public class Connections {
                     }
                     JSONObject jsonObject = json.getJSONObject(TAG_USER);
 
+                    SaveSharedPreference.setNrOfSneezes(context, sneezes.length());
                     SaveSharedPreference.setUserName(context, username);
 
                     BigClass bigClass = BigClass.ReadData(context);

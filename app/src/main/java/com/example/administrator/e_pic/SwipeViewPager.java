@@ -59,10 +59,10 @@ public class SwipeViewPager extends ViewPager {
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (mStartDragX < x  && getCurrentItem() == 1) {
-                    iSneezeFragment.setButtonLocation(x-mStartDragX);
+                    //iSneezeFragment.setButtonLocation(x-mStartDragX);
                     System.out.println("wadde? hahaha");
                 } else if (mStartDragX > x && getCurrentItem() == 1) {//&& getCurrentItem() == getAdapter().getCount() - 1) {
-                    iSneezeFragment.setButtonLocation(mStartDragX-x);
+                    //iSneezeFragment.setButtonLocation(mStartDragX-x);
                     System.out.println("wadddsqfjklmsjdqfje? hahaha");
                 } else {
                     //addSneezeButton.setY(addSneezeButton.getY() + (mStartDragX - getCurrentItem()));
@@ -71,13 +71,13 @@ public class SwipeViewPager extends ViewPager {
 
                 break;
             case MotionEvent.ACTION_CANCEL:
-                iSneezeFragment.resetButtonLocation();
+                //iSneezeFragment.resetButtonLocation();
                 break;
             case MotionEvent.ACTION_SCROLL:
                 System.out.println("scrollingzzz");
                 break;
             case MotionEvent.ACTION_UP:
-                iSneezeFragment.resetButtonLocation();
+                //iSneezeFragment.resetButtonLocation();
         }
         return super.onInterceptTouchEvent(ev);
     }
