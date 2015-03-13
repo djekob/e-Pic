@@ -1,6 +1,7 @@
 package com.example.administrator.e_pic;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.app.IntentService;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -60,7 +61,7 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
     //private TextView myNameTextViewNavigationDrawer, nrOfSneezesNavigationDrawer, myFullNameTextViewNavigationDrawer;
 
     private static final int NUM_PAGES = 3;
-    private ViewPager mPager;
+    private SwipeViewPager mPager;
     public PagerAdapter mPagerAdapter;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
@@ -99,8 +100,13 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
         mDrawerList.bringToFront();
         mDrawerLayout.requestLayout();
-        mPager = (ViewPager) findViewById(R.id.pager);
-        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+        mPager = new SwipeViewPager(this);
+        mPager = (SwipeViewPager) findViewById(R.id.pager);
+        mPager.setPageTransformer(true, new ZoomOutPageTransformer());
+        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+        mPagerAdapter = new ScreenSlidePagerAdapter(fragmentManager);
+
+
         mPager.setAdapter(mPagerAdapter);
         mPager.setOffscreenPageLimit(2);
         mPager.setCurrentItem(1);
@@ -110,6 +116,7 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
                 invalidateOptionsMenu();
             }
         });
+
         actionBarDrawerToggle = new ActionBarDrawerToggle(
                 this,                  /* host Activity */
                 mDrawerLayout,         /* DrawerLayout object */
@@ -277,24 +284,26 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
 
         public ScreenSlidePagerAdapter(android.support.v4.app.FragmentManager fm) {
             super(fm);
+            frag0 = new SneezeOverviewFragment();
+            frag1 = new iSneezeFragment();
+            frag2= new MyFriendsFragment();
+            mPager.setFragment(frag1);
         }
 
         @Override
         public android.support.v4.app.Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    frag0 = new SneezeOverviewFragment();
                     return frag0;
                 case 1:
-                    frag1 = new iSneezeFragment();
                     return frag1;
                 case 2:
-                    frag2 = new MyFriendsFragment();
                     return frag2;
                 default:
-                    return new iSneezeFragment();
+                    return frag1;
             }
         }
+
 
         @Override
         public int getCount() {
@@ -396,6 +405,8 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
             handler.post((iSneezeActivity)getContext());
         }
     }
+
+
 }
 
 

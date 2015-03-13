@@ -1,11 +1,13 @@
 package com.example.administrator.e_pic;
 
+import android.app.ActionBar;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
@@ -16,16 +18,22 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.SyncStateContract;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,7 +67,8 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
     public static final String ADD_FRIEND_CODE = "add_friend";
 
     private Connections c;
-    private Button isneeze_image_button;
+
+    public Button isneeze_image_button;
     private String username;
     private int postcode;
     private Context context;
@@ -67,12 +76,13 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
     private MapView mapView;
     private GoogleMap map;
     private Location usersLocation;
-    protected GoogleApiClient mGoogleApiClient;
     private CameraUpdate cameraUpdate;
     private LocationManager service;
     private MyLocationListener locationListener;
-    private Marker marker;
     private ArrayList<Sneeze> sneezeLocationsInBuurt;
+    private float hoogte;
+    private Marker marker;
+
     //private DataReceiver dataReceiver;
 
     @Override
@@ -83,9 +93,6 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
     }
 
 
-    private ArrayList<LatLng> getSneezesLocationsInNeighbourhood() {
-        return null;
-    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -95,6 +102,8 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
         locationListener = new MyLocationListener();
 
         isneeze_image_button = (Button) rootView.findViewById(R.id.i_sneeze_button_i_sneeze_fragment);
+
+        hoogte =isneeze_image_button.getTranslationY();
         mapView = (MapView) rootView.findViewById(R.id.mapview);
         mapView.onCreate(savedInstanceState);
 
@@ -139,8 +148,8 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
         isneeze_image_button.setOnClickListener(new SneezeClickListener());
         service = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
-        service.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 10, locationListener);
-        service.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 10, locationListener);
+        service.requestLocationUpdates(LocationManager.GPS_PROVIDER, 15*1000, 10, locationListener);
+        service.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 15*1000, 10, locationListener);
         usersLocation = getMyLocation();
         System.out.println(usersLocation);
         if(usersLocation!=null) {
@@ -170,6 +179,18 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
         }
 
         return rootView;
+    }
+
+    public void resetButtonLocation()  {
+        isneeze_image_button.setTranslationY(hoogte);
+    }
+
+    public void setButtonLocation(float x) {
+        System.out.println(hoogte);
+        isneeze_image_button.setTranslationY(x + hoogte);
+    }
+    public Button getButton() {
+        return isneeze_image_button;
     }
 
     private void  moveCameraToNewLocation(Location location) {
@@ -318,7 +339,7 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
     public void onResume() {
         mapView.onResume();
         super.onResume();
-        service.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 10, locationListener);
+        service.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 15*1000, 10, locationListener);
     }
 
     @Override

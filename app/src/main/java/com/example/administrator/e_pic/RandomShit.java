@@ -10,6 +10,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Environment;
 import android.preference.PreferenceGroup;
+import android.util.DisplayMetrics;
 import android.util.Log;
 
 import java.io.File;
@@ -93,6 +94,12 @@ public class RandomShit {
             }
         }
         return false;
+    }
+
+    public static int dpToPx(Context context, int dp) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        int px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+        return px;
     }
 
     public static ArrayList<Float> generateShadeColors(int amount, int start,int end){
