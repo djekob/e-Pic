@@ -28,12 +28,7 @@ public class SwipeViewPager extends ViewPager {
         super(context, attrs);
     }
 
-    /*public void getButton() {
-        System.out.println("neee wa nigga");
-        addSneezeButton = iSneezeFragment.getButton();
-        System.out.println("hier nigga");
-    }
-*/
+
     public void setFragment(iSneezeFragment is) {
         this.iSneezeFragment = is;
     }

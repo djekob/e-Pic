@@ -1596,7 +1596,10 @@ public class Connections {
                 int success = json.getInt(TAG_SUCCESS);
 
                 if (success == 1) {
+
+                    SaveSharedPreference.setNrOfFriendRequests(context, SaveSharedPreference.getFriendRequests(context) -1);
                     return true;
+
                 } else {
                     return false;
                 }

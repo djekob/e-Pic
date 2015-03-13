@@ -33,6 +33,11 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
 
     //private TextView myNameTextViewNavigationDrawer, nrOfSneezesNavigationDrawer, myFullNameTextViewNavigationDrawer;
 
+    private iSneezeFragment isneezefrag;
+    private SneezeOverviewFragment sneezeoverviewfrag;
+    private MyFriendsFragment myfriendsoverviewfrag;
+
+
     private static final int NUM_PAGES = 3;
     private SwipeViewPager mPager;
     public PagerAdapter mPagerAdapter;
@@ -79,9 +84,11 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
         mDrawerLayout.requestLayout();
         mPager = new SwipeViewPager(this);
         mPager = (SwipeViewPager) findViewById(R.id.pager);
-        mPager.setPageTransformer(true, new ZoomOutPageTransformer());
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         mPagerAdapter = new ScreenSlidePagerAdapter(fragmentManager);
+
+        mPager.setPageTransformer(true, new MyPageTransformer());
+
 
 
         mPager.setAdapter(mPagerAdapter);
@@ -149,6 +156,7 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
     @Override
     protected void onResume() {
         super.onResume();
+        myNumberOfSneezesTextView.setText(""+SaveSharedPreference.getNrOfSneezes(getContext()));
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Connections.ACTION_SNEEZE_IN_BUURT);
         registerReceiver(dataReceiver, intentFilter);
@@ -264,6 +272,10 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
             frag0 = new SneezeOverviewFragment();
             frag1 = new iSneezeFragment();
             frag2= new MyFriendsFragment();
+            sneezeoverviewfrag = frag0;
+            isneezefrag = frag1;
+            myfriendsoverviewfrag=frag2;
+
             mPager.setFragment(frag1);
         }
 
@@ -281,6 +293,17 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
             }
         }
 
+        public iSneezeFragment getFrag1() {
+            return frag1;
+        }
+
+        public SneezeOverviewFragment getFrag0() {
+            return frag0;
+        }
+
+        public MyFriendsFragment getFrag2() {
+            return frag2;
+        }
 
         @Override
         public int getCount() {
@@ -372,6 +395,8 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
 
     }
 
+
+
     public class DataReceiver extends BroadcastReceiver {
 
         @Override
@@ -384,7 +409,57 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
     }
 
 
-}
+    private class MyPageTransformer implements ViewPager.PageTransformer {
+
+
+
+        public void transformPage(View view, float position) { //position = 1 als rechts, position = -1 als links
+            int pageWidth = view.getWidth();
+            System.out.println(position);
+            position++;
+                if (position < -1) { // [-Infinity,-1)
+                    // This page is way off-screen to the left.
+                    view.setAlpha(1);
+
+                } else if (position<= 1) { // [-1,1]
+
+                    isneezefrag.mapView.setTranslationX(-position * (pageWidth / 2)); //Half the normal speed
+
+                } else { // (1,+Infinity]
+                    // This page is way off-screen to the right.
+                    view.setAlpha(1);
+                }
+
+
+            }
+                /*sneezeoverviewfrag.graph.setTranslationX((float) (-(1 - position) * 0.5 * pageWidth));
+                //mBlurLabel.setTranslationX((float) (-(1 - position) * 0.5 * pageWidth));
+
+                //mDim.setTranslationX((float) (-(1 - position) * pageWidth));
+                isneezefrag.mapView.setTranslationX((float) (-(1 - position) * pageWidth));
+
+                isneezefrag.isneeze_image_button.setTranslationX((float) (-(1 - position) * 1.5 * pageWidth));
+                //mDoneButton.setTranslationX((float) (-(1 - position) * 1.7 * pageWidth));
+                // The 0.5, 1.5, 1.7 values you see here are what makes the view move in a different speed.
+                // The bigger the number, the faster the view will translate.
+                // The result float is preceded by a minus because the views travel in the opposite direction of the movement.
+
+                myfriendsoverviewfrag.myFriendsTextView.setTranslationX((position) * (pageWidth / 4));
+
+                myfriendsoverviewfrag.listView.setTranslationX((position) * (pageWidth));
+
+               // mTint.setTranslationX((position) * (pageWidth / 2));
+
+               // mDesaturate.setTranslationX((position) * (pageWidth / 1));
+                // This is another way to do it
+
+
+            } else { // (1,+Infinity]
+                // This page is way off-screen to the right.
+                view.setAlpha(0);
+            }*/
+        }
+    }
 
 
 /*

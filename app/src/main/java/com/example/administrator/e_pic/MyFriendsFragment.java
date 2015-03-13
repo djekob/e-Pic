@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -14,8 +15,9 @@ public class MyFriendsFragment extends android.support.v4.app.Fragment implement
 
     private String username;
     public ArrayList<User> friends;
-    private ListView listView;
+    public ListView listView;
     private MyFriendsListAdapter myFriendsListAdapter;
+    public TextView myFriendsTextView;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         System.out.println("Myfriendsfragment werkt");
@@ -27,6 +29,7 @@ public class MyFriendsFragment extends android.support.v4.app.Fragment implement
 
         //friends = (ArrayList) getIntent().getSerializableExtra(Connections.TAG_FRIENDS);
         listView = (ListView) rootView.findViewById(R.id.my_friends_list_view_my_friends_activity);
+        myFriendsTextView=(TextView) rootView.findViewById(R.id.title_my_friends_activity);
         myFriendsListAdapter = new MyFriendsListAdapter(getActivity(), R.layout.friend_list_item, friends);
         listView.setAdapter(myFriendsListAdapter);
 

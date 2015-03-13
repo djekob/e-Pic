@@ -50,7 +50,7 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
     private int postcode;
     private Context context;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private MapView mapView;
+    public MapView mapView;
     private GoogleMap map;
     private Location usersLocation;
     private CameraUpdate cameraUpdate;

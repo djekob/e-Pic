@@ -25,7 +25,7 @@ public class SneezeOverviewFragment extends android.support.v4.app.Fragment impl
 
     public ArrayList<Sneeze> sneezeList;
     private LineGraphSeries<DataPoint> series;
-    private GraphView graph;
+    public GraphView graph;
     private TextView startTitle;
     private TextView endTitle;
     private Calendar myCalendarStart;

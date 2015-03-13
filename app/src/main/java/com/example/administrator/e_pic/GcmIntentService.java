@@ -140,9 +140,9 @@ public class GcmIntentService extends IntentService {
                         .bigText(from + " heeft je een vriendschapsverzoek gestuurd."))
                         .setContentText(from + " heeft je een vriendschapsverzoek gestuurd.")
                         .setTicker(from + " heeft je een vriendschapsverzoek gestuurd.");
+                SaveSharedPreference.setNrOfSneezes(getApplicationContext(), SaveSharedPreference.getNrOfSneezes(getApplicationContext()) + 1);
                 notificationIntent = new Intent(getApplicationContext(), FriendRequestsActivity.class);
 
-                SaveSharedPreference.setNrOfSneezes(getApplicationContext(), SaveSharedPreference.getNrOfSneezes(getApplicationContext()) + 1);
                 //contentIntent = PendingIntent.getActivity(this, 0,
                   //      new Intent(this.getApplicationContext(), iSneezeActivity.class), 0);
                 break;
