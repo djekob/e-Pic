@@ -222,7 +222,21 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
         for(int k=0;k<sneezes.size();k++) {
             BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.defaultMarker(colors.get(k));
             marker = map.addMarker(new MarkerOptions().position(new LatLng(sneezes.get(k).getLatitude(), sneezes.get(k).getLongitude())).icon(bitmapDescriptor).alpha(0.8f));
+            map.setOnMarkerClickListener(new OurOnMarkerClickListener(sneezes.get(k).getUser().getUsername()));
+        }
+    }
 
+    private class OurOnMarkerClickListener implements GoogleMap.OnMarkerClickListener{
+        private String userName;
+
+        public OurOnMarkerClickListener(String userName){
+            this.userName=userName;
+        }
+
+        @Override
+        public boolean onMarkerClick(Marker marker) {
+            marker.setSnippet(userName);
+            return false;
         }
     }
 
