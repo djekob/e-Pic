@@ -1,13 +1,10 @@
 package com.example.administrator.e_pic;
 
-import android.app.Fragment;
 import android.content.Context;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.Button;
-import android.widget.Toast;
 
 /**
  * Created by Administrator on 12/03/2015.

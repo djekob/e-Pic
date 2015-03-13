@@ -2,12 +2,8 @@ package com.example.administrator.e_pic;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.content.Context;
 import android.os.SystemClock;
 import android.util.Log;
-
-import java.sql.Timestamp;
-import java.util.Calendar;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in

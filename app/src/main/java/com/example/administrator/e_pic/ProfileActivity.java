@@ -1,10 +1,7 @@
 package com.example.administrator.e_pic;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.text.LoginFilter;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;

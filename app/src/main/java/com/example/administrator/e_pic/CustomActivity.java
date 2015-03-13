@@ -3,7 +3,6 @@ package com.example.administrator.e_pic;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 
 public abstract class CustomActivity extends Activity {

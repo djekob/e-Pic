@@ -17,8 +17,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Map;
-import java.util.TreeMap;
 
 
 public class SneezeOverviewActivity extends CustomActionBarActivity {

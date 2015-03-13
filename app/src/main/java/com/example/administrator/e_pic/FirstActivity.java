@@ -2,16 +2,10 @@ package com.example.administrator.e_pic;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-
-import java.security.Timestamp;
-
 
 public class FirstActivity extends Activity {
 

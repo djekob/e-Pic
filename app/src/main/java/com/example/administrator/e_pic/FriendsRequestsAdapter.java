@@ -1,7 +1,6 @@
 package com.example.administrator.e_pic;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Looper;
 import android.os.SystemClock;
 import android.view.LayoutInflater;
@@ -9,15 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.TreeMap;
-import java.util.logging.Handler;
 
 /**
  * Created by Administrator on 15/02/2015.

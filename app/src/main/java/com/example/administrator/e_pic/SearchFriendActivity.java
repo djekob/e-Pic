@@ -1,6 +1,5 @@
 package com.example.administrator.e_pic;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -9,11 +8,8 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.TreeMap;
 
 
 public class SearchFriendActivity extends CustomActionBarActivity {
