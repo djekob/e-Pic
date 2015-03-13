@@ -1,13 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@android:id/text1"
-    android:layout_width="match_parent"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="wrap_content"
-    android:textAppearance="?android:attr/textAppearanceListItemSmall"
-    android:gravity="center_vertical"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:textColor="#fff"
-    android:background="@drawable/navigation_bar_item"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
 
-    android:minHeight="?android:attr/listPreferredItemHeightSmall"/>
+    android:background="@drawable/navigation_bar_item"
+    >
+    <TextView
+        android:id="@+id/title_text_view_navigation_drawer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceListItemSmall"
+        android:gravity="center_vertical|center"
+        android:text="sqmdkfj"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:textColor="#fff"
+
+        android:minHeight="?android:attr/listPreferredItemHeightSmall"/>
+    <TextView
+        android:id="@+id/text_new_stuff_navigation_drawer"
+        android:textColor="#fff"
+        android:textAppearance="?android:attr/textAppearanceListItemSmall"
+        android:layout_centerVertical="true"
+        android:gravity="center_vertical|center"
+        android:background="@drawable/background_notification_navigation_drawer"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+
+        android:textAlignment="center"
+        android:layout_width="30dp"
+        android:layout_height="30dp" />
+</RelativeLayout>

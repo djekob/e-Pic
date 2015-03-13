@@ -88,6 +88,7 @@ public class Connections {
     public static final String TAG_USERS_NOT_FRIEND= "users";
     public static final String TAG_ID = "_id";
     public static final String TAG_VOORNAAM = "Voornaam";
+    public static final String TAG_NR_OF_FRIEND_REQUESTS = "Friend request";
     public static final String TAG_ACHTERNAAM = "Achternaam";
     public static final String TAG_LEEFTIJD = "Leeftijd";
     public static final String TAG_USER = "users";
@@ -293,7 +294,7 @@ public class Connections {
             List<NameValuePair> params = new ArrayList<>();
 
             Calendar c = Calendar.getInstance();
-            c.setTimeInMillis(c.getTimeInMillis()-/*48*60**/60*1000);
+            c.setTimeInMillis(c.getTimeInMillis()-12*60*60*1000);
             String format ="yyyy-MM-dd kk:mm:ss";
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
             time = simpleDateFormat.format(c.getTime());
@@ -1013,6 +1014,7 @@ public class Connections {
                     System.out.println(bigClass.getOwnSneezes());
                     bigClass.writeData(context);
 
+                    SaveSharedPreference.setNrOfFriendRequests(context, jsonObject.getInt(TAG_NR_OF_FRIEND_REQUESTS));
                     SaveSharedPreference.setFirstName(context, jsonObject.getString(TAG_VOORNAAM));
                     SaveSharedPreference.setName(context, jsonObject.getString(TAG_ACHTERNAAM));
                     //SaveSharedPreference.setNrOfSneezes(context, jsonObject.getInt(TAG_NR_OF_SNEEZES));

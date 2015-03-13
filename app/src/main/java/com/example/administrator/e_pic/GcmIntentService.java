@@ -142,6 +142,7 @@ public class GcmIntentService extends IntentService {
                         .setTicker(from + " heeft je een vriendschapsverzoek gestuurd.");
                 notificationIntent = new Intent(getApplicationContext(), FriendRequestsActivity.class);
 
+                SaveSharedPreference.setNrOfSneezes(getApplicationContext(), SaveSharedPreference.getNrOfSneezes(getApplicationContext()) + 1);
                 //contentIntent = PendingIntent.getActivity(this, 0,
                   //      new Intent(this.getApplicationContext(), iSneezeActivity.class), 0);
                 break;

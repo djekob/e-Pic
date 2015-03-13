@@ -17,6 +17,7 @@ public class SaveSharedPreference
     public static final String TAG_LATITUDE = "latitude";
     public static final String TAG_LONGITUDE = "longitude";
     public static final String TAG_POSTCODE = "postcode";
+    public static final String TAG_FRIEND_REQUESTS = "friend requests";
 
     static SharedPreferences getSharedPreferences(Context ctx) {
         return PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -36,6 +37,12 @@ public class SaveSharedPreference
     {
         SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
         editor.putString(TAG_USERNAME, userName);
+        editor.commit();
+    }
+
+    public static void setNrOfFriendRequests(Context xtc, int nr) {
+        SharedPreferences.Editor editor = getSharedPreferences(xtc).edit();
+        editor.putInt(TAG_FRIEND_REQUESTS, nr);
         editor.commit();
     }
 
@@ -87,6 +94,10 @@ public class SaveSharedPreference
         return getSharedPreferences(context).getString(TAG_REG_ID, "");
     }
 
+    public static int getFriendRequests(Context context) {
+        return getSharedPreferences(context).getInt(TAG_FRIEND_REQUESTS, -1);
+    }
+
     public static void setName(Context context, String name) {
         SharedPreferences.Editor editor = getSharedPreferences(context).edit();
         editor.putString(TAG_NAME, name);
@@ -114,6 +125,7 @@ public class SaveSharedPreference
         editor.putInt(TAG_NR_OF_SNEEZES, -1);
         editor.putString(TAG_LATITUDE, "");
         editor.putString(TAG_LONGITUDE, "");
+        editor.putInt(TAG_FRIEND_REQUESTS, -1);
         editor.commit();
     }
 

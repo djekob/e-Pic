@@ -72,7 +72,8 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
         nrOfSneezesNavigationDrawer.setText(SaveSharedPreference.getNrOfSneezes(getContext()) + "");
         myFullNameTextViewNavigationDrawer.setText(SaveSharedPreference.getFirstname(getContext()) + " " +SaveSharedPreference.getName(getContext())) ;
         */
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, drawerList));
+        NavigationDrawerListAdapter navigationDrawerListAdapter = new NavigationDrawerListAdapter(getContext(), R.layout.drawer_list_item, drawerList);
+        mDrawerList.setAdapter(navigationDrawerListAdapter);
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
         mDrawerList.bringToFront();
         mDrawerLayout.requestLayout();

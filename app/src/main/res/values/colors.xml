@@ -25,6 +25,7 @@
     <color name="indigo_licht_transparant">#E65C6BC0</color>
     <color name="yellow_pending_friend">#616161</color>
     <color name="green_accepted_friend">#009688</color>
+    <color name="deep_orange">#FF5722</color>
 
 
 </resources>
