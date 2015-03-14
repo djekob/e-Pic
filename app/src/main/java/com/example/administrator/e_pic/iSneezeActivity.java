@@ -157,6 +157,8 @@ public class iSneezeActivity extends CustomActionBarActivity implements Runnable
     protected void onResume() {
         super.onResume();
         myNumberOfSneezesTextView.setText(""+SaveSharedPreference.getNrOfSneezes(getContext()));
+        NavigationDrawerListAdapter navigationDrawerListAdapter = new NavigationDrawerListAdapter(getContext(), R.layout.drawer_list_item, drawerList);
+        mDrawerList.setAdapter(navigationDrawerListAdapter);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Connections.ACTION_SNEEZE_IN_BUURT);
         registerReceiver(dataReceiver, intentFilter);

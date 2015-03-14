@@ -72,7 +72,7 @@ public class FriendsListAdapter extends ArrayAdapter implements Filterable {
         String friend = filteredUsers.get(position);
         addFriendButton.setOnClickListener(new OnFriendClickListener(friend, position));
         if(originalUsers.get(friend)>0)  {
-            addFriendButton.setBackgroundResource(R.drawable.my_button_pressed);
+            addFriendButton.setBackgroundResource(R.drawable.my_button_pending_friends);
         }
         else {
             addFriendButton.setBackgroundResource(R.drawable.my_button);
@@ -139,6 +139,9 @@ public class FriendsListAdapter extends ArrayAdapter implements Filterable {
         @Override
         public void onClick(View v) {
             new Connections(context, friendname, position, originalUsers ,Connections.ADD_FRIEND_CODE);
+            Button b = (Button) v;
+            b.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.my_button_pending_friends));
+            b.setText("Added!");
             //v.setBackgroundColor(Color.RED);
 
             //handler.post(updateResults);

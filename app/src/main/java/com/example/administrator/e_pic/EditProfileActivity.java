@@ -14,7 +14,7 @@ import android.widget.ImageButton;
 
 public class EditProfileActivity extends CustomActionBarActivity {
 
-    private EditText usernameEditText, firstnameEditText, nameEditText, oldPasswordEditText, newPasswordEditText;
+    private EditText usernameEditText, firstnameEditText, nameEditText, oldPasswordEditText, newPasswordEditText, phoneEditText;
     private Button mOkButton, mCancelButton;
     private ImageButton imageButton;
     private Bitmap bitmap;
@@ -53,6 +53,8 @@ public class EditProfileActivity extends CustomActionBarActivity {
         oldPasswordEditText = (EditText) findViewById(R.id.my_old_password_edit_text_edit_profile_activity);
         newPasswordEditText = (EditText) findViewById(R.id.my_new_password_edit_text_edit_profile_activity);
         mOkButton = (Button) findViewById(R.id.ok_edit_profile_data_button);
+        phoneEditText = (EditText) findViewById(R.id.my_phone_number_edit_text_edit_profile);
+        mOkButton.setOnClickListener(new EditProfileDataOnClickListener());
         mCancelButton = (Button) findViewById(R.id.cancel_edit_profile_data_button);
         imageButton = (ImageButton) findViewById(R.id.profile_picture_image_button_edit_profile_activity);
         imageButton.setImageBitmap(bitmap);
@@ -91,5 +93,15 @@ public class EditProfileActivity extends CustomActionBarActivity {
 
     private Context getContext() {
         return this;
+    }
+
+    private class EditProfileDataOnClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            new Connections(getContext(), usernameEditText.getText().toString(),
+                    firstnameEditText.getText().toString(), nameEditText.getText().toString(),
+                    phoneEditText.getText().toString(), Connections.EDIT_PROFILE_DATA_CODE);
+        }
     }
 }

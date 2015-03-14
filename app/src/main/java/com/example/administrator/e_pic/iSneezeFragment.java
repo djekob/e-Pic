@@ -25,6 +25,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -86,12 +87,15 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
         mapView = (MapView) rootView.findViewById(R.id.mapview);
         mapView.onCreate(savedInstanceState);
 
+
         try {
             initializeMap();
         } catch (Exception e) {
             e.printStackTrace();
         }
         map.getUiSettings().setMyLocationButtonEnabled(false);
+        map.getUiSettings().setZoomControlsEnabled(true);
+        map.getUiSettings().setIndoorLevelPickerEnabled(false);
         map.setMyLocationEnabled(true);
         map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
@@ -160,14 +164,6 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
         return rootView;
     }
 
-    public void resetButtonLocation()  {
-        isneeze_image_button.setTranslationY(hoogte);
-    }
-
-    public void setButtonLocation(float x) {
-        System.out.println(hoogte);
-        isneeze_image_button.setTranslationY(x + hoogte);
-    }
     public Button getButton() {
         return isneeze_image_button;
     }
@@ -197,7 +193,7 @@ public class iSneezeFragment extends android.support.v4.app.Fragment implements 
 
     private void updateMarkersToMap(ArrayList<Sneeze> sneezes) {
         map.clear();
-        ArrayList<Float> colors = RandomShit.generateShadeColors(usernameKleur.size(),0,359);
+        ArrayList<Float> colors = RandomShit.generateShadeColors(usernameKleur.size(), 0, 359);
         int inti=0;
         for(String s : usernameKleur.keySet()) {
             usernameKleur.put(s,colors.get(inti));

@@ -74,7 +74,7 @@ public class FriendsRequestsAdapter extends ArrayAdapter {
         acceptFriendButton.setOnClickListener(new acceptFriendOnClickListener(friend));
 
         if(originalPendingFriends.get(friend)>0)  {
-            acceptFriendButton.setBackgroundResource(R.drawable.my_button_pressed);
+            acceptFriendButton.setBackgroundResource(R.drawable.my_button_accepted_friend);
         }
         else {
             acceptFriendButton.setBackgroundResource(R.drawable.my_button);
@@ -91,6 +91,9 @@ public class FriendsRequestsAdapter extends ArrayAdapter {
         @Override
         public void onClick(View v) {
             new Connections(context, friend , Connections.ACCEPT_FRIEND_CODE);
+            Button b = (Button) v;
+            b.setText("Friends");
+            b.setBackgroundResource(R.drawable.my_button_accepted_friend);
         }
     }
 

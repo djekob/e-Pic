@@ -74,6 +74,7 @@ public class Connections {
     private static final String URL_GET_FRIENDS_NO_EXTRA_DATA = IP + "get_friends_no_extra_data.php";
     private static final String URL_GET_SNEEZES_IN_DE_BUURT = IP + "get_all_sneezes_in_buurt.php";
     private static final String URL_SAVE_IMAGE = IP + "save_image.php";
+    private static final String URL_EDIT_PROFILE_DATA = IP + "update_profile_info.php";
 
     public static final String ACTION_SNEEZE_IN_BUURT= "action sneeze in buurt";
 
@@ -106,6 +107,8 @@ public class Connections {
     public static final String TAG_LATITUDE  = "Latitude";
     public static final String TAG_LONGITUDE= "Longitude";
     public static final String TAG_SNEEZES_IN_BUURT="Sneezes in buurt";
+    public static final String TAG_OORSPRONKELIJKE_USERNAME= "Oorspronkelijke loginnaam";
+    public static final String TAG_TELEFOONNUMMER="Telefoonnummer";
 
 
 
@@ -131,6 +134,7 @@ public class Connections {
     public static final int GET_ALL_SNEEZES_IN_BUURT_CODE=17;
     public static final int ADD_PICTURE_CODE = 18;
     public static final int ADD_FRIEND_CODE2 = 19;
+    public static final int EDIT_PROFILE_DATA_CODE = 21;
 
     private Context context;
     private View buttonView;
@@ -148,6 +152,18 @@ public class Connections {
     private String time;
     private ArrayList<Sneeze> sneezesInBuurt;
     private String filepath;
+    private String telefoonnummer;
+
+    public Connections(Context context, String newUsername, String newVoornaam, String newAchternaam, String newNumber, int code) {
+        this.context = context;
+        this.username = newUsername;
+        this.prename = newVoornaam;
+        this.name = newAchternaam;
+        this.telefoonnummer = newNumber;
+        if(code == EDIT_PROFILE_DATA_CODE) {
+            new EditProfileData().execute();
+        }
+    }
 
     public Connections(Context context, Sneeze s, int code){
         this.context = context;
@@ -677,6 +693,44 @@ public class Connections {
         }
 
 
+    }
+
+    private class EditProfileData extends AsyncTask<String, String, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(String... paras) {
+            List<NameValuePair> params = new ArrayList<>();
+            params.add(new BasicNameValuePair(TAG_LOGINNAME, username));
+            params.add(new BasicNameValuePair(TAG_VOORNAAM, prename));
+            params.add(new BasicNameValuePair(TAG_ACHTERNAAM, name));
+            params.add(new BasicNameValuePair(TAG_TELEFOONNUMMER, telefoonnummer));
+            params.add(new BasicNameValuePair(TAG_OORSPRONKELIJKE_USERNAME, SaveSharedPreference.getUserName(context)));
+
+            System.err.println("PARAS:" + params);
+
+            JSONParser jsonParser = new JSONParser();
+            JSONObject json = jsonParser.makeHttpRequest(URL_EDIT_PROFILE_DATA,"POST", params);
+
+            try {
+                int success = json.getInt(TAG_SUCCESS);
+
+                if (success == 1) {
+                    System.out.println("update gelukt");
+                    Intent i = new Intent(context, iSneezeActivity.class);
+
+                    context.startActivity(i);
+                } else {
+
+                    System.out.println("update mislukt");
+                    return true;
+
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return false;
+        }
     }
 
     private class OpenSneezesGraphAndGetFriends extends AsyncTask<String, String ,Boolean>{
@@ -1511,6 +1565,7 @@ public class Connections {
             }
         }
     }
+
 
     private class GetPendingFriends extends AsyncTask<String, String, Boolean> {
 

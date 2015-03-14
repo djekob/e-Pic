@@ -1,6 +1,9 @@
 package com.example.administrator.e_pic;
 
+import android.content.ContentResolver;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -8,8 +11,10 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class SearchFriendActivity extends CustomActionBarActivity {
@@ -29,6 +34,7 @@ public class SearchFriendActivity extends CustomActionBarActivity {
 
         username = user.getUsername();
         users = (ArrayList<String>) getIntent().getExtras().getStringArrayList(Connections.NAAM_VAR_USERS_NOT_FRIEND);
+        users.addAll(getContacts().values());
         adapter = new FriendsListAdapter(this, R.layout.search_friends_list_item, users);
 
         listView.setAdapter(adapter);
@@ -81,5 +87,31 @@ public class SearchFriendActivity extends CustomActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    private HashMap<String, String> getContacts() {
+        HashMap<String, String> nummerNaam = new HashMap<>();
+        String name;
+        ContentResolver cr = getContentResolver();
+        Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
+                null, null, null, null);
+        if (cur.getCount() > 0) {
+            while (cur.moveToNext()) {
+                String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
+                name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                if (Integer.parseInt(cur.getString( cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
+                    Cursor pCur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID +" = ?",
+                            new String[]{id}, null);
+                    while (pCur.moveToNext()) {
+
+                        String phoneNo = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                        nummerNaam.put(phoneNo, name);
+                    }
+                    pCur.close();
+                }
+            }
+        }
+        return nummerNaam;
     }
 }

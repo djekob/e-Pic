@@ -59,5 +59,6 @@
     <string name="drawer_close">Close</string>
     <string name="switch_1">Switch</string>
     <string name="title_activity_picture">PictureActivity</string>
+    <string name="Phonenumber">Phonenumber</string>
 
 </resources>
